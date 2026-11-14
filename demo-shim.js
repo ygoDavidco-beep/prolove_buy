@@ -47,7 +47,7 @@ async function handle(path, method, body) {
     const q = priceLines(lines, { partner: false, rules: DEFAULT_RULES });
     if (path === '/api/quote') return json({ items: q.items, total: q.total, base_total: q.base_total, total_kg: q.total_kg, hints: q.hints, partner: false });
     if (!String(body.name || '').trim()) return json({ error: "Вкажи ім'я" }, 400);
-    if (!String(body.delivery || '').trim()) return json({ error: 'Вкажи місто і відділення Нової пошти' }, 400);
+    if (!String(body.delivery || '').trim() && !(String(body.np_city || '').trim() && String(body.np_branch || '').trim())) return json({ error: 'Вкажи місто і відділення Нової пошти' }, 400);
     return json({ ok: true, number: 'ДЕМО — не відправлено', total: q.total, invoice: null });
   }
   if (path === '/api/match') {

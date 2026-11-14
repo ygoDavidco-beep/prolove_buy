@@ -181,7 +181,8 @@ async function openCart() {
       <input name="name" placeholder="Ім'я" autocomplete="name" value="${v('name')}" required>
       <input name="phone" type="tel" inputmode="tel" placeholder="Телефон +380…" autocomplete="tel" value="${v('phone')}" required>
       <input name="cafe" placeholder="Заклад (для кав'ярень, необов'язково)" value="${v('cafe')}">
-      <input name="delivery" placeholder="Нова пошта: місто, відділення" value="${v('delivery')}" required>
+      <div class="np2"><input name="np_city" placeholder="Місто" autocomplete="address-level2" value="${v('np_city')}" required>
+        <input name="np_branch" placeholder="Відділення або поштомат НП, №" value="${v('np_branch')}" required></div>
       <div class="payopt"><label><input type="radio" name="payment" value="invoice" ${prev?.payment !== 'cod' ? 'checked' : ''}> На рахунок<small>QR і кнопка Приват24 / mono</small></label>
         <label><input type="radio" name="payment" value="cod" ${prev?.payment === 'cod' ? 'checked' : ''}> Накладений платіж<small>оплата при отриманні</small></label></div>
       <textarea name="comment" rows="2" placeholder="Коментар: помол, побажання">${v('comment')}</textarea>
