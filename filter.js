@@ -4,7 +4,8 @@
 // У кінці — картка рецепту під скріншот (без брендування) зі своїми полями: помел, кава, температура…
 import { fmt, beep, wake, timeline } from './tmr.js';
 
-const ROWS = [[30, 50, 60, 80], [100, 120, 140], [150, 160, 180], [200, 250, 300]];
+// вливання — проста сітка 10…200 г з кроком 10
+const STEPS = Array.from({ length: 20 }, (_, i) => (i + 1) * 10);
 const PRESETS = ['Кава', 'Помел', 'Температура', 'Пуровер', 'Вода', 'Смак'];
 export const targetTime = W => (W <= 300 ? 120 : Math.round(W / 100 * 60));
 export const waitAfter = (g, first) => Math.max(first ? 30 : 10, Math.round(g / 100 * 30));
@@ -51,8 +52,8 @@ if (box && calc) {
     const rest = left();
     if (rest <= 5) { $('ftPick').hidden = true; return; }
     $('ftPick').hidden = false;
-    $('ftPick').innerHTML = `<p>${pours.length ? `Вливання ${pours.length + 1}: скільки ллєш?` : 'Перше вливання (цвітіння): скільки ллєш?'} <span>лишилось ${rest} мл</span></p>` +
-      ROWS.map(r => `<div class="ft-row">${r.map(g => `<button type="button" class="chip" data-g="${g}"${g > rest + 10 ? ' disabled' : ''}>${g} г</button>`).join('')}</div>`).join('');
+    $('ftPick').innerHTML = `<p>${pours.length ? `Вливання ${pours.length + 1}: скільки грамів ллєш?` : 'Перше вливання (цвітіння): скільки грамів ллєш?'} <span>лишилось ${rest} мл</span></p>` +
+      `<div class="ft-grid">${STEPS.map(g => `<button type="button" class="chip" data-g="${g}"${g > rest + 5 ? ' disabled' : ''}>${g}</button>`).join('')}</div>`;
   }
   function idle() {
     say('Змели каву, промий фільтр гарячою водою.', 'Насип каву, розрівняй, ваги на нуль. «Старт» — разом із першим вливанням.');

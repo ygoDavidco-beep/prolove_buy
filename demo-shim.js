@@ -55,6 +55,13 @@ async function handle(path, method, body) {
     if (!q.trim()) return json({ error: 'Порожній запит' }, 400);
     return json(matchLots(q, lots, m));
   }
+  // демо без сервера: розмова = лише пошук Матриці (ні ШІ, ні ростера на зв'язку)
+  if (path === '/api/chat' && method === 'POST') {
+    const text = String(body.text || '').trim().slice(0, 500);
+    if (!text) return json({ error: 'Порожнє повідомлення' }, 400);
+    return json({ token: 'demo', messages: [{ id: Date.now(), role: 'user', text, lots: [] }], match: matchLots(text, lots, m), human: false, owner: false });
+  }
+  if (path === '/api/chat') return json({ messages: [], human: false });
   if (path === '/api/info') return json({ contacts: CONTACTS, rules: DEFAULT_RULES, seller: { name: 'PROLOVE (демо)', code: '', address: '', phone: '', email: '' } });
   if (path === '/api/espresso') {
     try {

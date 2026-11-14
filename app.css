@@ -16,3 +16,16 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 /* спосіб приготування на картці лота — посилання на інструкцію */
 #w-kava .meth a.go{font-size:13px;font-weight:800;border-radius:10px;padding:6px 10px;border:1px solid color-mix(in srgb,var(--ink) 30%,transparent);background:var(--surface2);color:var(--ink);text-decoration:none}
 #w-kava .meth a.go i{font-style:normal;color:var(--teal)}
+
+/* Матриця як розмова: ШІ, Давид, роздільник між запитами */
+#w-ask .note{margin:2px 0 0;text-align:center;font:12px/1.4 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:rgba(233,255,251,.38)}
+#w-ask .term.up .note{display:none}
+#w-ask .out .sep{height:1px;margin:10px 0 8px;background:linear-gradient(90deg,transparent,rgba(94,196,204,.35),transparent)}
+#w-ask .out .ln.ai{color:#E9FFFB}
+#w-ask .out .ln.owner{color:#F2B33D}
+#w-ask .out .ln .who{font-weight:800;color:var(--teal)}
+#w-ask .out .ln.owner .who{color:#F2B33D}
+.nav-tabs .ping{position:relative}
+.nav-tabs .ping::after{content:"";position:absolute;top:6px;right:5px;width:8px;height:8px;border-radius:50%;background:#F2B33D;box-shadow:0 0 0 2px #000}
+#w-ask .out .ln.ai,#w-ask .out .ln.owner{background:rgba(0,0,0,.78);border-radius:10px;padding:6px 9px;margin:4px 0}
+#w-ask .out .ln.owner{border:1px solid rgba(242,179,61,.35)}

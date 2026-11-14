@@ -207,3 +207,9 @@ body{margin:0;font-family:var(--body)}
 .rc-end span{font:400 16px var(--hand);color:var(--muted)}
 #rcSave{justify-self:center}
 @media print{.rcwrap{display:none!important}}
+
+.ft-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ft-grid .chip{min-width:0;padding:9px 0;font:500 18px var(--head);text-align:center;box-shadow:2px 2px 0 var(--ink)}
+.ft-grid .chip:disabled{opacity:.25;box-shadow:none;cursor:default}
+.ft-grid .chip:not(:disabled):active{transform:translate(2px,2px);box-shadow:none}
+.ft-pick p span{display:block;margin:2px 0 0}

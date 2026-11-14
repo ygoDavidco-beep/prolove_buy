@@ -30,3 +30,7 @@ button{cursor:pointer}
 
 /* свайп тачпадом не повинен вмикати «назад/вперед» браузера — ним гортаємо світи */
 html,body{overscroll-behavior-x:none}
+
+/* iPhone: не «роздувати» текст і не збільшувати сторінку при тапі в поле вводу (Safari робить це для шрифтів < 16 px) */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media (hover:none) and (pointer:coarse){input,textarea,select{font-size:max(16px,1em)!important}}
