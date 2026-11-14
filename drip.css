@@ -25,7 +25,7 @@ body{margin:0;font-family:var(--body)}
 .cover p{position:relative;font-family:var(--hand);font-size:clamp(17px,2.4vw,21px);line-height:1.35;margin:0;max-width:30ch}
 .cover .stamp{position:relative;display:inline-block;margin-top:16px;font-family:var(--head);font-size:15px;letter-spacing:.08em;border:2.5px solid #fff;border-radius:8px;padding:3px 8px;transform:rotate(-6deg)}
 .cover figure{margin:0;border:3px solid var(--ink);background:var(--sheet);box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column}
-.cover figure img{display:block;width:100%;height:auto}
+.cover figure img{display:block;width:100%;max-width:100%;height:auto;max-height:75vh;object-fit:contain}
 .cover figcaption{border-top:3px solid var(--ink);padding:8px 12px;font-family:var(--hand);font-size:16px}
 .cover figcaption b{font-family:var(--head);font-weight:500;text-transform:uppercase;letter-spacing:.03em;color:var(--berry)}
 

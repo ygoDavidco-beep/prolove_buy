@@ -8,19 +8,21 @@
 <meta name="description" content="Комікс-інструкції PROLOVE: дріп, а далі турка, гейзер і фільтр.">
 <meta property="og:image" content="img/drip-xmas.webp">
 <link rel="icon" href="img/favicon.png">
-<link rel="stylesheet" href="base.css">
-<link rel="stylesheet" href="nav.css">
-<script src="nav.js"></script>
+<link rel="stylesheet" href="base.css?v=mwguvrl9">
+<link rel="stylesheet" href="nav.css?v=mwguvrl9">
+<script src="nav.js?v=mwguvrl9"></script>
 
-<link rel="stylesheet" href="drip.css">
+<link rel="stylesheet" href="drip.css?v=mwguvrl9">
 <style>
 .hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .hub a{text-decoration:none;color:var(--ink)}
-.hub .pnl .art{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
-.hub .pnl img{width:100%;max-width:100%;height:100%;object-fit:cover;display:block}
+.hub .pnl .art{display:flex;align-items:center;justify-content:center;overflow:hidden}
+/* розмір фото задано явно — не залежить від підтримки aspect-ratio у старих iPhone */
+.hub .pnl img{width:100%;max-width:100%;height:min(56vw,300px);object-fit:cover;display:block}
+@media (min-width:721px){.hub .pnl img{height:220px}}
 .hub>a,.hub>article{min-width:0;display:block}
 .tipf{margin:0 0 28px}.mhint{background:var(--gold)}.mhint .btn{display:inline-block;text-decoration:none;margin-top:4px}.tipf .cap{padding-left:46px}
-.soon .art{font-family:var(--head);font-size:clamp(30px,6vw,46px);text-transform:uppercase;color:var(--berry);text-align:center;line-height:1}
+.soon .art{min-height:min(56vw,300px);font-family:var(--head);font-size:clamp(30px,6vw,46px);text-transform:uppercase;color:var(--berry);text-align:center;line-height:1}
 @media (max-width:720px){.hub{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
@@ -49,9 +51,9 @@
   </section>
   <div class="next"><a class="btn" href="index.html">До кави PROLOVE</a><a class="btn ghost" href="info.html">Інфо і контакти</a></div>
 </main>
-<script type="module" src="demo-shim.js"></script>
-<script type="module" src="calc.js"></script>
-<script type="module" src="filter.js"></script>
-<script type="module" src="brew.js"></script>
+<script type="module" src="demo-shim.js?v=mwguvrl9"></script>
+<script type="module" src="calc.js?v=mwguvrl9"></script>
+<script type="module" src="filter.js?v=mwguvrl9"></script>
+<script type="module" src="brew.js?v=mwguvrl9"></script>
 </body>
 </html>
