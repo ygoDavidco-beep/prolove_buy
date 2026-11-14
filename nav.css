@@ -1,0 +1,27 @@
+/* Одне меню PROLOVE на всіх світах і сторінках + переходи між сторінками як в Instagram (нова сторінка виїжджає справа, «назад» — навпаки). */
+:root{--navh:calc(env(safe-area-inset-top,0px) + 50px)}
+.nav{position:fixed;left:0;right:0;top:0;z-index:100;height:var(--navh);box-sizing:border-box;
+  padding:env(safe-area-inset-top,0px) max(8px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px));
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.7));-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--body,'Manrope',system-ui,sans-serif);view-transition-name:pl-nav}
+.nav-wm{display:flex;align-items:center;gap:6px;min-width:0;color:#F6F0EB;text-decoration:none}
+.nav-wm img{height:18px;width:auto;display:block}
+.nav-back{display:flex;align-items:center;justify-content:center;width:34px;height:34px;margin-left:-8px;border-radius:50%;color:#F6F0EB;text-decoration:none;font-size:26px;line-height:1}
+.nav-tabs{display:flex;gap:2px;flex:0 0 auto}
+.nav-tabs a,.nav-tabs button{border:0;background:none;color:rgba(246,240,235,.64);font:700 13.5px/1 var(--body,'Manrope',system-ui,sans-serif);
+  padding:0 10px;min-height:36px;border-radius:999px;text-decoration:none;display:flex;align-items:center;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.nav-tabs [aria-current="true"],.nav-tabs [aria-current="page"]{background:#F6F0EB;color:#120D0F}
+.nav-tabs svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.4}
+@media (max-width:359px){.nav-tabs a,.nav-tabs button{padding:0 7px;font-size:12.5px}.nav-wm img{height:15px}}
+
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:pl-out .26s cubic-bezier(.4,0,.2,1) both}
+::view-transition-new(root){animation:pl-in .3s cubic-bezier(.2,.8,.2,1) both}
+html:active-view-transition-type(back)::view-transition-old(root){animation-name:pl-out-back}
+html:active-view-transition-type(back)::view-transition-new(root){animation-name:pl-in-back}
+@keyframes pl-out{to{transform:translateX(-22%);opacity:.5}}
+@keyframes pl-in{from{transform:translateX(100%)}}
+@keyframes pl-out-back{to{transform:translateX(100%)}}
+@keyframes pl-in-back{from{transform:translateX(-22%);opacity:.5}}
+@media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}

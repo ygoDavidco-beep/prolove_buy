@@ -48,10 +48,10 @@ function step() {
   }
 }
 let last = 0;
-const shellOf = (() => { try { return window.parent !== window ? window.parent.PL_SHELL : null; } catch { return null; } })();
+const host = document.getElementById('w-ask');
 function loop(ts) {
-  // в оболонці дощ іде лише тоді, коли Матрицю видно: решту часу телефон відпочиває
-  if (ts - last > 55 && (!shellOf || shellOf.visible('ask'))) { step(); last = ts; }
+  // дощ іде лише тоді, коли Матрицю видно: решту часу телефон відпочиває
+  if (ts - last > 55 && (!host || host.dataset.vis !== '0') && !document.hidden) { step(); last = ts; }
   requestAnimationFrame(loop);
 }
 function still() { // без анімації: статичний візерунок слів

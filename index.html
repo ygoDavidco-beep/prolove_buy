@@ -2,7 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="theme-color" content="#000000">
 <title>PROLOVE — Кава вогонь</title>
 <meta name="description" content="PROLOVE: кава вогонь. Обирай лот за смаком.">
@@ -12,28 +12,62 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="img/favicon.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<style>
-html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavior:none}
-.view{position:fixed;inset:0;overflow:hidden;background:#000}
-.track{position:relative;display:flex;height:100%;width:400%;will-change:transform;transform:translate3d(-25%,0,0)}
-.track iframe{flex:0 0 25%;width:25%;height:100%;border:0;display:block;background:#000}
-.track iframe[data-w="brew"]{background:#E6E1D5}
-/* газетний аркуш лежить на темному столі: м'яка тінь на стику з темними світами */
-.edge{position:absolute;top:0;bottom:0;width:26px;pointer-events:none;z-index:2}
-.edge.l{left:50%;background:linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,.12) 45%,rgba(0,0,0,0))}
-.edge.r{left:75%;transform:translateX(-100%);background:linear-gradient(270deg,rgba(0,0,0,.42),rgba(0,0,0,.12) 45%,rgba(0,0,0,0))}
-</style>
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="nav.css">
+<link rel="stylesheet" href="worlds.css">
+<link rel="stylesheet" href="app.css">
+<script src="nav.js"></script>
 </head>
-<body>
-<div class="view">
-  <div class="track" id="track">
-    <iframe data-w="ask" data-src="ask.html" title="Запитай"></iframe>
-    <iframe data-w="kava" data-src="kava.html" title="Кава"></iframe>
-    <iframe data-w="brew" data-src="brew.html" title="Як заварити"></iframe>
-    <iframe data-w="partners" data-src="partners.html" title="Партнерам"></iframe>
-    <div class="edge l" aria-hidden="true"></div><div class="edge r" aria-hidden="true"></div>
+<body class="pl-app">
+<!-- Одне меню на всіх світах і сторінках -->
+<header class="nav" id="nav">
+  <a class="nav-wm" href="info.html" aria-label="Про PROLOVE: контакти і підтримка"><img src="img/wordmark.png" alt="PROLOVE"></a>
+  <nav class="nav-tabs" aria-label="Розділи">
+    <button type="button" data-w="ask">Запитай</button>
+    <button type="button" data-w="kava" aria-current="true">Кава</button>
+    <a href="brew.html">Заварити</a>
+    <a href="partners.html" aria-label="Партнерам"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a>
+  </nav>
+</header>
+
+<!-- Світи: одна сторінка, гортає сам браузер (scroll-snap), кожен світ рівно на екран і ізольований -->
+<main class="worlds" id="worlds">
+<section class="world" id="w-ask" data-w="ask" aria-label="Запитай">
+<div class="app">
+  <canvas id="rain" aria-hidden="true"></canvas>
+  <div class="veil" id="veil"></div>
+  <div class="term" id="term">
+    <form class="ask" id="ask" autocomplete="off">
+      <label for="q">Що хочеш відчути?</label>
+      <input id="q" name="q" maxlength="300" enterkeyhint="search" placeholder="вишня й шоколад…">
+      <button type="submit" aria-label="Знайти">↵</button>
+    </form>
+    <div class="hint" id="hint">смак або спосіб: <button type="button">ягоди</button> · <button type="button">шоколад і горіх</button> · <button type="button">для турки</button> · <button type="button">під капучино</button></div>
+    <div class="out" id="out" aria-live="polite"></div>
   </div>
+  <nav class="foot"><a href="info.html">Інфо і контакти</a><a href="brew.html">Як заварити</a><a href="https://instagram.com/prolove_coffee" target="_blank" rel="noopener">Instagram</a></nav>
 </div>
-<script type="module" src="shell.js"></script>
+</section>
+<section class="world" id="w-kava" data-w="kava" aria-label="Кава: стрічка лотів">
+<div class="app" id="app">
+  <div class="feed" id="feed" aria-label="Стрічка лотів"><div class="loading">Завантажую лоти…</div></div>
+
+  <button class="cartpill" id="cartPill" type="button" hidden>Кошик</button>
+  <div class="buy" id="buy">
+    <button class="w1" type="button" data-w="250"><b>250 г</b><small id="p250">—</small></button>
+    <button class="w2" type="button" data-w="1000"><b>1 кг</b><small id="p1000">—</small></button>
+  </div>
+
+  <div class="shade" id="shade"></div>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Опис лота"></section>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+</section>
+</main>
+
+<script type="module" src="demo-shim.js"></script>
+<script type="module" src="app.js"></script>
+<script type="module" src="ask.js"></script>
+<script type="module" src="feed.js"></script>
 </body>
 </html>

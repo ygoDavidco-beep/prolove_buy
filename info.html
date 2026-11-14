@@ -9,6 +9,9 @@
 <meta property="og:image" content="img/og.png">
 <link rel="icon" href="img/favicon.png">
 <link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="nav.css">
+<script src="nav.js"></script>
+
 <style>
 body{background:var(--bg);color:var(--ink);font-family:var(--body);margin:0}
 .w{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 8px) max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
@@ -39,13 +42,15 @@ ol.steps li+li{margin-top:4px}
 .docs a span{color:var(--muted)}
 .cta{display:inline-block;margin-top:12px;text-decoration:none;background:var(--flame);color:#120D0F;font-weight:800;border-radius:14px;padding:11px 16px}
 .foot{margin-top:28px;font-size:12.5px;color:var(--muted)}
+.w{padding-top:calc(var(--navh) + 4px)!important}
 </style>
 </head>
 <body>
+<header class="nav">
+  <div class="nav-wm"><a class="nav-back" href="index.html" data-back aria-label="Назад">‹</a><a href="info.html" aria-label="Про PROLOVE"><img src="img/wordmark.png" alt="PROLOVE"></a></div>
+  <nav class="nav-tabs" aria-label="Розділи"><a href="index.html?w=ask">Запитай</a><a href="index.html">Кава</a><a href="brew.html">Заварити</a><a href="partners.html" aria-label="Партнерам"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a></nav>
+</header>
 <main class="w">
-  <header class="brow"><a href="index.html" aria-label="До стрічки кави"><img src="img/wordmark.png" alt="PROLOVE"></a>
-    <nav class="tabs" aria-label="Розділи"><a href="index.html?w=ask">Запитай</a><a href="index.html">Кава</a><a href="index.html?w=brew">Заварити</a>
-      <a href="index.html?w=partners" aria-label="Партнерам"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a></nav></header>
 
   <section class="hero">
     <img src="img/logo.png" alt="">

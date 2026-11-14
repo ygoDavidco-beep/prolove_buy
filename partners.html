@@ -7,6 +7,9 @@
 <title>PROLOVE — Партнерам</title>
 <link rel="icon" href="img/favicon.png">
 <link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="nav.css">
+<script src="nav.js"></script>
+
 <style>
 body{background:var(--bg);color:var(--ink);font-family:var(--body);margin:0;min-height:100vh}
 button,input{font:inherit;color:inherit}
@@ -34,11 +37,15 @@ input.code{font-size:28px;letter-spacing:.4em;text-align:center;font-weight:800}
 .st{display:inline-block;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800;border:1px solid currentColor}
 .fine{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:18px}
 [hidden]{display:none !important}
+.w{padding-top:calc(var(--navh) + 22px)!important}
 </style>
 </head>
 <body>
+<header class="nav">
+  <div class="nav-wm"><a class="nav-back" href="index.html" data-back aria-label="Назад">‹</a><a href="info.html" aria-label="Про PROLOVE"><img src="img/wordmark.png" alt="PROLOVE"></a></div>
+  <nav class="nav-tabs" aria-label="Розділи"><a href="index.html?w=ask">Запитай</a><a href="index.html">Кава</a><a href="brew.html">Заварити</a><a href="partners.html" aria-label="Партнерам" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a></nav>
+</header>
 <div class="w">
-  <div class="top"><img src="img/wordmark.png" alt="PROLOVE"><a href="index.html">← Кава</a></div>
 
   <section id="vIn" hidden>
     <h1>Партнерам</h1>
@@ -78,7 +85,7 @@ input.code{font-size:28px;letter-spacing:.4em;text-align:center;font-weight:800}
       <button class="btn pri" type="button" id="applyBtn">Стати партнером</button>
     </div>
     <div id="pending" hidden><p>Заявку отримано. Щойно підтвердимо партнерство — напишемо в Telegram.</p></div>
-    <div id="partner" hidden><p>Ти партнер PROLOVE 🔥 Бариста Борис уже чекає. Журнали НАССР і оптові замовлення — наступні.</p><a class="btn pri" href="partners.html">Відкрити Бариста Бориса</a></div>
+    <div id="partner" hidden><p>Ти партнер PROLOVE 🔥 Бариста Борис уже чекає. Журнали НАССР і оптові замовлення — наступні.</p><a class="btn pri" href="/boris">Відкрити Бариста Бориса</a></div>
     <div style="height:12px"></div>
     <a class="btn ghost" href="index.html">До стрічки кави</a>
     <button class="btn ghost" type="button" id="logout">Вийти</button>
@@ -87,6 +94,5 @@ input.code{font-size:28px;letter-spacing:.4em;text-align:center;font-weight:800}
 <div class="toast" id="toast" role="status"></div>
 <script type="module" src="demo-shim.js"></script>
 <script type="module" src="partners.js"></script>
-<script type="module" src="swipe.js"></script>
 </body>
 </html>

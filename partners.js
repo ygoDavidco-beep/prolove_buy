@@ -75,7 +75,7 @@ $('#applyBtn').onclick = async () => {
 };
 $('#logout').onclick = async () => { await post('/api/auth/logout'); show('vIn'); };
 
-function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2600); }
+function toast(t) { const el = $('#ptoast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2600); }
 
 (async () => {
   const [{ me }, cfg] = await Promise.all([fetch('/api/me').then(r => r.json()), fetch('/api/auth/config').then(r => r.json())]);

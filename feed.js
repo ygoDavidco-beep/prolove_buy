@@ -8,7 +8,9 @@ const store = {
 };
 let fav = store.get('pl_fav', []), cart = store.get('pl_cart', []);
 let LOTS = [], MAP = null, N = 0, current = 0;
-const feed = $('#feed'), brow = $('#brow'), sheet = $('#sheet'), shade = $('#shade');
+// меню тепер одне на весь сайт і завжди видно — колишня «брова» стрічки лишилась заглушкою
+const NOOP = { classList: { toggle() {}, add() {}, remove() {} }, querySelectorAll: () => [] };
+const feed = $('#feed'), brow = $('#brow') || NOOP, sheet = $('#sheet'), shade = $('#shade');
 
 function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2200); }
 
@@ -49,12 +51,19 @@ function cardHTML(l, k) {
       <div class="sc" style="background:${MAP.gradient}"><i style="left:${pos}%;background:${l.color}"></i></div>
       <div class="scl"><span>свіжа кислинка</span><span>тепла солодкість</span></div>
       <div class="cats">${l.categories.map(c => `<span style="color:${c.color}">${esc(c.uk)}</span>`).join('')}</div></div>`}
-    ${l.methods?.length ? `<div class="box"><h4>Як готувати</h4><div class="meth">${l.methods.map(m => `<span class="${m.group}">${esc(m.uk)}</span>`).join('')}</div></div>` : ''}
+    ${l.methods?.length ? `<div class="box"><h4>Як готувати</h4>${methLinks(l)}</div>` : ''}
     <div class="box"><h4>Паспорт лота</h4><dl class="kv">
       ${l.process_label ? `<dt>Обробка</dt><dd>${esc(l.process_label)}</dd>` : ''}${l.variety ? `<dt>Різновид</dt><dd>${esc(l.variety)}</dd>` : ''}${l.farm ? `<dt>Ферма</dt><dd>${esc(l.farm)}</dd>` : ''}${l.altitude ? `<dt>Висота</dt><dd>${esc(l.altitude)}</dd>` : ''}${l.country ? `<dt>Країна</dt><dd>${esc(l.country)}</dd>` : ''}
     </dl></div>
     ${l.description ? `<p class="desc-p">${esc(l.description)}</p>` : ''}
   </div>`;
+}
+
+// спосіб приготування веде на інструкцію до нього (турка → поради для турки), призначення — просто позначка
+function methLinks(l) {
+  return `<div class="meth">${l.methods.map(m => m.group === 'use'
+    ? `<span class="use">${esc(m.uk)}</span>`
+    : `<a class="go" href="brew.html?m=${encodeURIComponent(m.key)}">${esc(m.uk)} <i aria-hidden="true">›</i></a>`).join('')}</div>`;
 }
 
 function lotHTML(l, k, copy) {
@@ -87,7 +96,6 @@ function render() {
   const markDots = (p, page) => p.parentElement.querySelectorAll('.dots b').forEach((b, j) => b.classList.toggle('on', j === page));
   const syncView = src => {
     for (const p of pagers) if (p !== src && pageOf(p) !== view) { p.style.scrollSnapType = 'none'; p.scrollLeft = view * p.clientWidth; p.style.scrollSnapType = ''; markDots(p, view); }
-    syncViewHook();
   };
   pagers.forEach(p => {
     p.addEventListener('scroll', () => {
@@ -97,11 +105,7 @@ function render() {
       clearTimeout(p._t); p._t = setTimeout(() => { if (Math.abs(p.scrollLeft - page * p.clientWidth) < 2 && page !== view) { view = page; syncView(p); } }, 120);
     }, { passive: true });
   });
-  // touch-action (напрям прокрутки): на пачці браузер гортає лише до опису, на описі — лише назад до пачки; жест у бік сусіднього світу лишається для swipe.js
-  const pan = () => pagers.forEach(p => { p.style.touchAction = view === 0 ? 'pan-right pan-y' : 'pan-left pan-y'; });
-  syncViewHook = pan;
   new ResizeObserver(() => syncView(null)).observe(feed);
-  pan();
   addEventListener('hashchange', () => {
     const k = LOTS.findIndex(l => '#' + l.id === decodeURIComponent(location.hash));
     if (k >= 0) feed.scrollTo({ top: (N + k) * H(), behavior: 'instant' });
@@ -124,10 +128,12 @@ function setCurrent(k) {
 // ---------- брова ----------
 let browPinned = false;
 let view = 0; // 0 — пачка, 1 — опис лота
-let syncViewHook = () => {};
-addEventListener('pl:show', () => { if (LOTS.length) peekBrow(); });
+// лот із пошуку Матриці: стрічка стає на нього
+addEventListener('pl:lot', e => {
+  const k = LOTS.findIndex(l => l.id === e.detail);
+  if (k >= 0) feed.scrollTo({ top: (N + k) * feed.clientHeight, behavior: 'instant' });
+});
 function peekBrow() { browPinned = true; brow.classList.add('on'); clearTimeout(peekBrow.t); peekBrow.t = setTimeout(() => { browPinned = false; setCurrent(current); }, 3000); }
-brow.querySelectorAll('[data-soon]').forEach(b => b.onclick = () => toast(`«${b.dataset.soon}» — незабаром`));
 
 // ---------- кошик ----------
 function addToCart(k, w) {
@@ -220,7 +226,7 @@ function openLot(k) {
     <h5>Опис</h5>
     ${l.description ? `<p>${esc(l.description)}</p>` : `<p>Смак: <b style="color:${l.color}">${esc(l.taste)}</b>.</p>`}
     <div class="chips" style="margin-bottom:10px">${l.words.map(x => `<span class="chip" style="color:${x.color}">${esc(x.word)}</span>`).join('')}</div>
-    ${l.methods?.length ? `<h5>Як готувати</h5><div class="meth" style="margin-bottom:10px">${l.methods.map(m => `<span class="${m.group}">${esc(m.uk)}</span>`).join('')}</div>` : ''}
+    ${l.methods?.length ? `<h5>Як готувати</h5>${methLinks(l)}` : ''}
     <h5>Звідки</h5><p>${esc([l.farm && 'Ферма ' + l.farm, l.country, l.altitude && 'висота ' + l.altitude].filter(Boolean).join(', '))}.</p>
     ${l.price1000_bulk ? `<h5>Для кав'ярень</h5><p style="font-size:14.5px">Від 7 кг у замовленні — 1 кг за ${uah(l.price1000_bulk)}. Від 28 пачок по 250 г — ще дешевше. Партнерам — спеціальна ціна на 250 г.</p>` : ''}`);
   sheet.querySelectorAll('[data-sw]').forEach(b => b.onclick = () => {

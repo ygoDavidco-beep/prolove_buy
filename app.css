@@ -1,0 +1,18 @@
+/* Світи PROLOVE на одній сторінці: гортає сам браузер, кожен світ рівно на екран і не виходить за свої межі. */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+.worlds{position:fixed;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:none;scrollbar-width:none}
+.worlds::-webkit-scrollbar{display:none}
+/* contain: paint — усе «fixed» усередині світу (штора, тост, кнопки ваги) прив'язане до свого світу і їде разом із ним */
+.world{flex:0 0 100%;width:100%;max-width:100%;height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;overflow:hidden;contain:layout paint}
+
+/* меню зверху — вміст світів починається під ним */
+#w-kava .pack{padding-top:calc(var(--navh) + 2%)}
+#w-kava .card{padding-top:calc(var(--navh) + 14px)}
+#w-kava .pack .topzone{display:none}
+/* картка лота: з краю (пачка або опис) жест переходить у сусідній світ — браузер робить це сам */
+#w-kava .pager{overscroll-behavior-x:auto}
+#w-ask .term.up{top:calc(var(--navh) + 16px)}
+
+/* спосіб приготування на картці лота — посилання на інструкцію */
+#w-kava .meth a.go{font-size:13px;font-weight:800;border-radius:10px;padding:6px 10px;border:1px solid color-mix(in srgb,var(--ink) 30%,transparent);background:var(--surface2);color:var(--ink);text-decoration:none}
+#w-kava .meth a.go i{font-style:normal;color:var(--teal)}
