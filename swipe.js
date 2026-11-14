@@ -55,10 +55,10 @@ if (idx >= 0 && shell) {
     const t = e.touches[0], dx = t.clientX - s.x, dy = t.clientY - s.y;
     if (!s.lock) {
       // світ гортаємо лише чітким жестом убік; будь-який нахил донизу/догори — це звичайна прокрутка сторінки
-      if (s.scrolled || (Math.abs(dy) > 10 && Math.abs(dx) < 2 * Math.abs(dy))) { s.lock = 'no'; return; }
-      if (Math.abs(dx) < 18) return;
+      if (s.scrolled || (Math.abs(dy) > 12 && Math.abs(dx) < 1.5 * Math.abs(dy))) { s.lock = 'no'; return; }
+      if (Math.abs(dx) < 12) return;
       const sideOk = (dx > 0 && s.atStart) || (dx < 0 && s.atEnd);
-      if (Math.abs(dx) > 2 * Math.abs(dy) && sideOk) { s.lock = 'x'; s.x0 = t.clientX; s.sign = Math.sign(dx); }
+      if (Math.abs(dx) > 1.5 * Math.abs(dy) && sideOk) { s.lock = 'x'; s.x0 = s.x + Math.sign(dx) * 12; s.sign = Math.sign(dx); }
       else { s.lock = 'no'; return; }
     }
     let d = t.clientX - s.x0;

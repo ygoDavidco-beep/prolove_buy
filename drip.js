@@ -201,13 +201,13 @@ function frame() {
   }
 }
 async function start() {
-  t0 = Date.now(); tick = setInterval(frame, 250); show(0); frame();
+  t0 = Date.now(); tick = setInterval(frame, 250); show(0); frame(); window.PL_BUSY = true;
   $('#go').textContent = 'Скинути';
   screen.on();
 }
 function stop(reset = true) {
   const s = elapsed();
-  clearInterval(tick); tick = null; screen.off();
+  clearInterval(tick); tick = null; screen.off(); window.PL_BUSY = false;
   if (reset) { $('#clock').textContent = '0:00'; $('#now').innerHTML = IDLE; $('#now').classList.remove('nag'); $('#next').hidden = true; $('#go').textContent = 'Старт'; stage = -1; timeline($('#tl'), marks(), 0, total()); }
   else timeline($('#tl'), marks(), s, total());
 }

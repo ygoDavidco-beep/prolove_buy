@@ -6,7 +6,8 @@ let LOTS = [], POOL = [], FOCUS = null;
 
 // ---------- дощ ----------
 const cv = $('#rain'), ctx = cv.getContext('2d');
-const FS = 17, COL = 19;
+// кожна літера — у своїй клітинці з запасом зверху/знизу, щоб Й, Ї, Д, Щ не обрізались сусідньою літерою
+const FS = 17, COL = 20, LH = 24;
 let cols = [], W = 0, H = 0, dpr = 1;
 function pick() {
   const src = FOCUS && Math.random() < 0.8 ? FOCUS : POOL;
@@ -14,31 +15,35 @@ function pick() {
 }
 function newCol(x, scatter) {
   const w = pick();
-  return { x, y: scatter ? -Math.random() * H : -FS * (1 + Math.random() * 20), w, i: 0, speed: 0.55 + Math.random() * 0.75, acc: 0 };
+  return { x, y: scatter ? -Math.round(Math.random() * H / LH) * LH : -LH * Math.round(1 + Math.random() * 14), w, i: 0, speed: 0.5 + Math.random() * 0.7, acc: 0 };
 }
 function resize() {
   dpr = Math.min(1.5, devicePixelRatio || 1);
   W = cv.clientWidth; H = cv.clientHeight;
   cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
-  cols = Array.from({ length: Math.ceil(W / COL) }, (_, k) => newCol(k * COL + 3, true));
+  cols = Array.from({ length: Math.ceil(W / COL) }, (_, k) => newCol(k * COL + 1, true));
 }
 function step() {
   ctx.fillStyle = 'rgba(0,0,0,0.085)';
   ctx.fillRect(0, 0, W, H);
   ctx.font = `500 ${FS}px Oswald, 'Arial Narrow', sans-serif`;
-  ctx.textBaseline = 'top';
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+  const cx = c => c.x + COL / 2, cy = y => y + LH / 2;
   for (const c of cols) {
     c.acc += c.speed;
     while (c.acc >= 1) {
       c.acc -= 1;
       const ch = c.w.t[c.i] ?? ' ';
-      // попередня літера стає кольором смаку, голова — світла
-      if (c.i > 0) { ctx.fillStyle = '#000'; ctx.fillRect(c.x - 1, c.y - FS, COL - 2, FS); ctx.fillStyle = c.w.c; ctx.fillText((c.w.t[c.i - 1] || '').toUpperCase(), c.x, c.y - FS); }
+      // попередня літера стає кольором смаку, голова — світла; очищаємо рівно її клітинку
+      if (c.i > 0) {
+        ctx.fillStyle = '#000'; ctx.fillRect(c.x, c.y - LH, COL, LH);
+        ctx.fillStyle = c.w.c; ctx.fillText((c.w.t[c.i - 1] || '').toUpperCase(), cx(c), cy(c.y - LH));
+      }
       ctx.fillStyle = '#F6F0EB';
-      ctx.fillText(ch.toUpperCase(), c.x, c.y);
-      c.y += FS; c.i += 1;
-      if (c.i > c.w.t.length + 3 || c.y > H + FS) Object.assign(c, newCol(c.x, false), { y: c.y > H ? -FS * (Math.random() * 8) : c.y + FS * 2 });
+      ctx.fillText(ch.toUpperCase(), cx(c), cy(c.y));
+      c.y += LH; c.i += 1;
+      if (c.i > c.w.t.length + 3 || c.y > H + LH) Object.assign(c, newCol(c.x, false), { y: c.y > H ? -LH * Math.round(Math.random() * 8) : c.y + LH * 2 });
     }
   }
 }
@@ -51,7 +56,7 @@ function loop(ts) {
 }
 function still() { // без анімації: статичний візерунок слів
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.font = `500 ${FS}px Oswald, sans-serif`; ctx.textBaseline = 'top';
-  for (const c of cols) { const w = pick(); for (let i = 0; i < w.t.length; i++) { ctx.fillStyle = w.c; ctx.globalAlpha = 0.25; ctx.fillText(w.t[i].toUpperCase(), c.x, c.y + i * FS); } c.y = Math.random() * H; }
+  ctx.textAlign = 'center'; for (const c of cols) { const w = pick(); for (let i = 0; i < w.t.length; i++) { ctx.fillStyle = w.c; ctx.globalAlpha = 0.25; ctx.fillText(w.t[i].toUpperCase(), c.x + COL / 2, c.y + i * LH); } c.y = Math.random() * H; }
   ctx.globalAlpha = 1;
 }
 

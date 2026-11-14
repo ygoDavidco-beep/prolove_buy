@@ -82,21 +82,21 @@ if (box && calc) {
     return [`Злилось за ${fmt(t)} — довше за ціль ~${fmt(tg)}.`, 'Якщо смак важкий чи гіркий, наступного разу змели трохи крупніше.'];
   }
   function finish() {
-    doneAt = el(); clearInterval(tick); tick = null; screen.off(); beep();
+    doneAt = el(); clearInterval(tick); tick = null; screen.off(); beep(); window.PL_BUSY = false;
     $('ftClock').textContent = fmt(doneAt); $('ftPick').hidden = true; $('ftDone').hidden = true;
     say(...verdict(doneAt));
     $('ftGo').textContent = 'Ще раз';
     draw(); card.open({ coffee: v.coffee, water: v.water, cup: v.cup, pours: pours.slice(), done: doneAt, target: T() });
   }
   function reset() {
-    clearInterval(tick); tick = null; screen.off();
+    clearInterval(tick); tick = null; screen.off(); window.PL_BUSY = false;
     pours = []; doneAt = null; rec = null; $('ftClock').textContent = '0:00'; $('ftPick').hidden = true; $('ftDone').hidden = true;
     $('ftGo').textContent = 'Старт'; idle(); draw(); card.close();
   }
   $('ftGo').addEventListener('click', () => {
     if (tick) return reset();
     if (doneAt != null) reset();
-    t0 = Date.now(); tick = setInterval(frame, 250); screen.on();
+    t0 = Date.now(); tick = setInterval(frame, 250); screen.on(); window.PL_BUSY = true;
     $('ftGo').textContent = 'Скинути';
     say('Лий перше вливання — цвітіння.', 'Обери нижче, скільки грамів: зазвичай удвічі-втричі більше, ніж кави.');
     picker(); frame();
