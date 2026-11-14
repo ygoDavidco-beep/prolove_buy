@@ -18,7 +18,7 @@ body{margin:0;font-family:var(--body)}
 .topbar a{color:var(--ink);font-weight:800;font-size:14px;text-decoration:none;border:2.5px solid var(--ink);border-radius:999px;padding:5px 12px;box-shadow:3px 3px 0 var(--ink);background:var(--sheet)}
 
 /* обкладинка */
-.cover{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;margin-bottom:22px}
+.cover{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px;margin-bottom:22px}
 .cover .title{border:3px solid var(--ink);background:var(--berry);color:#fff;padding:20px 18px 18px;position:relative;overflow:hidden;box-shadow:6px 6px 0 var(--ink)}
 .cover .title::before{content:"";position:absolute;inset:0;background:radial-gradient(rgba(255,255,255,.18) 1.2px,transparent 1.5px) 0 0/10px 10px}
 .cover h1{position:relative;font-family:var(--head);font-weight:500;text-transform:uppercase;font-size:clamp(44px,10vw,86px);line-height:.9;margin:0 0 10px;letter-spacing:.01em;text-shadow:4px 4px 0 var(--ink);text-wrap:balance}
@@ -30,7 +30,7 @@ body{margin:0;font-family:var(--body)}
 .cover figcaption b{font-family:var(--head);font-weight:500;text-transform:uppercase;letter-spacing:.03em;color:var(--berry)}
 
 /* таймер */
-.timer{border:3px solid var(--ink);background:var(--sheet);box-shadow:6px 6px 0 var(--ink);padding:14px 16px;margin-bottom:28px;display:grid;grid-template-columns:auto 1fr auto;gap:8px 16px;align-items:center}
+.timer{border:3px solid var(--ink);background:var(--sheet);box-shadow:6px 6px 0 var(--ink);padding:14px 16px;margin-bottom:28px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px 16px;align-items:center}
 .timer .clock{font-family:var(--head);font-size:clamp(48px,9vw,64px);line-height:1;font-variant-numeric:tabular-nums;min-width:3.3ch}
 .timer .now{min-height:5.2em;font-family:var(--hand);font-size:clamp(18px,2.6vw,22px);line-height:1.25}
 .timer .now small{display:block;font-family:var(--body);font-size:13.5px;color:var(--muted);margin-top:3px}
@@ -69,7 +69,7 @@ body{margin:0;font-family:var(--body)}
 
 /* підсумки, заборони */
 .donts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.dont{border:3px solid var(--ink);background:var(--sheet);box-shadow:4px 4px 0 var(--ink);padding:10px 12px 12px;display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center}
+.dont{border:3px solid var(--ink);background:var(--sheet);box-shadow:4px 4px 0 var(--ink);padding:10px 12px 12px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:center}
 .dont svg{width:56px;height:56px}
 .dont p{margin:0;font-size:14.5px;line-height:1.4}
 .dont b{display:block;font-family:var(--head);font-weight:500;text-transform:uppercase;font-size:16px;letter-spacing:.02em}
@@ -89,10 +89,10 @@ body{margin:0;font-family:var(--body)}
 .dsp{font-family:var(--head);fill:var(--water)}
 
 @media (max-width:720px){
-  .cover{grid-template-columns:1fr}
-  .page{grid-template-columns:1fr}
-  .rules{grid-template-columns:1fr}
-  .timer{grid-template-columns:1fr auto}
+  .cover{grid-template-columns:minmax(0,1fr)}
+  .page{grid-template-columns:minmax(0,1fr)}
+  .rules{grid-template-columns:minmax(0,1fr)}
+  .timer{grid-template-columns:minmax(0,1fr) auto}
   .timer .now{grid-column:1/-1;grid-row:2}
   .say{font-size:14.5px;max-width:62%}
 }
@@ -114,10 +114,10 @@ body{margin:0;font-family:var(--body)}
   .part{break-after:avoid;margin:18px 0 10px}
   .part.fast{break-before:page}
   .page{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
-  .cover{grid-template-columns:1.15fr 1fr!important}
+  .cover{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)!important}
   .cover figure{max-height:330px;overflow:hidden}
   .rules{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  .donts{grid-template-columns:repeat(3,minmax(0,1fr))}.dont{grid-template-columns:44px 1fr}.dont svg{width:44px;height:44px}.dont p{font-size:12.5px}
+  .donts{grid-template-columns:repeat(3,minmax(0,1fr))}.dont{grid-template-columns:44px minmax(0,1fr)}.dont svg{width:44px;height:44px}.dont p{font-size:12.5px}
   .pnl .cap{padding:8px 10px 10px}.pnl p{font-size:12.5px}.pnl h3{font-size:17px}
   .say{font-size:13px}
   .cover .title,.finale,.rule,.part h2,.pnl .no,.pnl .art{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -127,7 +127,7 @@ body{margin:0;font-family:var(--body)}
 .calc{border:3px solid var(--ink);background:var(--sheet);box-shadow:6px 6px 0 var(--ink);padding:14px 16px 12px;margin:0 0 28px;background-image:radial-gradient(var(--dot) 1.1px,transparent 1.3px);background-size:10px 10px;background-color:#fff}
 .calc-head h3{font-family:var(--head);font-weight:500;text-transform:uppercase;font-size:22px;margin:0;line-height:1.1}
 .calc-head p{font-family:var(--hand);font-size:16px;margin:2px 0 10px;color:var(--muted)}
-.calc-row{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:end}
+.calc-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:end}
 .calc-row b{font-family:var(--head);font-size:22px;padding-bottom:10px;color:var(--berry)}
 .calc label{display:flex;flex-direction:column;position:relative;min-width:0}
 .calc label span{font:800 12.5px var(--body);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
@@ -137,7 +137,7 @@ body{margin:0;font-family:var(--body)}
 .calc .cup input{background:var(--gold)}
 .calc-say{min-height:0;margin:8px 0 0;font-family:var(--hand);font-size:15px;color:var(--berry)}
 .calc-say:empty{display:none}
-@media (max-width:420px){.calc-row{grid-template-columns:1fr 1fr 1fr}.calc-row b{display:none}}
+@media (max-width:420px){.calc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)}.calc-row b{display:none}}
 @media print{.calc{display:none}}
 
 /* Лінійна карта таймера */
@@ -171,7 +171,7 @@ body{margin:0;font-family:var(--body)}
 .ft-log p{margin:4px 0 8px;font-family:var(--hand);font-size:16.5px;line-height:1.35}
 .timer .now.go{color:var(--water)}
 .timer .now.go::before{content:"▶";margin-right:6px;color:var(--ink)}
-@media (max-width:520px){.timer{grid-template-columns:auto 1fr}.timer .btns{grid-column:1/-1;flex-direction:row}.timer .btns .btn{flex:1}}
+@media (max-width:520px){.timer{grid-template-columns:auto minmax(0,1fr)}.timer .btns{grid-column:1/-1;flex-direction:row}.timer .btns .btn{flex:1}}
 .ft-pick p span{font-weight:600;color:var(--muted);margin-left:6px}
 .tl-mk.rec::before{background:var(--sheet);border:2px dashed var(--ink);width:2px;margin-left:-3px}
 .tl-mk.rec b,.tl-mk.rec{color:var(--water)}
@@ -194,10 +194,10 @@ body{margin:0;font-family:var(--body)}
 .rc-big{font:500 clamp(40px,11vw,56px)/1 var(--head)}
 .rc-big i{font-style:normal;color:var(--berry)}
 .rc-sub{font:700 14px var(--body);color:var(--muted);margin-top:-4px}
-.rc-f{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:2px 0;align-items:baseline}
+.rc-f{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:2px 0;align-items:baseline}
 .rc-f dt{font:800 11.5px var(--body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
 .rc-f dd{margin:0;font:400 19px/1.2 var(--hand);word-break:break-word}
-.rc-pours{display:grid;grid-template-columns:auto auto 1fr;gap:2px 14px;border-top:3px solid var(--ink);padding-top:8px;align-items:baseline}
+.rc-pours{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:2px 14px;border-top:3px solid var(--ink);padding-top:8px;align-items:baseline}
 .rc-pours span{font:500 18px var(--head);color:var(--muted)}
 .rc-pours b{font:500 19px var(--head)}
 .rc-pours em{font:400 15px var(--hand);font-style:normal;color:var(--berry);text-align:right}
@@ -213,3 +213,8 @@ body{margin:0;font-family:var(--body)}
 .ft-grid .chip:disabled{opacity:.25;box-shadow:none;cursor:default}
 .ft-grid .chip:not(:disabled):active{transform:translate(2px,2px);box-shadow:none}
 .ft-pick p span{display:block;margin:2px 0 0}
+
+/* Safari: картинки й колонки не ширші за екран (інакше iPhone зменшує всю сторінку) */
+.comic{overflow-x:clip}
+.comic img,.comic svg{max-width:100%}
+.cover>*,.page>*,.rules>*,.donts>*,.hub>*,.timer>*,.calc-row>*{min-width:0}

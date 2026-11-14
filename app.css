@@ -9,8 +9,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 #w-kava .pack{padding-top:calc(var(--navh) + 2%)}
 #w-kava .card{padding-top:calc(var(--navh) + 14px)}
 #w-kava .pack .topzone{display:none}
-/* картка лота: з краю (пачка або опис) жест переходить у сусідній світ — браузер робить це сам */
-#w-kava .pager{overscroll-behavior-x:auto}
+/* картка лота гортає лише пачку ↔ опис; перехід у Матрицю з пачки — у app.js (вкладене гортання на iPhone ненадійне) */
+#w-kava .pager{overscroll-behavior-x:contain}
 #w-ask .term.up{top:calc(var(--navh) + 16px)}
 
 /* спосіб приготування на картці лота — посилання на інструкцію */
@@ -31,5 +31,5 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 #w-ask .out .ln.owner{border:1px solid rgba(242,179,61,.35)}
 
 /* кошик: місто і відділення Нової пошти поруч */
-#w-kava .checkout .np2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#w-kava .checkout .np2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 #w-kava .checkout .np2 input{min-width:0}

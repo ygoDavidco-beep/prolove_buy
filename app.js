@@ -60,6 +60,25 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowRight' && cur < KEYS.length - 1) show(KEYS[cur + 1]);
 });
 
+// стрічка → Матриця: чіткий свайп праворуч на пачці (картка вже на першій сторінці).
+// Safari на iPhone не передає жест із вкладеної картки на світи — тому робимо це явно.
+(() => {
+  let t = null;
+  const kava = document.getElementById('w-kava');
+  kava.addEventListener('touchstart', e => {
+    const pg = e.target.closest('.pager');
+    const p = e.touches[0];
+    // від самого краю екрана — це «назад» телефона, не чіпаємо
+    t = pg && pg.scrollLeft < 4 && e.touches.length === 1 && p.clientX > 24 ? { x: p.clientX, y: p.clientY, at: Date.now() } : null;
+  }, { passive: true });
+  kava.addEventListener('touchend', e => {
+    if (!t) return;
+    const p = e.changedTouches[0], dx = p.clientX - t.x, dy = p.clientY - t.y;
+    if (dx > 60 && Math.abs(dx) > 2 * Math.abs(dy) && Date.now() - t.at < 900) show('ask');
+    t = null;
+  }, { passive: true });
+})();
+
 // старт: світ з адреси (?w=ask) або стрічка
 const start = new URLSearchParams(location.search).get('w');
 const first = KEYS.includes(start) ? start : 'kava';

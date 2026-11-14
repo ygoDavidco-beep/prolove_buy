@@ -25,3 +25,7 @@ html:active-view-transition-type(back)::view-transition-new(root){animation-name
 @keyframes pl-out-back{to{transform:translateX(100%)}}
 @keyframes pl-in-back{from{transform:translateX(-22%);opacity:.5}}
 @media (prefers-reduced-motion:reduce){::view-transition-old(root),::view-transition-new(root){animation:none}}
+
+/* Чітка рамка: сторінка рівно на ширину екрана, вбік не тягнеться — лише гортання вгору-вниз */
+html,body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
+body:not(.pl-app){touch-action:pan-y pinch-zoom}

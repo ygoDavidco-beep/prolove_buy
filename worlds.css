@@ -49,7 +49,7 @@
 #w-kava .scl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
 #w-kava .cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 #w-kava .cats span{font-size:12.5px;font-weight:800;border-radius:8px;padding:4px 8px;background:var(--surface2)}
-#w-kava .kv{display:grid;grid-template-columns:110px 1fr;row-gap:6px;font-size:14px;margin:0}
+#w-kava .kv{display:grid;grid-template-columns:110px minmax(0,1fr);row-gap:6px;font-size:14px;margin:0}
 #w-kava .kv dt{color:var(--muted)}
 #w-kava .kv dd{margin:0;font-weight:700}
 #w-kava .meth{display:flex;flex-wrap:wrap;gap:6px}
@@ -85,7 +85,7 @@
 #w-kava .qty button{width:34px;height:34px;padding:0;font-size:18px;font-weight:800}
 #w-kava .checkout{display:flex;flex-direction:column;gap:9px}
 #w-kava .checkout input,#w-kava .checkout textarea{background:#000;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:16px;color:var(--ink)}
-#w-kava .payopt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#w-kava .payopt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 #w-kava .payopt label{border:1px solid var(--line);border-radius:12px;padding:10px;font-weight:800;font-size:14px;cursor:pointer}
 #w-kava .payopt label:has(input:checked){border-color:var(--ink);background:var(--surface2)}
 #w-kava .payopt input{accent-color:var(--flame);margin:0 6px 0 0}
