@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>PROLOVE — Кава</title>
+<meta name="description" content="PROLOVE: кава вогонь. Обирай лот за смаком.">
+<meta property="og:title" content="PROLOVE — Кава вогонь">
+<meta property="og:description" content="Specialty-кава від ростерії PROLOVE: обирай лот за смаком.">
+<meta property="og:image" content="img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="stylesheet" href="base.css">
+<style>
+html,body{height:100%;overflow:hidden}
+.app{position:relative;height:100%;max-width:480px;margin:0 auto;background:var(--bg);overflow:hidden}
+@media (min-width:600px){body{background:#0B0A0B}.app{border-left:1px solid #1a1718;border-right:1px solid #1a1718}}
+
+/* вертикальна стрічка по колу */
+.feed{height:100%;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none}
+.feed::-webkit-scrollbar,.pager::-webkit-scrollbar{display:none}
+.lot{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative}
+/* горизонтально: пачка → картка опису */
+.pager{height:100%;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;scrollbar-width:none}
+.page{flex:0 0 100%;height:100%;scroll-snap-align:start;position:relative;overflow:hidden}
+
+/* ---- пачка: стовпчик PROLOVE → логотип (стискається) → етикетка; нічого не налазить на будь-якій висоті ---- */
+.app{--buyh:calc(62px + env(safe-area-inset-bottom,0px))}
+.pack{background:#000;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 3.5%) 0 calc(var(--buyh) + 46px)}
+.pack .wm{flex:0 0 auto;margin:0 5%}
+.pack .lg{flex:1 1 auto;min-height:70px;position:relative;margin:1.5% 2% 3%}
+.pack .lg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.pack img{width:100%;display:block;pointer-events:none;user-select:none}
+.pack .topzone{position:absolute;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 44px);background:none;border:0;z-index:4}
+.label{flex:0 0 auto;position:relative;margin:0 80px 0 20px;z-index:3;background:none;border:0;padding:0;text-align:left;color:var(--ink)}
+.label .n{font-size:clamp(22px,6.8vw,30px);font-weight:600;line-height:1.1;letter-spacing:-.01em;display:block}
+.label .t{font-size:clamp(14px,3.9vw,16px);font-weight:700;margin:5px 0 8px;line-height:1.35;display:block}
+.label .d{font-size:clamp(12.5px,3.5vw,14.5px);line-height:1.45;color:rgba(246,240,235,.85);display:block}
+.label .m{display:block;margin-top:6px;font-size:clamp(12px,3.3vw,13.5px);font-weight:700;color:rgba(246,240,235,.7)}
+.label .more{display:inline-block;margin-top:7px;font-weight:800;font-size:14px;border-bottom:1.5px solid currentColor;padding-bottom:1px}
+@media (max-height:620px){.label .d{display:none}}
+.rail{position:absolute;right:12px;bottom:calc(var(--buyh) + 46px);display:flex;flex-direction:column;gap:12px;align-items:center;z-index:3}
+.rail button{background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;color:rgba(246,240,235,.8);font-size:10.5px;font-weight:700}
+.rail .ic{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
+.rail svg{width:21px;height:21px;stroke:var(--ink);fill:none;stroke-width:1.9}
+.rail [aria-pressed="true"] svg{fill:#E8394A;stroke:#E8394A}
+.pop{position:absolute;left:50%;top:38%;width:110px;height:110px;margin-left:-55px;pointer-events:none;opacity:0;z-index:5}
+.pop.go{animation:pop .7s ease-out}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}25%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.3) translateY(-20px)}}
+.dots{position:absolute;left:0;right:0;bottom:calc(var(--buyh) + 18px);display:flex;justify-content:center;gap:6px;z-index:3;pointer-events:none}
+.dots b{width:7px;height:7px;border-radius:4px;background:rgba(246,240,235,.35);transition:width .2s}
+.dots b.on{width:20px;background:var(--ink)}
+
+/* ---- картка опису ---- */
+.card{background:radial-gradient(80% 35% at 50% 0%,color-mix(in srgb,var(--lotc) 24%,transparent),transparent 70%),var(--bg2);overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 64px) 20px calc(var(--buyh) + 40px);display:flex;flex-direction:column;gap:13px}
+.dh{display:flex;gap:12px;align-items:center}
+.mini{width:52px;height:70px;border-radius:6px;background:#000;border:1px solid #2a2a2a;display:flex;flex-direction:column;justify-content:center;padding:5px 4px;gap:4px;flex:0 0 auto}
+.mini img{width:100%}
+.dh .nm{font-size:22px;font-weight:600;line-height:1.1}
+.dh .s{font-size:13px;color:var(--muted);margin-top:3px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border-radius:999px;padding:6px 11px;font-weight:800;font-size:14px;border:1px solid currentColor;background:color-mix(in srgb,currentColor 10%,transparent)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:13px 15px}
+.box h4{margin:0 0 10px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sc{height:10px;border-radius:5px;position:relative;margin:4px 0 8px}
+.sc i{position:absolute;top:-5px;width:20px;height:20px;border-radius:50%;border:3px solid var(--bg2);transform:translateX(-50%);box-shadow:0 0 0 2px var(--ink)}
+.scl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+.cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cats span{font-size:12.5px;font-weight:800;border-radius:8px;padding:4px 8px;background:var(--surface2)}
+.kv{display:grid;grid-template-columns:110px 1fr;row-gap:6px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:700}
+.meth{display:flex;flex-wrap:wrap;gap:6px}
+.meth span,.meth button{font-size:13px;font-weight:800;border-radius:10px;padding:6px 10px;border:1px solid var(--line);background:var(--surface2);color:var(--ink)}
+.meth .use{border-color:color-mix(in srgb,var(--teal) 55%,transparent);color:var(--teal);background:none}
+.meth.pick button{cursor:pointer;font-size:14px;padding:9px 12px}
+.desc-p{font-size:15px;line-height:1.55;color:rgba(246,240,235,.9);margin:0}
+
+/* ---- брова ---- */
+.brow{position:absolute;left:0;right:0;top:0;z-index:20;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 16px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg,rgba(0,0,0,.92),rgba(0,0,0,.55));border-bottom:1px solid rgba(255,255,255,.07);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .25s,transform .25s}
+.brow.on{opacity:1;transform:none;pointer-events:auto}
+.brow img{height:18px;display:block}
+.tabs{display:flex;gap:4px}
+.tabs a{text-decoration:none}
+.tabs{gap:2px}
+.tabs button,.tabs a{border:0;background:none;color:rgba(246,240,235,.6);font-weight:700;font-size:13px;padding:6px 10px;border-radius:999px;display:flex;align-items:center;gap:3px}
+.tabs button.on{background:var(--ink);color:#120D0F}
+.tabs svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4}
+
+/* ---- нижня панель ваги: дві компактні кнопки по центру ---- */
+.buy{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;z-index:10}
+.buy button{width:118px;border-radius:14px;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1;border:0;padding:4px 8px}
+.buy .w1{background:var(--ink);color:#120D0F}
+.buy .w2{background:rgba(0,0,0,.45);border:1.5px solid rgba(246,240,235,.35);color:var(--ink);backdrop-filter:blur(6px)}
+.buy b{font-size:15px}.buy small{font-size:11px;opacity:.7;font-weight:700}
+.cartpill{position:absolute;left:14px;bottom:calc(var(--buyh) + 10px);z-index:11;border:0;border-radius:999px;background:var(--flame);color:#120D0F;font-weight:800;padding:7px 13px;font-size:13.5px}
+
+/* ---- штора ---- */
+.shade{position:absolute;inset:0;z-index:30;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .2s}
+.shade.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:72%;z-index:31;background:var(--surface);border-radius:26px 26px 0 0;border-top:1px solid var(--line);padding:10px 20px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:12px;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);overflow-y:auto;touch-action:pan-y}
+.sheet.on{transform:none}
+.handle{width:44px;height:5px;border-radius:3px;background:#4A4044;margin:0 auto;flex:0 0 auto}
+.sh-top{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--line);position:sticky;top:-10px;background:var(--surface);padding-top:4px;z-index:1}
+.sh-top .t{flex:1;min-width:0}
+.sh-top .t b{font-size:20px;font-weight:600;display:block;line-height:1.1}
+.seg{display:inline-flex;margin-top:8px;background:#000;border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{border:0;background:none;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:800;color:var(--muted)}
+.seg button.on{background:var(--ink);color:#120D0F}
+.cta{border:0;border-radius:16px;background:var(--flame);color:#120D0F;font-weight:800;padding:12px 16px;font-size:16px;line-height:1.1;text-align:center}
+.cta small{display:block;font-size:12px;font-weight:700;opacity:.75}
+.sheet h5{margin:2px 0 6px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sheet p{margin:0 0 10px;font-size:15.5px;line-height:1.55;color:rgba(246,240,235,.9)}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding-block:10px;font-size:15px}
+.row2 button{border:1px solid var(--line);background:none;border-radius:10px;padding:6px 10px}
+.qty{display:flex;align-items:center;gap:10px}
+.qty button{width:34px;height:34px;padding:0;font-size:18px;font-weight:800}
+.checkout{display:flex;flex-direction:column;gap:9px}
+.checkout input,.checkout textarea{background:#000;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:16px;color:var(--ink)}
+.payopt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.payopt label{border:1px solid var(--line);border-radius:12px;padding:10px;font-weight:800;font-size:14px;cursor:pointer}
+.payopt label:has(input:checked){border-color:var(--ink);background:var(--surface2)}
+.payopt input{accent-color:var(--flame);margin:0 6px 0 0}
+.payopt small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin-top:3px}
+.consent{margin:0;font-size:12px;color:var(--muted);line-height:1.45}
+.consent a{color:rgba(246,240,235,.8)}
+.saved{margin:0;color:var(--teal);font-weight:800;font-size:14.5px}
+.hint-soft{margin:0;font-size:13.5px;color:var(--muted);border-left:2px solid var(--flame);padding-left:10px}
+.row2 s{opacity:.55}
+.checkout .msg{color:#F2B33D;font-weight:700;font-size:14px;min-height:18px}
+.mood{border:1.5px solid currentColor;background:none;border-radius:14px;padding:13px;text-align:left;font-weight:800;font-size:16px}
+.loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:15px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="feed" id="feed" aria-label="Стрічка лотів"><div class="loading">Завантажую лоти…</div></div>
+
+  <header class="brow" id="brow">
+    <a href="info.html" aria-label="Про PROLOVE: контакти і підтримка"><img src="img/wordmark.png" alt="PROLOVE"></a>
+    <nav class="tabs" aria-label="Розділи">
+      <a href="index.html?w=ask">Запитай</a>
+      <button type="button" class="on" aria-current="page">Кава</button>
+      <a href="index.html?w=brew">Заварити</a>
+      <a href="index.html?w=partners" aria-label="Партнерам"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a>
+    </nav>
+  </header>
+
+  <button class="cartpill" id="cartPill" type="button" hidden>Кошик</button>
+  <div class="buy" id="buy">
+    <button class="w1" type="button" data-w="250"><b>250 г</b><small id="p250">—</small></button>
+    <button class="w2" type="button" data-w="1000"><b>1 кг</b><small id="p1000">—</small></button>
+  </div>
+
+  <div class="shade" id="shade"></div>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Опис лота"></section>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+<script type="module" src="demo-shim.js"></script>
+<script type="module" src="feed.js"></script>
+<script type="module" src="swipe.js"></script>
+</body>
+</html>

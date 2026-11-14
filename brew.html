@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E6E1D5">
+<title>Як заварити — PROLOVE</title>
+<meta name="description" content="Комікс-інструкції PROLOVE: дріп, а далі турка, гейзер і фільтр.">
+<meta property="og:image" content="img/drip-xmas.webp">
+<link rel="icon" href="img/favicon.png">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="drip.css">
+<style>
+.hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.hub a{text-decoration:none;color:var(--ink)}
+.hub .pnl .art{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+.hub .pnl img{width:100%;height:100%;object-fit:cover;display:block}
+.tipf{margin:0 0 28px}.tipf .cap{padding-left:46px}
+.soon .art{font-family:var(--head);font-size:clamp(30px,6vw,46px);text-transform:uppercase;color:var(--berry);text-align:center;line-height:1}
+@media (max-width:720px){.hub{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="comic">
+  <nav class="topbar"><a href="index.html" aria-label="PROLOVE — стрічка кави"><img src="img/wordmark.png" alt="PROLOVE"></a><a href="index.html?w=ask">Підібрати каву</a></nav>
+  <div class="part"><h2>Як заварити</h2><p>комікси з таймером — від пачки до чашки</p></div>
+  <section class="calc" data-calc data-coffee="15" aria-label="Калькулятор порції"></section>
+  <section class="timer ft" id="ft" aria-label="Секундомір фільтра"></section>
+  <section class="rcwrap" id="rcWrap" hidden aria-label="Картка рецепту">
+    <div class="rc-edit"><h3>Картка рецепту</h3><p>Додай свої поля — помел, каву, температуру. Потім скріншот картки або «Зберегти картинку». Поля запам'ятаються на наступний раз.</p>
+      <div id="rcFields"></div><div class="rc-addrow" id="rcAdd"></div></div>
+    <div class="rc" id="rcCard"></div>
+    <button class="btn" type="button" id="rcSave">Зберегти картинку</button>
+  </section>
+  <aside class="pnl tipf"><span class="no">!</span><div class="cap"><h3>Фільтр: <em>200–300 мл за ~2 хв</em></h3><p>Стільки води має стекти крізь кавовий шар приблизно за 2 хвилини. Пролітає швидше — <b>вода холодна</b> або <b>помел завеликий</b>: нагрій воду сильніше або змели дрібніше.</p></div></aside>
+  <section class="hub">
+    <a href="drip.html"><article class="pnl"><span class="no">1</span><div class="art"><img src="img/drip-xmas.webp" alt="Дріп PROLOVE Raspberry Mulled Wine"></div>
+      <div class="cap"><h3>Дріп <em>за 3 хвилини</em></h3><p>Вдома з вагами і в дорозі без ваг. Гори, потяг, чого не робити — і таймер, який підкаже, коли доливати.</p></div></article></a>
+    <article class="pnl soon"><span class="no">2</span><div class="art">Турка<br>Гейзер<br>Фільтр</div>
+      <div class="cap"><h3>Скоро</h3><p>Малюємо наступні випуски. Хочеш якийсь раніше — напиши нам в Instagram.</p></div></article>
+  </section>
+  <div class="next"><a class="btn" href="index.html">До кави PROLOVE</a><a class="btn ghost" href="info.html">Інфо і контакти</a></div>
+</main>
+<script type="module" src="demo-shim.js"></script>
+<script type="module" src="calc.js"></script>
+<script type="module" src="filter.js"></script>
+<script type="module" src="swipe.js"></script>
+</body>
+</html>

@@ -1,0 +1,1250 @@
+{
+ "flame_stops": [
+  [
+   0,
+   "#5EC4CC"
+  ],
+  [
+   0.2,
+   "#6CD0D6"
+  ],
+  [
+   0.33,
+   "#FF6F8E"
+  ],
+  [
+   0.5,
+   "#E8394A"
+  ],
+  [
+   0.75,
+   "#F07A3A"
+  ],
+  [
+   1,
+   "#F2B33D"
+  ]
+ ],
+ "weights_by_order": [
+  1,
+  0.8,
+  0.6,
+  0.4,
+  0.3
+ ],
+ "overrides": {
+  "dried_fruit": [
+   "berry",
+   "fruit_fresh",
+   "fruit_stone"
+  ]
+ },
+ "process_defaults": {
+  "washed": 0.3,
+  "honey": 0.5,
+  "natural": 0.6,
+  "anaerobic": 0.55,
+  "wine_fermented": 0.6,
+  "other": 0.5
+ },
+ "neutral_color": "#F6F0EB",
+ "categories": [
+  {
+   "code": "sour",
+   "sca": "Sour/Fermented › Sour",
+   "uk": "Кисла",
+   "flame": 0,
+   "sort": 0
+  },
+  {
+   "code": "citrus",
+   "sca": "Fruity › Citrus Fruit",
+   "uk": "Цитрусова",
+   "flame": 0.05,
+   "sort": 1
+  },
+  {
+   "code": "green",
+   "sca": "Green/Vegetative",
+   "uk": "Трав'яниста",
+   "flame": 0.1,
+   "sort": 2
+  },
+  {
+   "code": "floral",
+   "sca": "Floral",
+   "uk": "Квіткова",
+   "flame": 0.2,
+   "sort": 3
+  },
+  {
+   "code": "tea",
+   "sca": "Floral › Black Tea",
+   "uk": "Чайна",
+   "flame": 0.22,
+   "sort": 4
+  },
+  {
+   "code": "berry",
+   "sca": "Fruity › Berry",
+   "uk": "Ягідна",
+   "flame": 0.27,
+   "sort": 5
+  },
+  {
+   "code": "fruit_fresh",
+   "sca": "Fruity › Other Fruit",
+   "uk": "Фруктова свіжа",
+   "flame": 0.35,
+   "sort": 6
+  },
+  {
+   "code": "fruit_stone",
+   "sca": "Fruity › Other Fruit (cherry, grape, plum)",
+   "uk": "Кісточкова, виноград",
+   "flame": 0.45,
+   "sort": 7
+  },
+  {
+   "code": "cocoa",
+   "sca": "Nutty/Cocoa › Cocoa",
+   "uk": "Шоколад, какао",
+   "flame": 0.62,
+   "sort": 8
+  },
+  {
+   "code": "vanilla",
+   "sca": "Sweet › Vanilla/Vanillin",
+   "uk": "Ваніль, вершки",
+   "flame": 0.65,
+   "sort": 9
+  },
+  {
+   "code": "brown_sugar",
+   "sca": "Sweet › Brown Sugar",
+   "uk": "Мед, карамель",
+   "flame": 0.7,
+   "sort": 10
+  },
+  {
+   "code": "nutty",
+   "sca": "Nutty/Cocoa › Nutty",
+   "uk": "Горіхова",
+   "flame": 0.75,
+   "sort": 11
+  },
+  {
+   "code": "dried_fruit",
+   "sca": "Fruity › Dried Fruit",
+   "uk": "Сухофрукти, варення",
+   "flame": 0.8,
+   "sort": 12
+  },
+  {
+   "code": "spice",
+   "sca": "Spices › Brown Spice",
+   "uk": "Прянощі",
+   "flame": 0.85,
+   "sort": 13
+  },
+  {
+   "code": "fermented",
+   "sca": "Sour/Fermented › Alcohol/Fermented",
+   "uk": "Алкогольна, вино",
+   "flame": 0.9,
+   "sort": 14
+  },
+  {
+   "code": "roasted",
+   "sca": "Roasted",
+   "uk": "Обсмажена, злаки",
+   "flame": 0.95,
+   "sort": 15
+  }
+ ],
+ "descriptors": [
+  {
+   "word": "кислий",
+   "cat": "sour",
+   "aliases": [
+    "кисла",
+    "кислинка"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "оцтовий",
+   "cat": "sour",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лимон",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лайм",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "грейпфрут",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "апельсин",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "мандарин",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "бергамот",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "юдзу",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "цедра",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "цитрус",
+   "cat": "citrus",
+   "aliases": [
+    "цитрусовий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "помело",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лемонграс",
+   "cat": "citrus",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "зелене яблуко",
+   "cat": "green",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "огірок",
+   "cat": "green",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "свіжа трава",
+   "cat": "green",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "м'ята",
+   "cat": "green",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "зелений чай",
+   "cat": "green",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "жасмин",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "троянда",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лаванда",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "бузина",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ромашка",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "апельсиновий цвіт",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "гібіскус",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "фіалка",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "квіти",
+   "cat": "floral",
+   "aliases": [
+    "квітковий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "жимолость",
+   "cat": "floral",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "чорний чай",
+   "cat": "tea",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ерл грей",
+   "cat": "tea",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "чай",
+   "cat": "tea",
+   "aliases": [
+    "чайний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "журавлина",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "малина",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "полуниця",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "суниця",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "чорниця",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лохина",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ожина",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "смородина",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "червона смородина",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "брусниця",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "обліпиха",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "барбарис",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ягоди",
+   "cat": "berry",
+   "aliases": [
+    "ягідний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "агрус",
+   "cat": "berry",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ананас",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "манго",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "маракуя",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "папая",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "гуава",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лічі",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "тропічні фрукти",
+   "cat": "fruit_fresh",
+   "aliases": [
+    "тропічний сік",
+    "тропіки",
+    "тропічний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "персик",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "абрикос",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "нектарин",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "яблуко",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "червоне яблуко",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "груша",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "айва",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "банан",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ківі",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "диня",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кавун",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кокос",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "гранат",
+   "cat": "fruit_fresh",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "фрукти",
+   "cat": "fruit_fresh",
+   "aliases": [
+    "фруктовий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "вишня",
+   "cat": "fruit_stone",
+   "aliases": [
+    "вишневий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "черешня",
+   "cat": "fruit_stone",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "слива",
+   "cat": "fruit_stone",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "виноград",
+   "cat": "fruit_stone",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "червоний виноград",
+   "cat": "fruit_stone",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "мускат",
+   "cat": "fruit_stone",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "аличе",
+   "cat": "fruit_stone",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "шоколад",
+   "cat": "cocoa",
+   "aliases": [
+    "шоколадний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "чорний шоколад",
+   "cat": "cocoa",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "молочний шоколад",
+   "cat": "cocoa",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "какао",
+   "cat": "cocoa",
+   "aliases": [
+    "какаовий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "какао-боби",
+   "cat": "cocoa",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "праліне",
+   "cat": "cocoa",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "нуга",
+   "cat": "cocoa",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ваніль",
+   "cat": "vanilla",
+   "aliases": [
+    "ванільний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "вершки",
+   "cat": "vanilla",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "вершкове масло",
+   "cat": "vanilla",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "бісквіт",
+   "cat": "vanilla",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "марципан",
+   "cat": "vanilla",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "мед",
+   "cat": "brown_sugar",
+   "aliases": [
+    "медовий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "карамель",
+   "cat": "brown_sugar",
+   "aliases": [
+    "карамельний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ірис",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "тростинний цукор",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кленовий сироп",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "патока",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "цукрова вата",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "сироп",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "солодка",
+   "cat": "brown_sugar",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "горіх",
+   "cat": "nutty",
+   "aliases": [
+    "горіховий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "фундук",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "мигдаль",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "волоський горіх",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "арахіс",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "пекан",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кешью",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "фісташка",
+   "cat": "nutty",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "сухофрукти",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "сушені ягоди",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "родзинки",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ізюм",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "чорнослив",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "інжир",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "фінік",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "курага",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "варення",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "джем",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "конфітюр",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "вишневе варення",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "малинове варення",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "сушена вишня",
+   "cat": "dried_fruit",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кориця",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "гвоздика",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кардамон",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "мускатний горіх",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "аніс",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "бадьян",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "імбир",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "чорний перець",
+   "cat": "spice",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "прянощі",
+   "cat": "spice",
+   "aliases": [
+    "пряний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ром",
+   "cat": "fermented",
+   "aliases": [
+    "ромовий"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "темний ром",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "вино",
+   "cat": "fermented",
+   "aliases": [
+    "винний"
+   ],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "червоне вино",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "біле вино",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "коньяк",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "бренді",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "віскі",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "лікер",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "портвейн",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "херес",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "ферментований",
+   "cat": "fermented",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "тютюн",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "кедр",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "солод",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "злаки",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "хліб",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "тост",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "дим",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "смажені горіхи",
+   "cat": "roasted",
+   "aliases": [],
+   "flame": null,
+   "color": null
+  },
+  {
+   "word": "білий шоколад",
+   "cat": "vanilla",
+   "aliases": [
+    "білого шоколаду"
+   ],
+   "flame": null,
+   "color": null
+  }
+ ],
+ "moods": [
+  {
+   "code": "sour_berries",
+   "uk": "Кислі ягоди",
+   "flame": 0.2
+  },
+  {
+   "code": "choc_cherry",
+   "uk": "Шоколад і вишня",
+   "flame": 0.55
+  },
+  {
+   "code": "dried_fruit",
+   "uk": "Сухофрукти",
+   "flame": 0.8
+  },
+  {
+   "code": "alcohol",
+   "uk": "Алкогольні ноти",
+   "flame": 0.9
+  }
+ ]
+}

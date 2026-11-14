@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>PROLOVE — Кава вогонь</title>
+<meta name="description" content="PROLOVE: кава вогонь. Обирай лот за смаком.">
+<meta property="og:title" content="PROLOVE — Кава вогонь">
+<meta property="og:description" content="Specialty-кава від ростерії PROLOVE: обирай лот за смаком.">
+<meta property="og:image" content="img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden;overscroll-behavior:none}
+.view{position:fixed;inset:0;overflow:hidden;background:#000}
+.track{position:relative;display:flex;height:100%;width:400%;will-change:transform;transform:translate3d(-25%,0,0)}
+.track iframe{flex:0 0 25%;width:25%;height:100%;border:0;display:block;background:#000}
+.track iframe[data-w="brew"]{background:#E6E1D5}
+/* газетний аркуш лежить на темному столі: м'яка тінь на стику з темними світами */
+.edge{position:absolute;top:0;bottom:0;width:26px;pointer-events:none;z-index:2}
+.edge.l{left:50%;background:linear-gradient(90deg,rgba(0,0,0,.42),rgba(0,0,0,.12) 45%,rgba(0,0,0,0))}
+.edge.r{left:75%;transform:translateX(-100%);background:linear-gradient(270deg,rgba(0,0,0,.42),rgba(0,0,0,.12) 45%,rgba(0,0,0,0))}
+</style>
+</head>
+<body>
+<div class="view">
+  <div class="track" id="track">
+    <iframe data-w="ask" data-src="ask.html" title="Запитай"></iframe>
+    <iframe data-w="kava" data-src="kava.html" title="Кава"></iframe>
+    <iframe data-w="brew" data-src="brew.html" title="Як заварити"></iframe>
+    <iframe data-w="partners" data-src="partners.html" title="Партнерам"></iframe>
+    <div class="edge l" aria-hidden="true"></div><div class="edge r" aria-hidden="true"></div>
+  </div>
+</div>
+<script type="module" src="shell.js"></script>
+</body>
+</html>

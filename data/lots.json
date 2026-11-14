@@ -1,0 +1,173 @@
+[
+ {
+  "farm": null,
+  "altitude": "800–1000 м і 2000–2100 м",
+  "description": "Бленд для еспресо і молочних напоїв: 60% бразильського Сантоса натуральної обробки (800–1000 м над рівнем моря) і 40% ферментованої Ефіопії Гуджі (2000–2100 м). Бразилія дає горіх і шоколад, Ефіопія — яскраву свіжу кислотність і насичений смак. Разом — збалансована чашка, яка чудово звучить у капучино й лате.",
+  "flame_override": null,
+  "id": "guji-blend",
+  "name": "Guji Blend",
+  "country": "Бразилія 60% + Ефіопія 40%",
+  "taste": "Тропічний сік, Ягоди, Шоколад, Ром",
+  "process": "anaerobic",
+  "process_label": "Натуральна + ферментована",
+  "price250": 400,
+  "price1000": 1200,
+  "sort": 0,
+  "methods": [
+   "espresso",
+   "superauto",
+   "milk",
+   "cafe"
+  ],
+  "variety": null
+ },
+ {
+  "id": "colombia-narino",
+  "name": "Colombia Narino",
+  "country": "Колумбія",
+  "taste": "Ананас, Тропічні фрукти, Шоколад",
+  "process": "washed",
+  "process_label": "Мита",
+  "farm": "Narino",
+  "altitude": "2100–2300 м",
+  "description": "",
+  "price250": 480,
+  "price1000": 1280,
+  "flame_override": null,
+  "sort": 1,
+  "methods": [
+   "superauto",
+   "moka",
+   "cezve",
+   "filter",
+   "cafe"
+  ],
+  "variety": null
+ },
+ {
+  "id": "brazil-rio-minas",
+  "name": "Brazil Rio Minas",
+  "country": "Бразилія",
+  "taste": "Шоколад, Горіх, Сушені Ягоди",
+  "process": "natural",
+  "process_label": "Натуральна",
+  "farm": "Minas",
+  "altitude": "750–950 м",
+  "description": "Класична кава з найменшою кислотністю в нашому асортименті. Шоколадні й горіхові ноти міцного напою — але без гіркоти. Найкраще розкривається в молочних напоях: капучино, лате, флет вайт.",
+  "price250": 400,
+  "price1000": 1170,
+  "flame_override": null,
+  "sort": 2,
+  "methods": [
+   "espresso",
+   "superauto",
+   "moka",
+   "milk",
+   "cafe"
+  ],
+  "variety": null
+ },
+ {
+  "farm": null,
+  "altitude": null,
+  "description": null,
+  "flame_override": null,
+  "id": "kenya-kegwa",
+  "name": "Kenya Kegwa",
+  "country": "Кенія",
+  "taste": "Смородина, Білий шоколад, Ягідний посмак",
+  "process": "washed",
+  "process_label": "Мита",
+  "price250": 550,
+  "price1000": 1400,
+  "sort": 3,
+  "methods": [
+   "filter",
+   "cezve",
+   "moka"
+  ],
+  "variety": null
+ },
+ {
+  "id": "honduras-el-jardin",
+  "name": "Honduras El Jardin",
+  "country": "Гондурас",
+  "taste": "Вишня в Шоколаді, Жасмин, Темний Ром",
+  "process": "natural",
+  "process_label": "Натуральна",
+  "farm": "El Jardin",
+  "altitude": "1500 м",
+  "description": "Наш фаворит за солодкістю чашки. Солодкість на межі, але кислотність збережена повністю: свіжа вишня врівноважує солодкий шоколад, а фінал довгий, з нотою темного рому. При легкому заварюванні проступають алкогольні ноти — експериментуй з рецептом і отримуй щодня інший настрій чашки. Однаково добра і в молоці, і у фільтрі.",
+  "price250": 480,
+  "price1000": 1300,
+  "flame_override": null,
+  "sort": 4,
+  "methods": [
+   "milk",
+   "filter"
+  ],
+  "variety": null
+ },
+ {
+  "farm": null,
+  "altitude": null,
+  "description": "Мита обробка і щільне зерно з високогір'я дозволяють готувати цю каву на вогні майже без прогіркання. Створена для гейзера й турки: розтягни заварювання до 4–6 хвилин на малому вогні — і чашка вийде солодкою та чистою.",
+  "flame_override": null,
+  "id": "honduras-aruco",
+  "name": "Honduras Aruco",
+  "country": "Гондурас",
+  "taste": "Шоколад, Квіти, Сушені ягоди",
+  "process": "washed",
+  "process_label": "Мита",
+  "price250": 450,
+  "price1000": 1250,
+  "sort": 5,
+  "methods": [
+   "superauto",
+   "moka",
+   "cezve"
+  ],
+  "variety": null
+ },
+ {
+  "id": "el-salvador-morazan",
+  "name": "El Salvador Morazan",
+  "country": "Сальвадор",
+  "taste": "Журавлина, Грейпфрут, Лимон, Какао",
+  "process": "anaerobic",
+  "process_label": "Природна анаеробна",
+  "farm": "Асоціація фермерів Acalem DE L.M.",
+  "altitude": "1200 м н.р.м.",
+  "description": "",
+  "price250": 435,
+  "price1000": 1220,
+  "flame_override": null,
+  "sort": 6,
+  "methods": [
+   "filter"
+  ],
+  "variety": null
+ },
+ {
+  "id": "rwanda-akagera",
+  "name": "Rwanda Akagera",
+  "country": "Руанда, регіон Акагера (північний схід)",
+  "taste": "Жовті фрукти, Родзинки, Горіх",
+  "process": "natural",
+  "process_label": "Натуральна",
+  "farm": "Farms of Akagera",
+  "altitude": "1650–1810 м",
+  "variety": "Red Bourbon",
+  "description": "Ідеальна для суперавтоматів: висока екстрактивність, тримає тіло в молочних напоях. Нагадує класику минулого покоління — але без гіркоти. Червоний бурбон натуральної обробки з регіону Акагера на північному сході Руанди, 1650–1810 м над рівнем моря, оцінка 83,25.",
+  "price250": null,
+  "price1000": null,
+  "flame_override": null,
+  "methods": [
+   "superauto",
+   "milk",
+   "cafe"
+  ],
+  "sort": 7,
+  "active": 1
+ }
+]

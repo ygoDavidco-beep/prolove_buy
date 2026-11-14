@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="theme-color" content="#000000">
+<title>PROLOVE — Що хочеш відчути?</title>
+<meta name="description" content="Напиши смак або спосіб приготування — PROLOVE підбере каву.">
+<meta property="og:title" content="PROLOVE — Що хочеш відчути?">
+<meta property="og:description" content="Одне поле: смак або спосіб — і кава знаходиться сама.">
+<meta property="og:image" content="img/og.png">
+<link rel="icon" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="stylesheet" href="base.css">
+<style>
+html,body{height:100%;overflow:hidden;background:#000}
+.app{position:relative;height:100%;max-width:820px;margin:0 auto;overflow:hidden}
+#rain{position:absolute;inset:0;width:100%;height:100%;display:block}
+.veil{position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 46%,rgba(0,0,0,.92),rgba(0,0,0,.55) 60%,rgba(0,0,0,.15));pointer-events:none;transition:opacity .6s}
+.brow{position:absolute;left:0;right:0;top:0;z-index:5;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 8px 16px;display:flex;align-items:center;justify-content:space-between;padding-bottom:22px;background:linear-gradient(180deg,#000 62%,rgba(0,0,0,0))}
+.brow img{height:18px;display:block}
+.tabs{display:flex;gap:2px}
+.tabs a{text-decoration:none;color:rgba(246,240,235,.6);font-weight:700;font-size:13px;padding:6px 9px;border-radius:999px;display:flex;align-items:center;gap:3px}
+.tabs a.on{background:var(--ink);color:#120D0F}
+.tabs svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4}
+.term{position:absolute;left:0;right:0;top:50%;transform:translateY(-58%);z-index:4;padding:0 max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;align-items:center;gap:14px;transition:top .5s,transform .5s}
+.term.up{top:calc(env(safe-area-inset-top,0px) + 72px);transform:none}
+.ask{position:relative;width:min(560px,100%)}
+.ask label{display:block;font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(26px,7vw,40px);line-height:1;text-align:center;margin-bottom:14px;color:var(--ink)}
+.ask input{width:100%;box-sizing:border-box;background:rgba(0,0,0,.75);border:1.5px solid rgba(94,196,204,.55);border-radius:14px;padding:15px 52px 15px 16px;font:600 17px/1.2 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:#E9FFFB;caret-color:var(--teal);outline:none;box-shadow:0 0 0 0 rgba(94,196,204,0);transition:box-shadow .3s,border-color .3s}
+.ask input:focus{border-color:var(--teal);box-shadow:0 0 24px rgba(94,196,204,.25)}
+.ask input::placeholder{color:rgba(233,255,251,.38)}
+.ask button{position:absolute;right:7px;bottom:7px;width:40px;height:40px;border:0;border-radius:10px;background:var(--teal);color:#06292C;font-weight:900;font-size:18px;cursor:pointer}
+.hint{font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;color:rgba(233,255,251,.45);text-align:center}
+.hint button{background:none;border:0;padding:0 2px;font:inherit;color:rgba(233,255,251,.75);text-decoration:underline dotted;cursor:pointer}
+.out{width:min(560px,100%);font:14.5px/1.55 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:#CFEDEA;max-height:52vh;overflow-y:auto}
+.out .ln{white-space:pre-wrap;word-break:break-word}
+.out .dim{color:rgba(207,237,234,.5)}
+.out a.lot{display:block;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.72);border-radius:12px;padding:10px 12px;margin:8px 0}
+.out a.lot b{font-family:var(--body);font-size:17px;color:var(--ink)}
+.out a.lot .go{float:right;color:var(--teal);font-weight:700}
+.out a.lot small{display:block;color:rgba(207,237,234,.6);margin-top:2px}
+.cur::after{content:"▍";animation:blink 1s steps(2) infinite;color:var(--teal)}
+@keyframes blink{50%{opacity:0}}
+.foot{position:absolute;left:0;right:0;bottom:0;z-index:4;display:flex;justify-content:center;gap:16px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));font-size:12.5px;padding-top:24px;background:linear-gradient(0deg,#000 58%,rgba(0,0,0,0))}
+.foot a{color:rgba(246,240,235,.6);text-decoration:none;font-weight:700}
+@media (prefers-reduced-motion:reduce){.term{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <canvas id="rain" aria-hidden="true"></canvas>
+  <div class="veil" id="veil"></div>
+  <header class="brow"><a href="info.html" aria-label="Про PROLOVE"><img src="img/wordmark.png" alt="PROLOVE"></a>
+    <nav class="tabs" aria-label="Розділи">
+      <a href="index.html?w=ask" class="on" aria-current="page">Запитай</a><a href="index.html">Кава</a><a href="index.html?w=brew">Заварити</a>
+      <a href="index.html?w=partners" aria-label="Партнерам"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></a>
+    </nav></header>
+  <main class="term" id="term">
+    <form class="ask" id="ask" autocomplete="off">
+      <label for="q">Що хочеш відчути?</label>
+      <input id="q" name="q" maxlength="300" enterkeyhint="search" placeholder="вишня й шоколад…">
+      <button type="submit" aria-label="Знайти">↵</button>
+    </form>
+    <div class="hint" id="hint">смак або спосіб: <button type="button">ягоди</button> · <button type="button">шоколад і горіх</button> · <button type="button">для турки</button> · <button type="button">під капучино</button></div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </main>
+  <nav class="foot"><a href="info.html">Інфо і контакти</a><a href="index.html?w=brew">Як заварити</a><a href="https://instagram.com/prolove_coffee" target="_blank" rel="noopener">Instagram</a></nav>
+</div>
+<script type="module" src="demo-shim.js"></script>
+<script type="module" src="ask.js"></script>
+<script type="module" src="swipe.js"></script>
+</body>
+</html>

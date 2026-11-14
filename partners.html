@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>PROLOVE — Партнерам</title>
+<link rel="icon" href="img/favicon.png">
+<link rel="stylesheet" href="base.css">
+<style>
+body{background:var(--bg);color:var(--ink);font-family:var(--body);margin:0;min-height:100vh}
+button,input{font:inherit;color:inherit}
+.w{max-width:440px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:34px}
+.top img{height:20px}
+.top a{color:var(--muted);text-decoration:none;font-weight:700;font-size:14px}
+h1{font-family:var(--display);font-weight:500;text-transform:uppercase;letter-spacing:.02em;font-size:40px;line-height:1;margin:0 0 14px}
+p{color:rgba(246,240,235,.86);line-height:1.55;font-size:15.5px;margin:0 0 14px}
+.list{margin:0 0 26px;padding:0;list-style:none;display:grid;gap:8px}
+.list li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 14px;font-weight:700;font-size:15px}
+.list li small{display:block;color:var(--muted);font-weight:600;font-size:13px;margin-top:2px}
+.btn{display:block;width:100%;border:0;border-radius:16px;padding:15px;font-weight:800;font-size:16px;cursor:pointer;text-align:center;text-decoration:none;box-sizing:border-box}
+.tg{background:#2AABEE;color:#fff}
+.pri{background:var(--flame);color:#120D0F}
+.ghost{background:none;border:1px solid var(--line);color:var(--ink)}
+.btn+.btn{margin-top:10px}
+.btn:disabled{opacity:.45;cursor:default}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin:18px 0}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+input{width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:17px;margin-bottom:10px}
+input.code{font-size:28px;letter-spacing:.4em;text-align:center;font-weight:800}
+.msg{min-height:22px;color:#F2B33D;font-size:14px;font-weight:700;margin:6px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:16px}
+.st{display:inline-block;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:800;border:1px solid currentColor}
+.fine{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:18px}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="top"><img src="img/wordmark.png" alt="PROLOVE"><a href="index.html">← Кава</a></div>
+
+  <section id="vIn" hidden>
+    <h1>Партнерам</h1>
+    <p>Кабінет для кав'ярень, які працюють на каві PROLOVE.</p>
+    <ul class="list">
+      <li>Бариста Борис<small>налаштування еспресо за смаком, історія шотів</small></li>
+      <li>Журнали НАССР онлайн<small>заповнення з телефона, експорт у файл</small></li>
+      <li>Оптові ціни і «Твоє звичне»<small>повторне замовлення в один дотик</small></li>
+    </ul>
+    <button class="btn tg" type="button" id="tgBtn">Увійти через Telegram</button>
+    <div id="phoneBox" hidden>
+      <div class="or">або за номером</div>
+      <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+380 __ ___ __ __">
+      <button class="btn ghost" type="button" id="phoneBtn">Надіслати код у Telegram</button>
+    </div>
+    <p class="fine">Бот попросить поділитися номером і надішле шестизначний код. Номер потрібен лише для входу й зв'язку щодо замовлень. <a href="legal-privacy.html" style="color:inherit">Політика конфіденційності</a>.</p>
+  </section>
+
+  <section id="vCode" hidden>
+    <h1>Код</h1>
+    <p id="codeHint">Відкрий бота PROLOVE у Telegram, натисни «Поділитися номером» — і я надішлю код.</p>
+    <a class="btn tg" id="openBot" href="#" target="_blank" rel="noopener">Відкрити бота</a>
+    <div style="height:16px"></div>
+    <input class="code" id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="······">
+    <div class="msg" id="msg"></div>
+    <button class="btn pri" type="button" id="verify">Увійти</button>
+    <button class="btn ghost" type="button" id="back">Почати знову</button>
+  </section>
+
+  <section id="vMe" hidden>
+    <h1 id="hi">Привіт</h1>
+    <div class="card"><div id="who"></div></div>
+    <div id="apply" hidden>
+      <p>Щоб відкрити кабінет, залиш заявку. Ми перевіримо заклад і відкриємо доступ — повідомлення прийде в Telegram.</p>
+      <input id="cafe" placeholder="Назва закладу і місто" maxlength="120">
+      <div class="msg" id="msg2"></div>
+      <button class="btn pri" type="button" id="applyBtn">Стати партнером</button>
+    </div>
+    <div id="pending" hidden><p>Заявку отримано. Щойно підтвердимо партнерство — напишемо в Telegram.</p></div>
+    <div id="partner" hidden><p>Ти партнер PROLOVE 🔥 Бариста Борис уже чекає. Журнали НАССР і оптові замовлення — наступні.</p><a class="btn pri" href="partners.html">Відкрити Бариста Бориса</a></div>
+    <div style="height:12px"></div>
+    <a class="btn ghost" href="index.html">До стрічки кави</a>
+    <button class="btn ghost" type="button" id="logout">Вийти</button>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script type="module" src="demo-shim.js"></script>
+<script type="module" src="partners.js"></script>
+<script type="module" src="swipe.js"></script>
+</body>
+</html>

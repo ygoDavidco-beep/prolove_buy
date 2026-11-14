@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E6E1D5">
+<title>Як заварити DRIP — PROLOVE</title>
+<meta name="description" content="Комікс-інструкція: як заварити дріп-каву PROLOVE вдома з вагами і в дорозі без ваг. Таймер з підказками.">
+<meta property="og:title" content="Як заварити DRIP — PROLOVE">
+<meta property="og:description" content="Комікс-інструкція і таймер: вдома, в горах, у потязі.">
+<meta property="og:image" content="img/drip-xmas.webp">
+<link rel="icon" href="img/favicon.png">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="drip.css">
+</head>
+<body>
+<main class="comic">
+  <nav class="topbar"><a href="index.html" aria-label="PROLOVE — стрічка кави"><img src="img/wordmark.png" alt="PROLOVE"></a><a href="index.html?w=brew">Усі інструкції</a></nav>
+
+  <header class="cover">
+    <div class="title">
+      <h1>Як заварити drip</h1>
+      <p>Хоч удома, хоч у потязі, хоч на висоті 2000 м. Три хвилини, гаряча вода і трохи уважності.</p>
+      <span class="stamp">12 г · 95–98°C · 200 г</span>
+    </div>
+    <figure>
+      <img src="img/drip-xmas-label.webp" alt="Етикетка дріпа PROLOVE Raspberry Mulled Wine" width="800" height="1180">
+      <figcaption><b>Raspberry Mulled Wine</b> — Ефіопія, анаеробна ферментація 72 год: темні ягоди, свіжа малина, солодкий шоколад і малиновий глінтвейн.</figcaption>
+    </figure>
+  </header>
+
+  <section class="timer" id="timer" aria-label="Таймер заварювання">
+    <div class="clock" id="clock">0:00</div>
+    <div class="now" id="now" aria-live="polite"></div>
+    <div class="btns"><button class="btn" type="button" id="go">Старт</button><button class="btn ghost" type="button" id="next" hidden>Далі</button></div>
+    <div class="tl" id="tl" aria-hidden="true"></div>
+    <div class="mode">Спосіб: <button class="chip" type="button" data-mode="home" aria-pressed="true">Вдома з вагами</button><button class="chip" type="button" data-mode="trip" aria-pressed="false">У дорозі без ваг</button></div>
+  </section>
+
+  <section class="calc" data-calc data-coffee="12" aria-label="Калькулятор порції"></section>
+
+  <div class="part"><h2>Частина 1. Вдома</h2><p>з вагами і секундоміром</p></div>
+  <section class="page">
+    <article class="pnl"><span class="no">1</span><div class="art" data-art="open"></div>
+      <div class="cap"><h3>Відкриваємо пакет</h3><p>На дріпі є засічка зверху — праворуч або ліворуч. Усередині герметичний фільтр із <b>12 г</b> свіжообсмаженої меленої кави. Азот і щільний пакет бережуть свіжість без кисню.</p></div></article>
+    <article class="pnl"><span class="no">2</span><div class="art" data-art="ears"></div>
+      <div class="cap"><h3>Вушка на чашку</h3><p>Відриваємо верхню стрічку по лінії «Open», розкриваємо «вушка» фільтра і кріпимо його на чашці або склянці.</p></div></article>
+    <article class="pnl"><span class="no">3</span><div class="art" data-art="water"></div><div class="say">Воду став першою!</div>
+      <div class="cap"><h3>Вода <em>95–98°C</em></h3><p>Термочайник — нагрій до 95–98°C. Звичайний чайник — доведи до кипіння й зачекай приблизно 1 хвилину.</p></div></article>
+    <article class="pnl"><span class="no">4</span><div class="art" data-art="scale"></div>
+      <div class="cap"><h3>Ваги на нуль</h3><p>Став чашку з дріпом на ваги, обнули їх. Секундомір запускай <b>разом із першим вливанням</b>.</p></div></article>
+    <article class="pnl"><span class="no">5</span><div class="art" data-art="pour1"></div>
+      <div class="cap"><h3>Перше вливання: <em>40 г</em></h3><p>Чекаємо 30–40 секунд. Це дегазація: кава виділяє CO₂ і готується до екстракції. Витримай цей етап — від нього залежить смак.</p></div></article>
+    <article class="pnl"><span class="no">6</span><div class="art" data-art="pour2"></div>
+      <div class="cap"><h3>Друге: <em>до верху</em>, ще ~60 г</h3><p>Чекаємо, поки вода майже пройде, але на поверхні лишається близько сантиметра. Вода має весь час працювати на екстракцію.</p></div></article>
+    <article class="pnl"><span class="no">7</span><div class="art" data-art="pour3"></div>
+      <div class="cap"><h3>Третє: до <em>190–200 г</em></h3><p>Доливаємо до загальної ваги 190–200 г і даємо воді повністю пройти.</p></div></article>
+    <article class="pnl"><span class="no">8</span><div class="art" data-art="done"></div><div class="say">Холоне — смачнішає</div>
+      <div class="cap"><h3>Готово!</h3><p>Коли у фільтрі не лишилось води — обережно зніми дріп. Перемішай ложкою або круговими обертаннями й дай каві трохи охолонути: смак стає м'якшим і глибшим.</p></div></article>
+  </section>
+
+  <div class="part"><h2>Частина 2. У дорозі</h2><p>без ваг — орієнтуємось по фільтру</p></div>
+  <section class="page">
+    <article class="pnl wide"><span class="no">1</span><div class="art" data-art="kit" style="aspect-ratio:16/5"></div>
+      <div class="cap"><h3>Що взяти</h3><p>DRIP, чашку або термочашку, гарячу воду 95–98°C, секундомір. Ложка — за бажанням: можна розмішати й обертанням чашки (нам так подобається більше). І рівна поверхня — щоб дріп не перекинувся.</p></div></article>
+    <article class="pnl wide"><span class="no">2</span><div class="art" data-art="levels" style="aspect-ratio:16/6"></div>
+      <div class="cap"><h3>Чотири вливання по фільтру</h3><p><b>1.</b> До половини фільтра (~40 мл), чекаємо 30–40 с. <b>2.</b> До верху — чекаємо, поки лишиться ~1 см. <b>3.</b> Знову до верху і знову до ~1 см. <b>4.</b> Доливаємо ще ~1 см — і даємо стекти.</p>
+        <p>Вода щойно закипіла? Хай постоїть не більше хвилини. Краще гарячіша, ніж холодніша: від температури залежать яскравість і солодкість.</p></div></article>
+    <article class="pnl"><span class="no">!</span><div class="art" data-art="mountain"></div><div class="say">Кипить — ще не значить гаряча!</div>
+      <div class="cap"><h3>У горах</h3><p>На висоті ~1500 м вода закипає вже при 94–95°C. Добре закип'яти — і одразу заварюй, не даючи охолонути. Холодно надворі — тримай воду на пальнику на слабкому вогні.</p></div></article>
+    <article class="pnl"><span class="no">!</span><div class="art" data-art="train"></div><div class="say left">Свій дріп завариш сам!</div>
+      <div class="cap"><h3>У потязі</h3><p>Переконайся, що вода від провідника справді гаряча — не менше 95°C. Не довіряй заварювання свого дріпа іншим: тепла вода дає «порожню» каву без аромату й балансу.</p></div></article>
+  </section>
+
+  <div class="part fast"><h2>Стекло надто швидко?</h2><p>тоді кава вийде водяниста — ось що перевірити</p></div>
+  <section class="page">
+    <article class="pnl wide"><span class="no">!</span><div class="art" data-art="foam"></div>
+      <div class="cap"><h3>Дивись на <em>піну</em></h3><p>Якщо вода пролетіла крізь дріп за кілька секунд — найчастіше вона <b>захолодна</b>. Підкаже піна після першого вливання: коричнева й дрібна, як крем, — усе добре. <b>Біла і з великими бульбашками</b> — вода холодна: нагрій сильніше.</p></div></article>
+    <article class="pnl"><span class="no">!</span><div class="art" data-art="dry"></div>
+      <div class="cap"><h3>Не дай каві <em>висохнути</em></h3><p>Кава у фільтрі весь час має бути під водою. Стекло все, а ти ще не долив — кава підсихає, і смак стає пласким.</p></div></article>
+    <article class="pnl"><span class="no">!</span><div class="art" data-art="short"></div>
+      <div class="cap"><h3>Більше, але <em>коротших</em> вливань</h3><p>Стікає швидко — лий частіше й потроху. Так ти розтягнеш час заварювання, і кава встигне віддати смак.</p></div></article>
+  </section>
+
+  <div class="part"><h2>Чого не робити</h2><p>щоб було смачно і відповідально</p></div>
+  <section class="donts" id="donts">
+    <div class="dont"><span data-icon="open"></span><p><b>Не відкривай заздалегідь</b>Кава втрачає аромат на повітрі.</p></div>
+    <div class="dont"><span data-icon="twice"></span><p><b>Не заварюй вдруге</b>Повноцінного смаку вже не буде.</p></div>
+    <div class="dont"><span data-icon="teabag"></span><p><b>Не як чайний пакетик</b>Не занурюй у воду — тільки пролив зверху.</p></div>
+    <div class="dont"><span data-icon="cup"></span><p><b>Не в широку чашку</b>Надто широка чи низька — дріп злетить або впаде.</p></div>
+    <div class="dont"><span data-icon="leave"></span><p><b>Не лишай дріп у чашці</b>Смак стане гірким і невиразним.</p></div>
+    <div class="dont"><span data-icon="cold"></span><p><b>Не холодна вода</b>Буде кисло, водянисто, без аромату.</p></div>
+    <div class="dont"><span data-icon="nature"></span><p><b>Не смітимо в природі</b>У горах і біля річок — забирай дріп із собою.</p></div>
+  </section>
+
+  <div class="part"><h2>Три основи</h2></div>
+  <section class="rules">
+    <div class="rule"><span class="big">95–98°C</span><span>температура води</span></div>
+    <div class="rule"><span class="big">0:00</span><span>секундомір обов'язковий</span></div>
+    <div class="rule"><span class="big">♥</span><span>уважність до деталей</span></div>
+  </section>
+  <p class="finale">DRIP — це не просто швидка кава. Це повноцінний кавовий досвід, який можна взяти з собою куди завгодно. Насолоджуйся й відкривай нові смакові грані!</p>
+
+  <div class="next"><a class="btn" href="index.html">Більше кави PROLOVE</a><a class="btn ghost" href="index.html?w=ask">Підібрати каву</a><a class="btn ghost" href="https://instagram.com/prolove_coffee" target="_blank" rel="noopener">Instagram</a></div>
+  <p class="foot">PROLOVE · Кава вогонь</p>
+</main>
+<script type="module" src="demo-shim.js"></script>
+<script type="module" src="drip.js"></script>
+<script type="module" src="calc.js"></script>
+</body>
+</html>
