@@ -8,18 +8,19 @@
 <meta name="description" content="Комікс-інструкції PROLOVE: дріп, а далі турка, гейзер і фільтр.">
 <meta property="og:image" content="img/drip-xmas.webp">
 <link rel="icon" href="img/favicon.png">
-<link rel="stylesheet" href="base.css?v=mwguvrl9">
-<link rel="stylesheet" href="nav.css?v=mwguvrl9">
-<script src="nav.js?v=mwguvrl9"></script>
+<link rel="stylesheet" href="base.css?v=mwgv2y8s">
+<link rel="stylesheet" href="nav.css?v=mwgv2y8s">
+<script src="nav.js?v=mwgv2y8s"></script>
 
-<link rel="stylesheet" href="drip.css?v=mwguvrl9">
+<link rel="stylesheet" href="drip.css?v=mwgv2y8s">
 <style>
 .hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .hub a{text-decoration:none;color:var(--ink)}
 .hub .pnl .art{display:flex;align-items:center;justify-content:center;overflow:hidden}
 /* розмір фото задано явно — не залежить від підтримки aspect-ratio у старих iPhone */
-.hub .pnl img{width:100%;max-width:100%;height:min(56vw,300px);object-fit:cover;display:block}
-@media (min-width:721px){.hub .pnl img{height:220px}}
+/* етикетка дріпа цілком, без обрізання */
+.hub .pnl .art{background:#fff;aspect-ratio:auto;height:auto;padding:10px 0}
+.hub .pnl img{display:block;width:auto;max-width:100%;height:auto;max-height:min(70vw,340px);margin:0 auto;object-fit:contain}
 .hub>a,.hub>article{min-width:0;display:block}
 .tipf{margin:0 0 28px}.mhint{background:var(--gold)}.mhint .btn{display:inline-block;text-decoration:none;margin-top:4px}.tipf .cap{padding-left:46px}
 .soon .art{min-height:min(56vw,300px);font-family:var(--head);font-size:clamp(30px,6vw,46px);text-transform:uppercase;color:var(--berry);text-align:center;line-height:1}
@@ -44,16 +45,16 @@
   </section>
   <aside class="pnl tipf"><span class="no">!</span><div class="cap"><h3>Фільтр: <em>200–300 мл за ~2 хв</em></h3><p>Стільки води має стекти крізь кавовий шар приблизно за 2 хвилини. Пролітає швидше — <b>вода холодна</b> або <b>помел завеликий</b>: нагрій воду сильніше або змели дрібніше.</p></div></aside>
   <section class="hub">
-    <a href="drip.html"><article class="pnl"><span class="no">1</span><div class="art"><img src="img/drip-xmas.webp" alt="Дріп PROLOVE Raspberry Mulled Wine"></div>
+    <a href="drip.html"><article class="pnl"><span class="no">1</span><div class="art"><img src="img/drip-xmas-label.webp" alt="Дріп PROLOVE Raspberry Mulled Wine" width="786" height="936"></div>
       <div class="cap"><h3>Дріп <em>за 3 хвилини</em></h3><p>Вдома з вагами і в дорозі без ваг. Гори, потяг, чого не робити — і таймер, який підкаже, коли доливати.</p></div></article></a>
     <article class="pnl soon"><span class="no">2</span><div class="art">Турка<br>Гейзер<br>Фільтр</div>
       <div class="cap"><h3>Скоро</h3><p>Малюємо наступні випуски. Хочеш якийсь раніше — напиши нам в Instagram.</p></div></article>
   </section>
   <div class="next"><a class="btn" href="index.html">До кави PROLOVE</a><a class="btn ghost" href="info.html">Інфо і контакти</a></div>
 </main>
-<script type="module" src="demo-shim.js?v=mwguvrl9"></script>
-<script type="module" src="calc.js?v=mwguvrl9"></script>
-<script type="module" src="filter.js?v=mwguvrl9"></script>
-<script type="module" src="brew.js?v=mwguvrl9"></script>
+<script type="module" src="demo-shim.js?v=mwgv2y8s"></script>
+<script type="module" src="calc.js?v=mwgv2y8s"></script>
+<script type="module" src="filter.js?v=mwgv2y8s"></script>
+<script type="module" src="brew.js?v=mwgv2y8s"></script>
 </body>
 </html>
