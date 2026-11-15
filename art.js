@@ -120,20 +120,24 @@ export function aeropress(cx, base, { inverted = false, press = 0, fill = 0.6, c
       ${fill > 0 ? `<rect x="${cx - w + 2}" y="${Math.min(level, bottom - 14)}" width="${w * 2 - 4}" height="${Math.max(2, bottom - 12 - Math.min(level, bottom - 14))}" fill="${COFFEE}" stroke="none"/>` : ''}
       <rect x="${cx - w}" y="${top}" width="${w * 2}" height="${h - 10}"/>
       ${[1, 2, 3, 4].map(i => `<path d="M${cx + w - 9} ${bottom - 14 - i * 19} l8 0" stroke-width="2"/>`).join('')}
-      <rect x="${cx - w - 7}" y="${top - 5}" width="${(w + 7) * 2}" height="7" rx="2" fill="${SHEET}"/>
+      <rect x="${cx - w - 7}" y="${bottom - 20}" width="${(w + 7) * 2}" height="7" rx="2" fill="${SHEET}"/>
       ${cap ? `<rect x="${cx - w - 4}" y="${bottom - 12}" width="${(w + 4) * 2}" height="12" rx="3" fill="${INK}"/>` : ''}
       <rect x="${cx - w + 4}" y="${plTop}" width="${(w - 4) * 2}" height="${top - plTop + 16}" fill="${SHEET}" stroke-width="2.6"/>
       <rect x="${cx - w + 2}" y="${top + 8 + press * 0}" width="0" height="0"/>
       <rect x="${cx - w - 2}" y="${plTop - 8}" width="${(w + 2) * 2}" height="8" rx="3" fill="${SHEET}"/>`;
   }
-  // перевернутий: поршень стоїть на столі, камера над ним, кава всередині, зверху відкрито або кришка
-  const plBase = base, plTop = base - 64, chTop = base - 64 - h + 30, chBot = base - 30;
-  return `<rect x="${cx - w - 2}" y="${plBase - 8}" width="${(w + 2) * 2}" height="8" rx="3" fill="${SHEET}"/>
-    <rect x="${cx - w + 4}" y="${plTop}" width="${(w - 4) * 2}" height="${plBase - 8 - plTop}" fill="${SHEET}" stroke-width="2.6"/>
-    <rect x="${cx - w}" y="${chTop}" width="${w * 2}" height="${chBot - chTop}" fill="${SHEET}"/>
-    ${fill > 0 ? `<rect x="${cx - w + 2}" y="${chTop + (chBot - chTop - 14) * (1 - fill) + 6}" width="${w * 2 - 4}" height="${(chBot - chTop - 14) * fill}" fill="${COFFEE}" stroke="none"/>` : ''}
-    <rect x="${cx - w}" y="${chTop}" width="${w * 2}" height="${chBot - chTop}"/>
-    <rect x="${cx - w - 7}" y="${chBot - 2}" width="${(w + 7) * 2}" height="7" rx="2" fill="${SHEET}"/>
+  // перевернутий («на ручці»): поршень зайшов у камеру лише на гумку, тож шток стирчить майже на всю довжину камери.
+  // Знизу — ручка поршня на столі, над нею довгий шток, далі камера з гумкою всередині, фланець і ковпачок угорі.
+  const H = 96, S = 80, chBot = base - 8 - S, chTop = chBot - H;
+  const avail = H - 18, lvl = chBot - 12 - avail * fill;
+  return `<rect x="${cx - w + 4}" y="${chBot - 16}" width="${(w - 4) * 2}" height="${base - 8 - chBot + 16}" fill="${SHEET}" stroke-width="2.6"/>
+    <rect x="${cx - w - 2}" y="${base - 8}" width="${(w + 2) * 2}" height="8" rx="3" fill="${SHEET}"/>
+    <rect x="${cx - w}" y="${chTop}" width="${w * 2}" height="${H}" fill="${SHEET}"/>
+    ${fill > 0 ? `<rect x="${cx - w + 2}" y="${lvl}" width="${w * 2 - 4}" height="${chBot - 12 - lvl}" fill="${COFFEE}" stroke="none"/>` : ''}
+    <rect x="${cx - w + 2}" y="${chBot - 12}" width="${w * 2 - 4}" height="10" fill="#2A2526" stroke="none"/>
+    <rect x="${cx - w}" y="${chTop}" width="${w * 2}" height="${H}"/>
+    ${[1, 2, 3].map(i => `<path d="M${cx + w - 9} ${chBot - 14 - i * 20} l8 0" stroke-width="2"/>`).join('')}
+    <rect x="${cx - w - 7}" y="${chTop + 4}" width="${(w + 7) * 2}" height="7" rx="2" fill="${SHEET}"/>
     ${cap ? `<rect x="${cx - w - 4}" y="${chTop - 12}" width="${(w + 4) * 2}" height="12" rx="3" fill="${INK}"/>` : ''}`;
 }
 
@@ -190,7 +194,7 @@ export function cupTop(cx, cy, { broken = false, rx = 100, ry = 54 } = {}) {
 export function deviceIcon(kind) {
   const f = {
     v60: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, orea: () => `${orea(60, 26)}`, origami: () => `${origami(60, 14)}`, valve: () => `${valve(60, 8)}`,
-    solo: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, aero: () => `${aeropress(60, 104, { press: 0.2 })}`, aeroInv: () => `${aeropress(60, 106, { inverted: true })}`,
+    solo: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, aero: () => `${aeropress(60, 104, { press: 0.2 })}`, aeroInv: () => `<g transform="translate(15 4) scale(.5)">${aeropress(90, 200, { inverted: true })}</g>`,
     cezve: () => `<g transform="translate(-14 0) scale(.9)">${cezve(70, 108, { foam: 0.6 })}</g>`, moka: () => `${moka(56, 106)}`,
     espresso: () => `<g transform="scale(.66) translate(10 10)">${espresso(80, 0, { flow: true, cupY: 108 })}</g>`,
     superauto: () => `<g transform="scale(.6) translate(30 10)">${superauto(70, 176)}</g>`,

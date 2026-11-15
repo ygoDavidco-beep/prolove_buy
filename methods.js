@@ -2,7 +2,7 @@
 // чемпіонатів і з першоджерел, переказані своїми словами з посиланням на оригінал.
 // Кроки таймера: at — секунда старту кроку; approx — орієнтовно; tap — чекає «Далі» (est — для мапи); end — фініш.
 import { svg, sfx, lbl, arrow, flip, cup, cupWhole, kettle, scale, stopwatch, flame, steam, spoon,
-  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwhtm3vr';
+  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwhtnsxe';
 
 const F = (body, label) => svg('0 0 320 240', body, label);
 
@@ -119,11 +119,11 @@ export const METHODS = {
     panels: [
       { art: () => F(`${aeropress(120, 222, { inverted: true, fill: 0, cap: false })}${scale(120, 206, 120, '16.0 g')}${sfx(190, 70, 'ІНВЕРТ', 30, -6)}${lbl(236, 100, 'на ручку', 17)}`, 'Аеропрес перевернутий на ручці'),
         h: 'Став <em>на ручку</em>', p: 'Поршень знизу, камера зверху — так кава не протікає, поки настоюється. Засип 16 г.' },
-      { art: () => F(`${aeropress(120, 222, { inverted: true, fill: 0.3, cap: false })}${kettle(246, 86, { pour: [126, 70], temp: '88°' })}${lbl(246, 160, '85–90°C', 17)}`, 'Перший полив'),
+      { art: () => F(`${aeropress(120, 222, { inverted: true, fill: 0.3, cap: false })}${kettle(246, 86, { pour: [124, 36], temp: '88°' })}${lbl(246, 160, '85–90°C', 17)}`, 'Перший полив'),
         h: 'Перший полив <em>85–90°C</em>', p: 'Змочи всю каву, розмішай. Без сухих грудочок.' },
-      { art: () => F(`${aeropress(120, 222, { inverted: true, fill: 0.85, cap: false })}${kettle(246, 86, { pour: [126, 64], temp: '95°' })}${lbl(246, 160, 'до 200 г', 17)}`, 'Другий полив'),
+      { art: () => F(`${aeropress(120, 222, { inverted: true, fill: 0.85, cap: false })}${kettle(246, 86, { pour: [124, 36], temp: '95°' })}${lbl(246, 160, 'до 200 г', 17)}`, 'Другий полив'),
         h: 'Другий — <em>95°C до 200 г</em>', p: 'Доливаємо гарячішою водою. Кришка з фільтром — і видави зайве повітря.' },
-      { art: () => F(`${aeropress(84, 200, { inverted: true, fill: 0.8 })}${flip(160, 110, 34)}<g transform="translate(236 0)">${cupWhole(0, 170, 96, 56)}${aeropress(0, 170, { press: 0.6, fill: 0.5 })}</g>${sfx(150, 230, 'ПЕРЕВЕРНИ І ТИСНИ', 20, -3, 'b')}`, 'Переверни на чашку й тисни'),
+      { art: () => F(`${aeropress(84, 214, { inverted: true, fill: 0.8 })}${flip(160, 110, 34)}<g transform="translate(236 0)">${cupWhole(0, 170, 96, 56)}${aeropress(0, 170, { press: 0.6, fill: 0.5 })}</g>${sfx(150, 230, 'ПЕРЕВЕРНИ І ТИСНИ', 20, -3, 'b')}`, 'Переверни на чашку й тисни'),
         h: 'Переверни <em>і тисни</em>', p: 'Накрий чашкою, переверни разом — і тисни рівно 20–30 с. Зупинись, коли зашипить.' },
     ],
     tips: [{ h: 'Без <em>розведення</em>', p: 'Чемпіонські рецепти часто варять концентрат і доливають воду. Для щоденної чашки ми цього не робимо: розведення дає здебільшого кислотність. Наш рецепт — повноцінна чашка.' }],

@@ -1,6 +1,6 @@
 // Режим фокусу: таймер на весь екран. Наступний крок видно заздалегідь — з відліком і лінійною мапою,
 // щоб не читати й лити одночасно. За 3 с до кроку — короткі сигнали, на крок — подвійний сигнал і вібро. Екран не гасне.
-import { fmt, beep, wake, timeline } from './tmr.js?v=mwhtm3vr';
+import { fmt, beep, wake, timeline } from './tmr.js?v=mwhtnsxe';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let el = null;
