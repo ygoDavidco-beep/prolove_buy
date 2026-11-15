@@ -8,22 +8,23 @@
 <meta name="description" content="Комікс-інструкції PROLOVE: дріп, турка, еспресо, гейзер, AeroPress, фільтр — з таймером і рецептами чемпіонів.">
 <meta property="og:image" content="img/drip-xmas.webp">
 <link rel="icon" href="img/favicon.png">
-<link rel="stylesheet" href="base.css?v=mwhzw9xv">
-<link rel="stylesheet" href="nav.css?v=mwhzw9xv">
-<script src="nav.js?v=mwhzw9xv"></script>
+<link rel="stylesheet" href="base.css?v=mwi1jlkq">
+<link rel="stylesheet" href="nav.css?v=mwi1jlkq">
+<script src="nav.js?v=mwi1jlkq"></script>
 
-<link rel="stylesheet" href="drip.css?v=mwhzw9xv">
+<script src="theme.js?v=mwi1jlkq"></script>
+<link rel="stylesheet" href="drip.css?v=mwi1jlkq">
 <style>
 .hub{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .hub a{text-decoration:none;color:var(--ink)}
 .hub .pnl .art{display:flex;align-items:center;justify-content:center;overflow:hidden}
 /* розмір фото задано явно — не залежить від підтримки aspect-ratio у старих iPhone */
 /* етикетка дріпа цілком, без обрізання */
-.hub .pnl .art{background:#fff;aspect-ratio:auto;height:auto;padding:10px 0}
+.hub .pnl .art{background:var(--card);aspect-ratio:auto;height:auto;padding:10px 0}
 .hub .pnl img{display:block;width:auto;max-width:100%;height:auto;max-height:min(70vw,340px);margin:0 auto;object-fit:contain}
 .hub>a,.hub>article{min-width:0;display:block}
 .tipf{margin:0 0 28px}.mhint{background:var(--gold)}.mhint .btn{display:inline-block;text-decoration:none;margin-top:4px}.tipf .cap{padding-left:46px}
-.hub.mhub{margin-top:14px;grid-template-columns:repeat(3,minmax(0,1fr))}.mhub .art{background:radial-gradient(var(--dot) 1.3px,transparent 1.6px) 0 0/9px 9px,#fff!important;padding:8px 0!important}.mhub .art{aspect-ratio:auto!important}.mhub .art svg{display:block;width:62%;max-width:150px;height:auto;aspect-ratio:12/11;margin:0 auto}.mhub .cap p{font-size:13.5px}
+.hub.mhub{margin-top:14px;grid-template-columns:repeat(3,minmax(0,1fr))}.mhub .art{background:radial-gradient(var(--dot) 1.3px,transparent 1.6px) 0 0/9px 9px,var(--card)!important;padding:8px 0!important}.mhub .art{aspect-ratio:auto!important}.mhub .art svg{display:block;width:62%;max-width:150px;height:auto;aspect-ratio:12/11;margin:0 auto}.mhub .cap p{font-size:13.5px}
 @media (max-width:720px){.hub.mhub{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .soon .art{min-height:min(56vw,300px);font-family:var(--head);font-size:clamp(30px,6vw,46px);text-transform:uppercase;color:var(--berry);text-align:center;line-height:1}
 @media (max-width:720px){.hub{grid-template-columns:minmax(0,1fr)}}
@@ -45,7 +46,7 @@
   <section class="hub ahub" id="articles" aria-label="Статті"></section>
   <div class="next"><a class="btn" href="index.html">До кави PROLOVE</a><a class="btn ghost" href="info.html">Інфо і контакти</a></div>
 </main>
-<script type="module" src="demo-shim.js?v=mwhzw9xv"></script>
-<script type="module" src="brew.js?v=mwhzw9xv"></script>
+<script type="module" src="demo-shim.js?v=mwi1jlkq"></script>
+<script type="module" src="brew.js?v=mwi1jlkq"></script>
 </body>
 </html>

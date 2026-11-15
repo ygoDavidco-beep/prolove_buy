@@ -2,7 +2,7 @@
 // чемпіонатів і з першоджерел, переказані своїми словами з посиланням на оригінал.
 // Кроки таймера: at — секунда старту кроку; approx — орієнтовно; tap — чекає «Далі» (est — для мапи); end — фініш.
 import { svg, sfx, lbl, arrow, flip, cup, cupWhole, kettle, scale, stopwatch, flame, steam, spoon,
-  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwhzw9xv';
+  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwi1jlkq';
 
 const F = (body, label) => svg('0 0 320 240', body, label);
 
@@ -64,7 +64,7 @@ export const METHODS = {
     timer: { name: 'Еспресо PROLOVE', params: '16 г → 40–48 г', autostart: true, prep: 'Таблетка в холдері, чашка на вагах, ваги на нуль.',
       steps: [
         { at: 0, mk: 'кнопка', t: 'Тисни кнопку пролива на машинці — секундомір уже йде.', s: 'Перші 10–20 с домашні кавоварки лише змочують таблетку — це нормально.' },
-        { tap: true, opt: true, est: 12, mk: 'шот', btn: 'Шот пішов', hint: 'побачив струмінь — тисни «Шот пішов» (можна пропустити)', t: 'Шот іде. Відлік — від першого струменя.', s: 'Далі все зсунулось на цей момент.' },
+        { tap: true, opt: true, est: 12, mk: 'шот', btn: 'Шот пішов', hint: 'пішов струмінь — тисни «Шот пішов»', t: 'Шот пішов — відлік від першого струменя.', s: 'Можна не тиснути: тоді таймер іде за звичайним часом.' },
         { at: 26, approx: true, mk: 'вага', t: 'Стеж за вагами: ціль 40–48 г.', s: 'З 16 г кави це 1:2,5–1:3. Менше — кисло, більше — гірко.' },
         { tap: true, est: 36, mk: 'стоп', end: true, btn: 'Стоп', hint: 'на 40–48 г — тисни «Стоп»', t: 'Стоп на 40–48 г: вимикай пролив.', s: 'Скуштуй: кисло — довше; гірко — коротше.' },
       ] },
