@@ -1,8 +1,12 @@
 // «Вивантаж вчасно» — фізика міні-гри. Чиста й детермінована: той самий seed і ті самі натискання дають той самий результат.
 // Тому згодом сервер зможе сам «прокрутити» гру й перевірити виграш (браузеру не довіряємо).
-// Час обсмаження йде швидше за реальний (SPEED): 1 с на екрані = 2,6 с у барабані.
+// Час обсмаження йде швидше за реальний (SPEED): 1 с на екрані = 2,2 с у барабані.
+// Сюжет: засипаємо зерно (21°), «Додай пальника» → інструкція (пауза) → «прокинувся» десь на 180–206°.
+// Що раніше прокинувся — то швидший RoR. Перший крек — завжди з 200°.
 
-export const SPEED = 2.6;
+export const SPEED = 2.2;
+export const CHARGE = 21;                 // зерно засипаємо кімнатної температури
+export const FC = 200;                    // перший крек
 export const WIN = [212, 212.5];          // вікно вивантаження, °C
 export const BLACK = 218;                 // далі — чорне зерно, гру зупиняємо
 export const GAS_STEP = 0.1;             // пальник 0…10, крок 1
@@ -19,26 +23,27 @@ export function makeRoast(seed) {
   const r = rng(seed);
   return {
     seed, t: 0,
-    BT: 200.6 + r() * 0.8,                // температура зерна: стартуємо біля 201°
-    RoR: 5 + r() * 2,                     // °C/хв
+    BT: CHARGE,                           // температура зерна
+    RoR: 0,                               // °C/хв
     gas: 0.2, gasEff: 0.2,                // поставлений газ і той, що реально «дійшов» до зерна
-    k: 72 + r() * 24,                     // скільки RoR дає повний газ
-    decay: 2.2 + r() * 0.5,             // наскільки RoR сам падає з ростом температури
+    k: 66 + r() * 20,                     // скільки RoR дає повний газ
+    decay: 0.65 + r() * 0.2,              // наскільки RoR сам падає з ростом температури (раніше — швидший)
     lift: r() * 2,
     tauG: 18 + r() * 10,                  // інерція барабана й газу, с
     tauR: 10 + r() * 6,
-    low: 0, peak: 0.2, crash: false, note: null, over: null,
-    wake: 204 + r() * 2.5,                // де «прокинешся» після інструкції: 204–206,5°
-    fc: 205.6 + r() * 1.4,                // перший крек
+    low: 0, peak: 0.2, crash: false, note: null, over: null, woke: false,
+    wake: 180 + r() * 26,                 // де «прокинешся» після інструкції: 180–206°
   };
 }
 
+const targetRoR = s => s.k * s.gasEff - s.decay * (s.BT - 180) + s.lift;
+
 /** Один крок фізики, dt — секунди обсмаження. */
 export function step(s, dt) {
-  if (s.over) return s;
+  if (s.over || !s.woke) return s;     // до «прокинувся» барабан для гравця не існує
   s.t += dt;
   s.gasEff += (s.gas - s.gasEff) * Math.min(1, dt / s.tauG);
-  let target = s.k * s.gasEff - s.decay * (s.BT - 204) + s.lift;
+  let target = targetRoR(s);
   if (s.crash) target -= 30;            // різко скинули вогонь на розвитку — RoR провалюється
   s.RoR += (target - s.RoR) * Math.min(1, dt / (s.crash ? s.tauR * 0.45 : s.tauR));
   s.BT += (s.RoR / 60) * dt;
@@ -57,9 +62,11 @@ export function ignite(s) {
   return true;
 }
 
-/** Людина читала інструкцію — барабан не чекав: перемотуємо до «прокинувся» (204–206,5°). Детерміновано. */
-export function fastForward(s, dt = 0.05) {
-  while (!s.over && s.BT < s.wake) step(s, dt);
+/** Людина дочитала інструкцію — обсмажка вже йшла: продовжуємо з випадкової точки 180–206°, RoR — як на цій температурі. */
+export function wakeUp(s) {
+  if (s.over || s.woke) return s;
+  s.BT = s.wake; s.gasEff = s.gas; s.woke = true;
+  s.RoR = targetRoR(s);
   return s;
 }
 
@@ -90,8 +97,9 @@ export function replay(seed, actions, dt = 0.05) {
   while (!s.over && s.t < 600) {
     while (i < acts.length && acts[i].t <= s.t) {
       const a = acts[i++].a;
-      if (a === 'ignite') ignite(s); else if (a === 'ff') fastForward(s, dt); else if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else if (a === 'drop') unload(s);
+      if (a === 'ignite') ignite(s); else if (a === 'wake') wakeUp(s); else if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else if (a === 'drop') unload(s);
     }
+    if (!s.woke && i >= acts.length) break;  // так і не прокинувся
     if (!s.over) step(s, dt);
   }
   return s.over;

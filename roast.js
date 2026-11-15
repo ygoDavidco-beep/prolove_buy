@@ -1,9 +1,9 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, ignite, unload, SPEED, WIN, BLACK, LOW_GAS } from './roastgame.js?v=mwi6y3ea';
+import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwi78a6z';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
-let briefAt = 0, ff = false, cracked = false, s = null, acts = [], hist = [], raf = 0, last = 0, acc = 0, started = false, forPrize = false;
+let briefAt = 0, cracked = false, s = null, acts = [], hist = [], raf = 0, last = 0, acc = 0, started = false, forPrize = false;
 // демо-лічильники лише в цьому браузері; у справжній грі все це рахує сервер
 const LS = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* */ } } };
 
@@ -16,7 +16,7 @@ const BEANS = Array.from({ length: 34 }, (_, i) => {
 beansG.innerHTML = BEANS.map(b => `<ellipse cx="${b.x.toFixed(1)}" cy="${b.y.toFixed(1)}" rx="5.2" ry="3.4" transform="rotate(${b.rot} ${b.x.toFixed(1)} ${b.y.toFixed(1)})"/>`).join('');
 
 // колір зерна за температурою: від карамельного до чорного
-const STOPS = [[203, [154, 106, 68]], [208, [128, 82, 50]], [212, [104, 63, 37]], [214.5, [62, 36, 22]], [217, [26, 16, 12]]];
+const STOPS = [[21, [122, 142, 86]], [150, [168, 150, 92]], [185, [176, 128, 78]], [203, [154, 106, 68]], [208, [128, 82, 50]], [212, [104, 63, 37]], [214.5, [62, 36, 22]], [217, [26, 16, 12]]];
 function beanColor(bt) {
   let a = STOPS[0], b = STOPS[STOPS.length - 1];
   for (let i = 0; i < STOPS.length - 1; i++) if (bt >= STOPS[i][0] && bt <= STOPS[i + 1][0]) { a = STOPS[i]; b = STOPS[i + 1]; }
@@ -29,7 +29,9 @@ const cv = $('chart'), ctx = cv.getContext('2d');
 function fit() { const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
 function chart() {
   const W = cv.clientWidth, H = cv.clientHeight, L = 34, R = 30, T = 8, B = 18;
-  const tMax = Math.max(40, (s?.t || 0) + 8), y = v => T + (H - T - B) * (1 - (v - 199) / 19), r = v => T + (H - T - B) * (1 - v / 40), x = t => L + (W - L - R) * (t / tMax);
+  const lo = s?.woke ? Math.min(199, Math.floor(Math.min(...hist.map(p => p.bt)) / 2) * 2 - 2) : 199, span = 217 - lo;
+  const rMax = Math.max(40, Math.ceil(Math.max(0, ...hist.map(p => p.ror)) / 10) * 10 + 10);
+  const tMax = Math.max(40, (s?.t || 0) + 8), y = v => T + (H - T - B) * (1 - (Math.max(lo, v) - lo) / span), r = v => T + (H - T - B) * (1 - v / rMax), x = t => L + (W - L - R) * (t / tMax);
   ctx.clearRect(0, 0, W, H);
   // вікно вивантаження
   ctx.fillStyle = 'rgba(242,96,58,.22)'; ctx.fillRect(L, y(WIN[1]), W - L - R, y(WIN[0]) - y(WIN[1]));
@@ -38,15 +40,15 @@ function chart() {
   ctx.setLineDash([]);
   // осі
   ctx.fillStyle = 'rgba(246,240,235,.5)'; ctx.font = '11px Oswald, sans-serif'; ctx.textAlign = 'right';
-  [200, 204, 208, 212, 216].forEach(v => ctx.fillText(v + '°', L - 5, y(v) + 4));
-  ctx.fillStyle = 'rgba(94,196,204,.8)'; ctx.textAlign = 'left'; [10, 20, 30].forEach(v => ctx.fillText(v, W - R + 5, r(v) + 4));
+  (span > 24 ? [lo + 2, 190, 200, 212] : [200, 204, 208, 212, 216]).filter(v => v > lo).forEach(v => ctx.fillText(Math.round(v) + '°', L - 5, y(v) + 4));
+  ctx.fillStyle = 'rgba(94,196,204,.8)'; ctx.textAlign = 'left'; [10, 20, 30, 40, 50, 60, 70].filter(v => v < rMax).forEach(v => ctx.fillText(v, W - R + 5, r(v) + 4));
   // легенда
   ctx.font = '11px Manrope, sans-serif'; ctx.fillStyle = '#F28C28'; ctx.fillText('— зерно, °C', L + 6, T + 12);
   ctx.fillStyle = '#5EC4CC'; ctx.fillText('— RoR, °/хв', L + 86, T + 12);
-  if (hist.length < 2) return;
+  if (hist.length < 2 || !s?.woke) return;
   // RoR — бірюза
   ctx.strokeStyle = '#5EC4CC'; ctx.lineWidth = 2; ctx.beginPath();
-  hist.forEach((p, i) => (i ? ctx.lineTo(x(p.t), r(Math.max(0, Math.min(40, p.ror)))) : ctx.moveTo(x(p.t), r(p.ror))));
+  hist.forEach((p, i) => (i ? ctx.lineTo(x(p.t), r(Math.max(0, Math.min(rMax, p.ror)))) : ctx.moveTo(x(p.t), r(p.ror))));
   ctx.stroke();
   // температура зерна — полум'я
   const g = ctx.createLinearGradient(0, y(216), 0, y(200)); g.addColorStop(0, '#E8394A'); g.addColorStop(0.5, '#F28C28'); g.addColorStop(1, '#FFD39A');
@@ -108,17 +110,15 @@ function loop(now) {
   const real = Math.min(0.1, (now - last) / 1000); last = now;
   // поки людина читає інструкцію — барабан «на паузі»; після — перемотка, ніби проспав
   if (!$('brief').hidden) { raf = requestAnimationFrame(loop); return; }
-  acc += real * SPEED * (ff ? 12 : 1);
+  acc += real * SPEED;
   while (acc >= DT && !s.over) {
     step(s, DT); acc -= DT;
     if (Math.round(s.t / DT) % 4 === 0) hist.push({ t: s.t, bt: s.BT, ror: s.RoR });
-    if (ff && s.BT >= s.wake) { ff = false; acc = 0; say(`Поки читав — уже ${fmt(s.BT)}°! Діяй!`, 'warn'); s.noteUntil = s.t + 5; break; }
   }
-  if (!cracked && s.BT >= s.fc) { cracked = true; crack(); s.crackUntil = s.t + 8; }
+  if (s.woke && !cracked && s.BT >= FC) { cracked = true; crack(); s.crackUntil = s.t + 8; } // крек — завжди з 200°
   if (s.crash) say('Запіканка! Вогонь нижче 4 — RoR летить униз. Додай пальник!', 'crash');
   else if (s.low > 8) say('RoR падає — кава запікається. Додай вогню!', 'warn');
   else if (!s.ignited) say('Додай пальника!', 'cue');
-  else if (ff) say('Ти зачитався, а барабан крутиться…', 'warn');
   else if (s.noteUntil > s.t) { /* лишаємо «Поки читав…» */ }
   else if (s.crackUntil > s.t) say('Перший крек! Чуєш?', 'cue');
   else if (!s.note) say('');
@@ -179,7 +179,7 @@ function newGame() {
   const seed = (crypto.getRandomValues(new Uint32Array(1))[0]) >>> 0; // у справжній грі seed видає сервер
   s = makeRoast(seed); acts = []; hist = [{ t: 0, bt: s.BT, ror: s.RoR }]; acc = 0; started = false;
   $('result').hidden = true; $('brief').hidden = true; $('smoke').classList.remove('on'); say('');
-  const left = triesLeft(); ff = false; cracked = false;
+  const left = triesLeft(); cracked = false;
   forPrize = left > 0;
   $('rgPrize').textContent = forPrize ? `спроба на −10% · лишилось ${left} · демо` : (LS.get('pl_roast_won') ? '−10% виграно' : 'спроби скінчились');
   if (!forPrize) { // тренувань немає: одна пачка — одна обсмажка
@@ -220,7 +220,13 @@ $('go').addEventListener('click', () => { try { ac().resume(); } catch { /* */ }
 $('briefOk').addEventListener('click', () => {
   if (Date.now() - briefAt <= 450) return;
   $('brief').hidden = true;
-  if (s && !s.over && s.BT < s.wake) { ff = true; acts.push({ t: +s.t.toFixed(2), a: 'ff' }); }
+  // поки читав — обсмажка йшла: продовжуємо з випадкової точки 180–206° (час не показуємо — просто ти вже тут)
+  if (s && !s.over && !s.woke) {
+    acts.push({ t: +s.t.toFixed(2), a: 'wake' }); wakeUp(s);
+    hist = [{ t: s.t, bt: s.BT, ror: s.RoR }];
+    say(`Поки читав — уже ${fmt(s.BT)}°! Діяй!`, 'warn'); s.noteUntil = s.t + 5;
+    paint();
+  }
 });
 const feedUrl = location.pathname.endsWith('.html') ? 'index.html' : '/';
 const fromCart = new URLSearchParams(location.search).get('from') === 'cart';
