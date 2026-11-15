@@ -1,5 +1,5 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, unload, SPEED, WIN, BLACK } from './roastgame.js?v=mwi2gxtw';
+import { makeRoast, step, gas, unload, SPEED, WIN, BLACK, LOW_GAS } from './roastgame.js?v=mwi2mlww';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
@@ -55,12 +55,28 @@ function chart() {
   if (s?.over && s.over.kind !== 'baked') { const p = hist[hist.length - 1]; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x(p.t), y(Math.min(217.5, p.bt)), 4.5, 0, 7); ctx.fill(); }
 }
 
+// ---------- звуки ----------
+let AC = null;
+const ac = () => (AC ||= new (window.AudioContext || window.webkitAudioContext)());
+function note(f0, f1, t, d, type = 'sawtooth', vol = 0.13, vib = 0) {
+  const a = ac(), o = a.createOscillator(), g = a.createGain(), at = a.currentTime + t;
+  o.type = type; o.frequency.setValueAtTime(f0, at); o.frequency.linearRampToValueAtTime(f1, at + d);
+  if (vib) { const l = a.createOscillator(), lg = a.createGain(); l.frequency.value = 7; lg.gain.value = vib; l.connect(lg).connect(o.frequency); l.start(at); l.stop(at + d); }
+  g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(vol, at + 0.03); g.gain.setValueAtTime(vol, at + d - 0.08); g.gain.exponentialRampToValueAtTime(0.0001, at + d);
+  o.connect(g).connect(a.destination); o.start(at); o.stop(at + d + 0.02);
+}
+// цирковий «тромбон-невдаха»: вау-вау-вау-ваааа
+function sadTrombone() { try { note(392, 380, 0, 0.42); note(370, 356, 0.45, 0.42); note(349, 336, 0.9, 0.42); note(330, 262, 1.35, 1.2, 'sawtooth', 0.14, 9); } catch { /* без звуку */ } }
+function fanfare() { try { [523, 659, 784, 1047].forEach((f, i) => note(f, f, i * 0.12, i === 3 ? 0.5 : 0.14, 'triangle', 0.12)); } catch { /* */ } }
+
 // ---------- екран ----------
 const fmt = v => v.toFixed(1).replace('.', ',');
 function paint() {
   $('bt').textContent = fmt(s.BT) + '°';
   $('ror').textContent = fmt(Math.max(0, s.RoR));
-  [...$('gbar').children].forEach((el, i) => el.classList.toggle('on', s.gas >= (i + 1) * 0.25 - 1e-6));
+  [...$('gbar').children].forEach((el, i) => { el.classList.toggle('on', s.gas >= (i + 1) * 0.1 - 1e-6); el.classList.toggle('lo', i < LOW_GAS * 10); });
+  $('gnum').textContent = Math.round(s.gas * 10);
+  $('rg').classList.toggle('crash', s.crash);
   const drum = $('drum');
   drum.style.setProperty('--heat', Math.min(1, s.gasEff).toFixed(3));
   beansG.setAttribute('fill', beanColor(s.BT));
@@ -77,7 +93,7 @@ function loop(now) {
     step(s, DT); acc -= DT;
     if (Math.round(s.t / DT) % 4 === 0) hist.push({ t: s.t, bt: s.BT, ror: s.RoR });
   }
-  if (s.note === 'zapik') say('Запіканка! Нижче не можна — RoR уже провис.', 'warn');
+  if (s.crash) say('Запіканка! Вогонь нижче 4 — RoR летить униз. Додай пальник!', 'crash');
   else if (s.low > 8) say('RoR падає — кава запікається. Додай вогню!', 'warn');
   else if (s.t < 6 && s.gas < 0.5) say('Готовий? Додай пальник +');
   else if (!s.note) say('');
@@ -98,13 +114,14 @@ function finish() {
   const o = s.over, bt = fmt(o.BT) + '°';
   const black = o.kind === 'black' || (o.kind === 'over' && o.BT >= 214);
   $('smoke').classList.toggle('on', black);
+  if (o.kind === 'baked' || black) sadTrombone(); else if (o.kind === 'win') fanfare();
   const R = {
     win: ['Влучив!', `${bt} — саме так вивантажує ростер. Ось що робить обсмаження смачним: вчасно.`],
     under: ['Недорозвиток', `${bt} — зарано. Зерно ще не дійшло: було б кисло й трав'янисто. Ціль — 212–212,5°.`],
     over: black ? ['Чорне зерно', `${bt} — вогонь мав інерцію, і зерно пішло далі. Скидай пальник за 4–6 секунд до цілі.`]
       : ['Перепал', `${bt} — трохи пізно. Вікно 212–212,5° пролітає за мить: готуйся раніше й скидай вогонь заздалегідь.`],
     black: ['Чорне зерно', `${fmt(BLACK)}° — момент вивантаження пролетів. Наступного разу тисни раніше.`],
-    baked: ['Запіканка', 'Вогню забракло — RoR провис, і кава запеклась: пласка й порожня. Додавай пальник раніше.'],
+    baked: ['Запіканка!', s.peak >= 0.6 ? 'Вогонь скинули нижче 4 — RoR провалився, і кава запеклась: пласка й порожня. Знижуй пальник плавно, не нижче 4.' : 'Вогню забракло — RoR провис, і кава запеклась. Додавай пальник раніше.'],
   }[o.kind];
   setTimeout(() => {
     $('rTitle').textContent = R[0]; $('rText').textContent = R[1];
@@ -134,10 +151,17 @@ function start() {
 
 // ---------- керування ----------
 const press = (id, fn) => $(id).addEventListener('pointerdown', e => { e.preventDefault(); fn(); });
-press('gUp', () => act('up'));
-press('gDown', () => act('down'));
+// пальник: тап — крок 1, тримаєш — крутить далі
+function hold(id, a) {
+  const el = $(id); let tmr = 0;
+  const stop = () => { clearTimeout(tmr); clearInterval(tmr); tmr = 0; };
+  el.addEventListener('pointerdown', e => { e.preventDefault(); act(a); stop(); tmr = setTimeout(() => { tmr = setInterval(() => act(a), 110); }, 280); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => el.addEventListener(ev, stop));
+}
+hold('gUp', 'up');
+hold('gDown', 'down');
 press('drop', () => act('drop'));
-$('go').addEventListener('click', start);
+$('go').addEventListener('click', () => { try { ac().resume(); } catch { /* */ } start(); });
 $('again').addEventListener('click', newGame);
 addEventListener('keydown', e => {
   if (e.key === 'ArrowUp' || e.key === '+') act('up');

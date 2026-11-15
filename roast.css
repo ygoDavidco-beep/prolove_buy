@@ -30,13 +30,18 @@ body{overscroll-behavior:none}
 .rg-read .bt b{color:#FFD39A}
 .rg-read .ror b{font-size:clamp(22px,6.5vw,30px);color:#5EC4CC}
 .rg-read em{font:400 12px 'Oswald',sans-serif;color:#77706F;font-style:normal;margin-left:3px}
-.gbar{display:flex;gap:4px;margin-top:4px}
-.gbar i{width:20px;height:12px;border-radius:3px;background:#2A2224}
+.gbar{display:flex;gap:3px;margin-top:4px}
+.gbar i{width:8px;height:14px;border-radius:2px;background:#2A2224}
+.gbar i.lo{box-shadow:inset 0 -2px 0 #5EC4CC55}
+.gas small b{font:500 15px 'Oswald',sans-serif;color:#F28C28;margin-left:4px}
+.rg.crash .gas small b{color:#5EC4CC}
 .gbar i.on{background:linear-gradient(90deg,#F28C28,#E8394A)}
 
 .rg-chart{width:100%;height:clamp(150px,26vh,230px);border:1px solid #241D1F;border-radius:12px;background:#0B0909}
 .rg-msg{min-height:20px;margin:0;font:600 14px var(--body,'Manrope',sans-serif);color:#ADA19C;text-align:center}
 .rg-msg.warn{color:#FF6F5E}
+.rg-msg.crash{color:#0B0909;background:#5EC4CC;border-radius:10px;padding:6px 10px;font-weight:800;animation:rg-shake .4s}
+@keyframes rg-shake{0%,100%{transform:none}25%{transform:translateX(-5px) rotate(-1deg)}75%{transform:translateX(5px) rotate(1deg)}}
 
 .rg-ctl{display:grid;grid-template-columns:64px 64px minmax(0,1fr);gap:10px;margin-top:auto}
 .rg-ctl button{min-height:64px;border-radius:16px;border:0;font:500 30px/1 'Oswald',sans-serif;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
