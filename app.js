@@ -30,6 +30,7 @@ function mark(i) {
   if (KEYS[i] === 'kava') u.searchParams.delete('w'); else u.searchParams.set('w', KEYS[i]);
   history.replaceState(history.state, '', u);
   dispatchEvent(new CustomEvent('pl:world', { detail: KEYS[i] }));
+  window.plt?.('world', KEYS[i]);
 }
 function slideTo(i, ms = 320) {
   cancelAnimationFrame(wAnim);

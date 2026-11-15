@@ -2,7 +2,7 @@
 // Рекомендації: після вливання чекати 30 с на кожні 100 мл (цвітіння — не менше 30 с);
 // ціль злива: до 300 мл — ~2 хв, далі 1 хв на кожні 100 мл (400 мл — 4 хв, 500 мл — 5 хв).
 // У кінці — картка рецепту під скріншот (без брендування) зі своїми полями: помел, кава, температура…
-import { fmt, beep, wake, timeline } from './tmr.js?v=mwi7c3pu';
+import { fmt, beep, wake, timeline } from './tmr.js?v=mwi7vw4j';
 
 // вливання — проста сітка 10…200 г з кроком 10
 const STEPS = Array.from({ length: 20 }, (_, i) => (i + 1) * 10);
@@ -83,6 +83,7 @@ if (box && calc) {
     return [`Злилось за ${fmt(t)} — довше за ціль ~${fmt(tg)}.`, 'Якщо смак важкий чи гіркий, наступного разу змели трохи крупніше.'];
   }
   function finish() {
+    window.plt?.('timer_done', 'filter', null, Math.round(el()));
     doneAt = el(); clearInterval(tick); tick = null; screen.off(); beep(); window.PL_BUSY = false;
     $('ftClock').textContent = fmt(doneAt); $('ftPick').hidden = true; $('ftDone').hidden = true;
     say(...verdict(doneAt));

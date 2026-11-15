@@ -1,6 +1,6 @@
 // Режим фокусу: таймер на весь екран. Наступний крок видно заздалегідь — з відліком і лінійною мапою,
 // щоб не читати й лити одночасно. За 3 с до кроку — короткі сигнали, на крок — подвійний сигнал і вібро. Екран не гасне.
-import { fmt, beep, wake, timeline } from './tmr.js?v=mwi7c3pu';
+import { fmt, beep, wake, timeline } from './tmr.js?v=mwi7vw4j';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let el = null;
@@ -103,6 +103,7 @@ export function openFocus(recipe) {
     $('fxGo').textContent = 'Далі таймер'; frame();
   }
   function finish() {
+    if (recipe._k) window.plt?.('timer_done', recipe._k, null, Math.round(now()));
     pausedAt = now(); run = false; clearInterval(timer); screen.off(); window.PL_BUSY = false;
     $('fxGo').textContent = 'Ще раз'; $('fxTap').hidden = true; $('fxNextBox').hidden = true;
     el.classList.add('done');

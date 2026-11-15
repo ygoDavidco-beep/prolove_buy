@@ -1,5 +1,5 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwi7c3pu';
+import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwi7vw4j';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
@@ -154,6 +154,7 @@ function act(a) {
 function finish() {
   cancelAnimationFrame(raf); started = false;
   const o = s.over, bt = fmt(o.BT) + '°';
+  window.plt?.('game', o.kind, s.wake ? s.wake.toFixed(1) : null, Math.round(o.BT * 10) / 10);
   const black = o.kind === 'black' || (o.kind === 'over' && o.BT >= 214);
   $('smoke').classList.toggle('on', black);
   if (o.kind === 'baked' || black) sadTrombone(); else if (o.kind === 'win') fanfare();

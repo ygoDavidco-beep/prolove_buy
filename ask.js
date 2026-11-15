@@ -86,7 +86,7 @@ let chat = store.get();
 const METH = { espresso: 'еспресо', superauto: 'суперавтомат', moka: 'гейзер', cezve: 'турка', filter: 'фільтр', milk: 'молочні напої', cafe: "кав'ярні" };
 const shown = new Set();
 function lotCard(l) {
-  blk.insertAdjacentHTML('beforeend', `<a class="lot" href="index.html#${esc(l.id)}"><b>${esc(l.name)}</b><span class="go">у стрічку →</span>
+  blk.insertAdjacentHTML('beforeend', `<a class="lot" data-ql="${esc(l.id)}" href="index.html#${esc(l.id)}"><b>${esc(l.name)}</b><span class="go">у стрічку →</span>
     <span style="color:${l.color}">${esc(l.taste)}</span>${l.methods?.length ? `<small>${esc(l.methods.map(m => m.short).join(' · '))}</small>` : ''}</a>`);
 }
 async function sayLine(who, text, cls) {
@@ -110,6 +110,8 @@ async function search(q) {
   }
   const m = r.match || { lots: [] };
   setMood(m.mood, q, m);
+  // у статистику — слова, які людина написала сама (без наших розширень «солодке → карамель, мед…»), і намір
+  window.plt?.('q', q, `${(m.own?.length ? m.own : m.words || []).slice(0, 8).join(',')}|${m.mood || ''}|${(m.intents || []).join(',')}`, (m.lots || []).length);
   if (/доставк|оплат|поверн|замовлен|рахун|опт\b|оптов/i.test(q)) {
     await type(r.owner ? '&gt; передав ростеру — Давид відповість тут' : '&gt; це питання до людей — контакти в «Інфо»');
     blk.insertAdjacentHTML('beforeend', '<a class="lot" href="info.html"><b>Інфо і підтримка</b><span class="go">→</span><small>доставка, оплата, контакти</small></a>');
@@ -215,3 +217,6 @@ setInterval(() => { if (document.activeElement !== $('#q') && !$('#q').value) $(
   const q = new URLSearchParams(location.search).get('q');
   if (q) { $('#q').value = q; search(q); }
 })();
+
+// статистика: з Матриці перейшли на лот
+document.addEventListener('click', e => { const a = e.target.closest('a[data-ql]'); if (a) window.plt?.('q_lot', a.dataset.ql); });

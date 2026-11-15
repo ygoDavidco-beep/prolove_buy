@@ -22,6 +22,7 @@
       var t = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       try { localStorage.setItem(KEY, t); } catch (e) { /* приватний режим */ }
       apply(t);
+      if (window.plt) window.plt('theme', t === 'dark' ? 'night' : 'day');
     });
   });
 })();

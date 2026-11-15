@@ -120,7 +120,7 @@ function render() {
       const page = pageOf(p);
       markDots(p, page);
       if (p.closest('.lot') === feed.querySelectorAll('.lot')[Math.round(feed.scrollTop / H())]) brow.classList.toggle('on', page === 1 || browPinned);
-      clearTimeout(p._t); p._t = setTimeout(() => { if (Math.abs(p.scrollLeft - page * p.clientWidth) < 2 && page !== view) { view = page; syncView(p); } }, 120);
+      clearTimeout(p._t); p._t = setTimeout(() => { if (Math.abs(p.scrollLeft - page * p.clientWidth) < 2 && page !== view) { view = page; syncView(p); if (page === 1) window.plt?.('desc', LOTS[current]?.id); } }, 120);
     }, { passive: true });
   });
   new ResizeObserver(() => syncView(null)).observe(feed);
@@ -151,7 +151,16 @@ function tasteMatch() {
 addEventListener('pagehide', () => {
   try { if (LOTS[current]) sessionStorage.setItem('pl_pos', JSON.stringify({ id: LOTS[current].id, view })); } catch { /* приватний режим */ }
 });
+// статистика: скільки секунд людина дивилась на лот (рахуємо від 1,2 с, щоб не ловити проскролені)
+const seen = { k: -1, t: 0 };
+function lotSeenFlush() {
+  if (seen.k >= 0 && LOTS[seen.k]) { const sec = (performance.now() - seen.t) / 1000; if (sec >= 1.2) window.plt?.('lot', LOTS[seen.k].id, null, Math.round(Math.min(sec, 600) * 10) / 10); }
+  seen.k = -1;
+}
+addEventListener('pagehide', lotSeenFlush);
+addEventListener('pl:world', e => { if (e.detail !== 'kava') lotSeenFlush(); else if (seen.k < 0) { seen.k = current; seen.t = performance.now(); } });
 function setCurrent(k) {
+  if (k !== seen.k) { lotSeenFlush(); seen.k = k; seen.t = performance.now(); }
   current = k;
   const l = LOTS[k];
   $('#p250').textContent = uah(l.price250);
@@ -205,6 +214,7 @@ cart = cart.map(c => ({ id: c.id, w: +c.w, g: gKey(c.g) }));
 function addToCart(k, w, g = 'beans', quiet = false) {
   const l = LOTS[k], item = { id: l.id, w: +w, g: gKey(g) };
   cart.push(item); store.set('pl_cart', cart); renderCart();
+  window.plt?.('cart', l.id, `${+w}:${gKey(g)}`);
   if (!quiet) toast(`${l.name}, ${wTxt(w)}, ${gTxt(g)} — у кошику`);
   return item;
 }
@@ -260,6 +270,7 @@ let me = null;
 fetch('/api/me').then(r => r.json()).then(j => { me = j.me; }).catch(() => {});
 async function openCart() {
   const L = lines();
+  if (L.length) window.plt?.('cart_open', null, null, cart.length);
   if (!L.length) { closeSheet(); return; }
   // що вже введено у форму — не губимо при зміні кількості
   let prev = $('#checkout') ? Object.fromEntries(new FormData($('#checkout'))) : null;
@@ -305,6 +316,7 @@ async function openCart() {
   // пакування змінює суму на кнопці (остаточну суму все одно рахує сервер)
   $('#checkout')?.addEventListener('change', e => {
     if (e.target.name !== 'gift') return;
+    window.plt?.('gift', null, e.target.checked ? 'on' : 'off');
     const b = $('#checkout button[type=submit]');
     b.textContent = `Замовити · ${uah(+b.dataset.total + (e.target.checked ? giftP : 0))}`;
     if (e.target.checked) $('#checkout .giftnote')?.focus({ preventScroll: true });
@@ -318,6 +330,7 @@ async function submitOrder(e) {
     const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...Object.fromEntries(f), items: lines().map(x => ({ id: x.id, w: x.w, g: x.g, qty: x.qty })) }) });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'Не вдалося оформити');
+    window.plt?.('order', j.number, f.get('gift') ? 'gift' : null, j.total);
     cart = []; store.set('pl_cart', cart); renderCart();
     openSheet(`<div class="handle"></div><h5>Замовлення ${esc(j.number)}</h5>
       <p>Дякуємо! Сума: <b>${uah(j.total)}</b>. ${j.invoice ? 'Рахунок готовий — оплатити можна в один дотик.' : 'Ми зв\'яжемося для підтвердження.'}</p>
@@ -336,7 +349,7 @@ try { if (sessionStorage.getItem('pl_back_cart')) { sessionStorage.removeItem('p
 function openSheet(html, keepScroll) { const y = sheet.scrollTop; sheet.innerHTML = html; sheet.classList.add('on'); shade.classList.add('on'); sheet.scrollTop = keepScroll ? y : 0; }
 function closeSheet() {
   sheet.classList.remove('on'); shade.classList.remove('on');
-  if (paused) { paused = null; toast('Покупку скасовано'); }
+  if (paused) { window.plt?.('cancel', LOTS[paused.k]?.id); paused = null; toast('Покупку скасовано'); }
 }
 shade.onclick = closeSheet;
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
@@ -441,6 +454,7 @@ function fsPaint(x) {
 }
 feed.addEventListener('pointerdown', e => {
   const hit = e.target.closest('.card .sc-hit');
+  if (hit) window.plt?.('scrub', LOTS[current]?.id);
   if (!hit || e.button || fs) return;
   e.preventDefault();
   const r = hit.getBoundingClientRect(), host = $('#w-kava .app') || $('#w-kava');

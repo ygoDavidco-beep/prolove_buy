@@ -1,7 +1,7 @@
 // Сторінка способу: /method?m=cezve. Комікс за рецептом PROLOVE, кнопка таймера на весь екран і «Рецепти чемпіонів».
-import { METHODS, ORDER, COMPASS } from './methods.js?v=mwi7c3pu';
-import { deviceIcon } from './art.js?v=mwi7c3pu';
-import { openFocus } from './focus.js?v=mwi7c3pu';
+import { METHODS, ORDER, COMPASS } from './methods.js?v=mwi7vw4j';
+import { deviceIcon } from './art.js?v=mwi7vw4j';
+import { openFocus } from './focus.js?v=mwi7vw4j';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const key = new URLSearchParams(location.search).get('m');
@@ -15,6 +15,7 @@ if (!M) {
   location.replace(`brew${sfx}`);
 } else {
   document.title = `${M.title} — як заварити — PROLOVE`;
+  window.plt?.('method', key);
   const i = ORDER.indexOf(key), prev = ORDER[i - 1], next = ORDER[i + 1];
   main.innerHTML = `
   <header class="cover mcover">
@@ -62,6 +63,7 @@ if (!M) {
     const C = COMPASS[key], p = cp.k === 'both' ? C.both : C.points[+cp.k], card = main.querySelector('#cpCard');
     const last = cp.i >= p.steps.length - 1;
     card.hidden = false;
+    window.plt?.('compass', key, p.name, cp.i + 1);
     card.innerHTML = `<h3>${esc(p.name)}</h3><p class="cp-why">${esc(p.why)}</p>
       <p class="cp-step"><b>${p.steps.length > 1 ? `Крок ${cp.i + 1} із ${p.steps.length}` : 'Дія'}</b>${esc(p.steps[cp.i])}</p>
       ${last ? (p.steps.length > 1 ? '<p class="cp-why">Усе ще не те? Напиши нам — підберемо разом.</p>' : '') : '<button type="button" class="btn ghost" data-cp-next>Спробував — не допомогло</button>'}`;
@@ -72,9 +74,10 @@ if (!M) {
     if (pt) { const k = pt.dataset.cp; if (cp.k === k) cp.i = Math.min(cp.i + 1, (k === 'both' ? COMPASS[key].both : COMPASS[key].points[+k]).steps.length - 1); else { cp.k = k; cp.i = 0; } showCp(); return; }
     if (e.target.closest('[data-cp-next]')) { cp.i += 1; showCp(); return; }
     const b = e.target.closest('[data-fx]'); if (!b) return;
-    if (b.dataset.fx === 'base') return openFocus(M.timer);
+    if (b.dataset.fx === 'base') { window.plt?.('timer', key, 'base'); return openFocus({ ...M.timer, _k: key }); }
     const c = M.champs[+b.dataset.fx];
-    openFocus({ name: `${c.who} · ${c.champ} ${c.year}`, params: c.params, prep: `${c.purpose}. Підготуй каву й воду — «Старт» разом із першим поливом.`, steps: c.steps });
+    window.plt?.('timer', key, `${c.who} ${c.year}`);
+    openFocus({ _k: key, name: `${c.who} · ${c.champ} ${c.year}`, params: c.params, prep: `${c.purpose}. Підготуй каву й воду — «Старт» разом із першим поливом.`, steps: c.steps });
   });
   if (M.tools) { import('./calc.js').then(() => import('./filter.js')); }
 }
