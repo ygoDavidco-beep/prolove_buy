@@ -275,3 +275,31 @@ html.fx-on,html.fx-on body{overflow:hidden}
 .fx-btns .btn{flex:1;font-size:19px;padding:14px}
 .fx-btns #fxTap{background:var(--water);color:#fff}
 .fx.done .fx-now{background:var(--berry);color:#fff}.fx.done .fx-now small,.fx.done .fx-k{color:#fff}
+
+/* ---------- компас смаку ---------- */
+.compass{border:3px solid var(--ink);background:var(--sheet);box-shadow:6px 6px 0 var(--ink);padding:18px 16px 14px;margin:0 0 22px}
+.cp-bar{position:relative;height:16px;border:2.5px solid var(--ink);border-radius:10px;margin:10px 10px 6px;
+  background:linear-gradient(90deg,#5EC4CC,#9ED9A0 22%,#F2D25A 38%,#FF6F8E 52%,#F28C28 74%,#8A3B1E)}
+.cp-pt{position:absolute;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;border:3px solid var(--ink);background:var(--sheet);padding:0;cursor:pointer;box-shadow:2px 2px 0 var(--ink);transition:transform .15s}
+.cp-pt.on{background:var(--gold);transform:scale(1.25)}
+.cp-ends{display:flex;justify-content:space-between;font:500 12px var(--head);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 2px 12px}
+.cp-list{display:flex;flex-direction:column;gap:7px}
+.cp-list button{text-align:left;border:2px solid var(--ink);background:#fff;border-radius:10px;padding:10px 12px;font:600 15px/1.25 var(--body);color:var(--ink);cursor:pointer}
+.cp-list button.on{background:var(--ink);color:#fff}
+.cp-list button[data-cp=both]{border-style:dashed}
+.cp-card{margin-top:14px;border:3px solid var(--ink);background:var(--gold);padding:12px 14px;box-shadow:4px 4px 0 var(--ink)}
+.cp-card h3{margin:0 0 4px;font:500 20px/1.1 var(--head);text-transform:uppercase}
+.cp-why{margin:0 0 8px;font-size:14.5px}
+.cp-step{margin:0 0 10px;font:400 clamp(19px,5vw,23px)/1.25 var(--hand)}
+.cp-step b{display:block;font:500 12.5px var(--head);letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+.cp-card .btn{width:100%;font-size:15px;padding:10px}
+.cp-rule{margin:12px 0 0;font-weight:700;font-size:14px}
+
+/* ---------- статті ---------- */
+.acover .title h1{font-size:clamp(34px,10vw,58px)}
+.acheck{list-style:none;margin:0 0 18px;padding:14px 16px;border:3px solid var(--ink);background:var(--sheet);box-shadow:5px 5px 0 var(--ink);display:grid;gap:8px}
+.acheck li{position:relative;padding-left:30px;font-weight:600;font-size:15.5px;line-height:1.35}
+.acheck li::before{content:"✓";position:absolute;left:0;top:-1px;width:22px;height:22px;border:2px solid var(--ink);border-radius:5px;background:var(--gold);font:700 14px/20px var(--body);text-align:center}
+.asrc{font-size:13.5px;color:var(--muted);margin:0 0 18px}.asrc a{color:var(--ink)}
+.ahub .pnl .cap h3{font-size:19px}
+.hub.ahub{gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}.ahub .pnl{height:100%}@media (max-width:520px){.hub.ahub{grid-template-columns:1fr}}

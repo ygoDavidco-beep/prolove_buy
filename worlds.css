@@ -17,6 +17,9 @@
 #w-kava .pack img{width:100%;display:block;pointer-events:none;user-select:none}
 #w-kava .pack .topzone{position:absolute;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 44px);background:none;border:0;z-index:4}
 #w-kava .label{flex:0 0 auto;position:relative;margin:0 80px 0 20px;z-index:3;background:none;border:0;padding:0;text-align:left;color:var(--ink)}
+#w-kava .pack{background:radial-gradient(90% 32% at 30% 100%,color-mix(in srgb,var(--lotc) 16%,transparent),transparent 72%),#000}
+#w-kava .label .mine{display:inline-block;margin-bottom:6px;padding:3px 9px;border-radius:999px;font:700 11.5px/1.2 var(--body);letter-spacing:.04em;text-transform:uppercase;color:#000;background:var(--lotc)}
+#w-kava .label .mine[hidden]{display:none}
 #w-kava .label .n{font-size:clamp(22px,6.8vw,30px);font-weight:600;line-height:1.1;letter-spacing:-.01em;display:block}
 #w-kava .label .t{font-size:clamp(14px,3.9vw,16px);font-weight:700;margin:5px 0 8px;line-height:1.35;display:block}
 #w-kava .label .d{font-size:clamp(12.5px,3.5vw,14.5px);line-height:1.45;color:rgba(246,240,235,.85);display:block}
@@ -126,6 +129,8 @@
 #w-ask .hint button{flex:0 0 auto;background:rgba(0,0,0,.6);border:1px solid rgba(94,196,204,.35);border-radius:999px;padding:7px 12px;font:600 13px/1 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:rgba(233,255,251,.85);cursor:pointer;white-space:nowrap}
 #w-ask .hint button:active{background:rgba(94,196,204,.25)}
 #w-ask .out{width:min(560px,100%);font:14.5px/1.55 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:#CFEDEA;max-height:52vh;overflow-y:auto}
+#w-ask .out .blk+.blk{border-top:1px dashed rgba(207,237,234,.18);margin-top:12px;padding-top:10px}
+#w-ask .out .blk:not(:first-child){opacity:.6}
 #w-ask .out .ln{white-space:pre-wrap;word-break:break-word}
 #w-ask .out .dim{color:rgba(207,237,234,.5)}
 #w-ask .out a.lot{display:block;text-decoration:none;color:inherit;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.72);border-radius:12px;padding:10px 12px;margin:8px 0}

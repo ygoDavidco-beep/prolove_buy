@@ -69,12 +69,15 @@ function still() { // без анімації: статичний візерун
 
 // ---------- друк відповіді ----------
 const out = $('#out');
+// нова розмова — вгорі, одразу під полем; старі блоки з'їжджають униз
+let blk = out;
+function newBlock() { blk = document.createElement('div'); blk.className = 'blk'; out.prepend(blk); out.scrollTop = 0; return blk; }
 const sleep = ms => new Promise(r => setTimeout(r, calm ? 0 : ms));
 async function type(html, cls = '') {
-  const d = document.createElement('div'); d.className = 'ln cur ' + cls; out.append(d);
+  const d = document.createElement('div'); d.className = 'ln cur ' + cls; blk.append(d);
   const tmp = document.createElement('div'); tmp.innerHTML = html; const text = tmp.textContent;
   for (let i = 1; i <= text.length; i += 2) { d.textContent = text.slice(0, i); await sleep(14); }
-  d.innerHTML = html; d.classList.remove('cur'); out.scrollTop = out.scrollHeight;
+  d.innerHTML = html; d.classList.remove('cur');
 }
 let busy = false;
 // розмова: токен і останнє побачене повідомлення — щоб відповідь Давида знайшла людину навіть після перезаходу
@@ -83,7 +86,7 @@ let chat = store.get();
 const METH = { espresso: 'еспресо', superauto: 'суперавтомат', moka: 'гейзер', cezve: 'турка', filter: 'фільтр', milk: 'молочні напої', cafe: "кав'ярні" };
 const shown = new Set();
 function lotCard(l) {
-  out.insertAdjacentHTML('beforeend', `<a class="lot" href="index.html#${esc(l.id)}"><b>${esc(l.name)}</b><span class="go">у стрічку →</span>
+  blk.insertAdjacentHTML('beforeend', `<a class="lot" href="index.html#${esc(l.id)}"><b>${esc(l.name)}</b><span class="go">у стрічку →</span>
     <span style="color:${l.color}">${esc(l.taste)}</span>${l.methods?.length ? `<small>${esc(l.methods.map(m => m.short).join(' · '))}</small>` : ''}</a>`);
 }
 async function sayLine(who, text, cls) {
@@ -93,7 +96,7 @@ async function sayLine(who, text, cls) {
 async function search(q) {
   q = q.trim(); if (!q || busy) return; busy = true;
   $('#term').classList.add('up'); HL = null; HLPOOL = [];
-  if (out.children.length) out.insertAdjacentHTML('beforeend', '<div class="sep"></div>');
+  newBlock();
   await type(`&gt; ${esc(q)}`, 'dim');
   let r = null;
   try {
@@ -109,7 +112,7 @@ async function search(q) {
   setMood(m.mood, q, m);
   if (/доставк|оплат|поверн|замовлен|рахун|опт\b|оптов/i.test(q)) {
     await type(r.owner ? '&gt; передав ростеру — Давид відповість тут' : '&gt; це питання до людей — контакти в «Інфо»');
-    out.insertAdjacentHTML('beforeend', '<a class="lot" href="info.html"><b>Інфо і підтримка</b><span class="go">→</span><small>доставка, оплата, контакти</small></a>');
+    blk.insertAdjacentHTML('beforeend', '<a class="lot" href="info.html"><b>Інфо і підтримка</b><span class="go">→</span><small>доставка, оплата, контакти</small></a>');
   } else {
     const found = (m.lots || []).map(x => ({ ...x, lot: LOTS.find(l => l.id === x.id) })).filter(x => x.lot);
     if (m.missing) {
@@ -150,7 +153,9 @@ const poll = (() => {
     try {
       const r = await fetch(`/api/chat?token=${encodeURIComponent(chat.token)}&after=${chat.last || 0}`).then(x => x.json());
       if (r.error) { chat = {}; store.set(chat); return stop(); }
-      for (const msg of r.messages || []) if (msg.role !== 'user') { $('#term').classList.add('up'); await render(msg); since = Date.now(); }
+      const fresh = (r.messages || []).filter(m => m.role !== 'user');
+      if (fresh.length) { $('#term').classList.add('up'); newBlock(); }
+      for (const msg of fresh) { await render(msg); since = Date.now(); }
     } catch { /* мережа — спробуємо пізніше */ }
     if (Date.now() - since > 30 * 60e3) stop(); // пів години тиші — перестаємо питати
   }
@@ -184,6 +189,7 @@ function setMood(mood, q, m) {
   if (!mood) return; // незрозумілий запит не стирає вже відомий смак
   paintMood(mood);
   taste.set({ mood, q: q.slice(0, 60), words: (m.words || []).slice(0, 8), at: Date.now() });
+  dispatchEvent(new CustomEvent('pl:taste'));
 }
 
 // підказки в полі по черзі

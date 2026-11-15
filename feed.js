@@ -21,7 +21,7 @@ const icon = {
 };
 
 function packHTML(l, k) {
-  return `<div class="page pack" data-k="${k}">
+  return `<div class="page pack" data-k="${k}" style="--lotc:${l.color}">
     <button class="topzone" type="button" aria-label="Показати меню"></button>
     <div class="wm"><img src="img/wordmark.png" alt="PROLOVE"></div>
     <div class="lg"><img src="img/logo.png" alt=""></div>
@@ -31,6 +31,7 @@ function packHTML(l, k) {
       <button type="button" data-mood><span class="ic"><svg viewBox="0 0 24 24">${icon.mood}</svg></span>Настрій</button>
     </div>
     <button class="label" type="button" data-open="${k}">
+      <span class="mine" hidden>твій смак</span>
       <span class="n">${esc(l.name)}</span>
       <span class="t" style="color:${l.color}">Смак: ${esc(l.taste)}.</span>
       <span class="d">${l.process_label ? `Обробка: ${esc(l.process_label)}<br>` : ''}${l.farm ? `Ферма: ${esc(l.farm)}<br>` : ''} ${l.altitude ? `Висота: ${esc(l.altitude)}` : ''}</span>
@@ -85,7 +86,17 @@ function render() {
   let back = null;
   try { back = JSON.parse(sessionStorage.getItem('pl_pos') || 'null'); } catch { /* приватний режим */ }
   const fromHash = LOTS.findIndex(l => '#' + l.id === location.hash);
-  const start = Math.max(0, fromHash >= 0 ? fromHash : LOTS.findIndex(l => l.id === back?.id));
+  // смак, який людина назвала в Матриці (лише в її браузері): стрічка відкривається на найближчому лоті
+  const mine = tasteMatch();
+  const mark = m => feed.querySelectorAll('.lot').forEach(a => { a.querySelector('.mine').hidden = !m.ids.includes(LOTS[+a.dataset.k].id); });
+  mark(mine);
+  // людина щойно назвала смак у Матриці: поки стрічку не видно, тихо ставимо її на «свій» лот
+  addEventListener('pl:taste', () => {
+    const m = tasteMatch(); mark(m);
+    if (m.best >= 0 && document.getElementById('w-kava')?.dataset.vis === '0') { jump(N + m.best); setCurrent(m.best); }
+  });
+  const backK = LOTS.findIndex(l => l.id === back?.id);
+  const start = Math.max(0, fromHash >= 0 ? fromHash : backK >= 0 ? backK : mine.best);
   if (fromHash < 0 && back?.view === 1) view = 1;
   requestAnimationFrame(() => jump(N + start));
   let lastH = 0;
@@ -120,6 +131,21 @@ function render() {
   syncView(null);
   setCurrent(start);
   peekBrow();
+}
+
+// Матриця зберігає { mood, words } у localStorage.pl_taste. Лот «твій» — якщо в ньому справді є названі слова;
+// найкращий — більше збігів, а за рівності ближчий на шкалі вогню до настрою (кислинка 0.1, солодке 0.3, тепле 0.8).
+const MOOD_FLAME = { bright: 0.1, sweet: 0.3, deep: 0.8 };
+function tasteMatch() {
+  let t = null;
+  try { t = JSON.parse(localStorage.getItem('pl_taste')); } catch { /* приватний режим */ }
+  if (!t || Date.now() - t.at > 60 * 864e5) return { ids: [], best: -1 };
+  const want = (t.words || []).map(w => String(w).toLowerCase());
+  const goal = MOOD_FLAME[t.mood] ?? 0.5;
+  const scored = LOTS.map((l, k) => ({ k, id: l.id, hit: l.words.filter(w => want.includes(w.word.toLowerCase())).length, d: Math.abs((l.flame ?? 0.5) - goal) }))
+    .sort((a, b) => b.hit - a.hit || a.d - b.d);
+  const ids = scored.filter(x => x.hit > 0).slice(0, 3).map(x => x.id);
+  return { ids, best: ids.length ? scored[0].k : -1 };
 }
 
 addEventListener('pagehide', () => {
