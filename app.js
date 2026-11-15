@@ -91,7 +91,7 @@ function step(dir) {
 // ---------- дотик ----------
 const EDGE = 18; // від самого краю — системний «назад» телефона, не чіпаємо
 // кнопки поверх стрічки (кошик, вага, повідомлення, правий ряд) — лише тапи, свайп із них не починаємо
-const SKIP = 'input, textarea, select, [contenteditable], .hint, .sheet, .nav, .cartpill, .buy, .btoast, .rail, .toast';
+const SKIP = 'input, textarea, select, [contenteditable], .hint, .sheet, .nav, .cartpill, .buy, .btoast, .rail, .toast, .sc-hit';
 let g = null;
 worlds.addEventListener('touchstart', e => {
   g = null;

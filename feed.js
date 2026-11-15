@@ -48,15 +48,23 @@ function cardHTML(l, k) {
       <div><div class="nm">${esc(l.name)}</div><div class="s">${esc([l.country, l.farm && 'Ферма ' + l.farm].filter(Boolean).join(' · '))}</div></div></div>
     <div class="chips">${l.words.map(w => `<span class="chip" style="color:${w.color}">${esc(w.word[0].toUpperCase() + w.word.slice(1))}</span>`).join('')}</div>
     ${pos === null ? '' : `<div class="box"><h4>Смак на шкалі вогню</h4>
-      <div class="sc" style="background:${MAP.gradient}"><i style="left:${pos}%;background:${l.color}"></i></div>
+      <div class="sc-hit" role="slider" aria-label="Гортай лоти за смаком" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pos}" tabindex="0">
+        <div class="sc" style="background:${MAP.gradient}">${ticksHTML(k)}<i style="left:${pos}%;background:${l.color}"></i></div></div>
       <div class="scl"><span>свіжа кислинка</span><span>тепла солодкість</span></div>
-      <div class="cats">${l.categories.map(c => `<span style="color:${c.color}">${esc(c.uk)}</span>`).join('')}</div></div>`}
+      <p class="sc-tip">Веди пальцем по шкалі — гортай лоти за смаком</p>
+      <div class="cats">${l.categories.map(c => `<span style="color:${c.color}">${esc(c.uk)}</span>`).join('')}</div>
+      <p class="sc-note">Смаковий профіль і шкалу вогню складають технологи PROLOVE — це наше суб'єктивне відчуття. Кожна людина індивідуальна і відчуває букет по-своєму, а смак змінюється від способу приготування, води й обладнання. Ми куштуємо нашу каву в різних варіаціях, щоб робити її смачнішою для вас.</p></div>`}
     ${l.methods?.length ? `<div class="box"><h4>Як готувати</h4>${methLinks(l)}</div>` : ''}
     <div class="box"><h4>Паспорт лота</h4><dl class="kv">
       ${l.process_label ? `<dt>Обробка</dt><dd>${esc(l.process_label)}</dd>` : ''}${l.variety ? `<dt>Різновид</dt><dd>${esc(l.variety)}</dd>` : ''}${l.farm ? `<dt>Ферма</dt><dd>${esc(l.farm)}</dd>` : ''}${l.altitude ? `<dt>Висота</dt><dd>${esc(l.altitude)}</dd>` : ''}${l.country ? `<dt>Країна</dt><dd>${esc(l.country)}</dd>` : ''}
     </dl></div>
     ${l.description ? `<p class="desc-p">${esc(l.description)}</p>` : ''}
   </div>`;
+}
+
+// позначки всіх лотів на шкалі вогню: по них гортаємо стрічку
+function ticksHTML(k) {
+  return LOTS.map((l, j) => (l.flame === null || l.flame === undefined || j === k ? '' : `<b class="tk" style="left:${Math.round(l.flame * 1000) / 10}%;--c:${l.color}"></b>`)).join('');
 }
 
 // спосіб приготування веде на інструкцію до нього (турка → поради для турки), призначення — просто позначка
@@ -351,6 +359,62 @@ function sortByMood(t) {
   LOTS.sort((a, b) => Math.abs((a.flame ?? 0.5) - t) - Math.abs((b.flame ?? 0.5) - t));
   render();
 }
+
+// ---------- шкала вогню: затисни і веди — стрічка позаду гортає лоти за смаком ----------
+// Шкала виходить на передній план, позаду стрічка їде лот за лотом до найближчого за смаком; відпустив — лишаєшся на ньому.
+let fs = null;
+function fsLot(t) {
+  let best = -1, d = 9;
+  LOTS.forEach((l, j) => { if (l.flame === null || l.flame === undefined) return; const x = Math.abs(l.flame - t); if (x < d - 1e-9) { d = x; best = j; } });
+  return best;
+}
+function fsGo(k) {
+  const H = feed.clientHeight, cur = Math.round(feed.scrollTop / H), base = cur - (((cur % N) + N) % N);
+  const idx = [base + k - N, base + k, base + k + N].reduce((a, b) => (Math.abs(b - cur) < Math.abs(a - cur) ? b : a));
+  feed.scrollTo({ top: idx * H, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+}
+function fsPaint(x) {
+  const bar = fs.panel.querySelector('.fs-bar'), r = bar.getBoundingClientRect();
+  const t = Math.min(1, Math.max(0, (x - r.left) / r.width)), k = fsLot(t);
+  fs.panel.querySelector('.fs-th').style.left = `${t * 100}%`;
+  if (k < 0) return;
+  const l = LOTS[k], lbl = fs.panel.querySelector('.fs-lbl');
+  fs.panel.querySelectorAll('.fs-bar b').forEach(b => b.classList.toggle('on', +b.dataset.k === k));
+  lbl.querySelector('b').textContent = l.name; lbl.querySelector('span').textContent = l.taste;
+  lbl.querySelector('span').style.color = l.color;
+  const half = Math.min(lbl.offsetWidth / 2, r.width / 2);
+  lbl.style.left = `${Math.min(r.width - half, Math.max(half, t * r.width))}px`;
+  if (k !== fs.k) { fs.k = k; navigator.vibrate?.(6); fsGo(k); }
+}
+feed.addEventListener('pointerdown', e => {
+  const hit = e.target.closest('.card .sc-hit');
+  if (!hit || e.button || fs) return;
+  e.preventDefault();
+  const r = hit.getBoundingClientRect(), host = $('#w-kava .app') || $('#w-kava');
+  const panel = document.createElement('div');
+  panel.className = 'fscrub';
+  panel.innerHTML = `<div class="fs-lbl"><b></b><span></span></div>
+    <div class="fs-bar" style="background:${MAP.gradient}">${LOTS.map((l, j) => (l.flame === null || l.flame === undefined ? '' : `<b data-k="${j}" style="left:${l.flame * 100}%;--c:${l.color}"></b>`)).join('')}<i class="fs-th"></i></div>
+    <div class="fs-ends"><span>свіжа кислинка</span><span>тепла солодкість</span></div>`;
+  panel.style.top = `${Math.max(0, r.top - host.getBoundingClientRect().top - 54)}px`;
+  host.appendChild(panel);
+  fs = { id: e.pointerId, panel, k: current };
+  feed.style.scrollSnapType = 'none';
+  try { hit.setPointerCapture(e.pointerId); } catch { /* */ }
+  requestAnimationFrame(() => { panel.classList.add('on'); fsPaint(e.clientX); });
+});
+document.addEventListener('pointermove', e => { if (fs && e.pointerId === fs.id) { e.preventDefault(); fsPaint(e.clientX); } }, { passive: false });
+function fsEnd(e) {
+  if (!fs || e.pointerId !== fs.id) return;
+  const { panel, k } = fs; fs = null;
+  panel.classList.remove('on'); setTimeout(() => panel.remove(), 220);
+  if (k >= 0) fsGo(k);
+  // снап повертаємо, коли стрічка доїхала
+  const done = () => { feed.style.scrollSnapType = ''; };
+  if ('onscrollend' in window) { let t = setTimeout(done, 900); feed.addEventListener('scrollend', () => { clearTimeout(t); done(); }, { once: true }); } else setTimeout(done, 700);
+}
+document.addEventListener('pointerup', fsEnd);
+document.addEventListener('pointercancel', fsEnd);
 
 // ---------- жести в стрічці ----------
 let lastTap = 0;
