@@ -147,17 +147,65 @@ function peekBrow() { browPinned = true; brow.classList.add('on'); clearTimeout(
 // помел: той самий лот, але для пакування — окрема позиція (ключ id:вага:помел)
 const GRIND = [['beans', 'зерно'], ['espresso', 'еспресо'], ['cezve', 'турка'], ['cup', 'чашка'], ['moka', 'гейзер'], ['aeropress', 'аеропрес'], ['v60', 'V-60'], ['clever', 'клевер / фільтр до 600 мл', '2–3 чашки'], ['filter', 'фільтр понад 800 мл']];
 const GN = Object.fromEntries(GRIND);
+// мапа помелу: від дрібного до крупного, над кожним — мінімалістичний образ; смуга — від солодкого червоного до світлого, тихіше за смаки
+const GMAP = [
+  ['cezve', 'турка', 'M9 8.5h10 M10 9c0 2.5-2.6 5-2.6 9.5 0 4.5 2.6 7.5 6.6 7.5s6.6-3 6.6-7.5C20.6 14 18 11.5 18 9 M19.8 14L29 10'],
+  ['espresso', 'еспресо', 'M3.5 11h16 M5 11v2.5c0 2.8 3 4.8 6.5 4.8s6.5-2 6.5-4.8V11 M18 13.5l11 3 M9.5 18.5v2 M13.5 18.5v2 M8.5 23h6v2a3 3 0 0 1-6 0z'],
+  ['moka', 'гейзер', 'M11.5 5.5h9 M10 8h12 M10 8l1.6 7.5h8.8L22 8 M11.6 15.5l-2.1 11h13l-2.1-11 M22.2 9.5h3v6.5l-3.6 1.4 M10 8L7.6 6.6'],
+  ['aeropress', 'аеропрес', 'M11.5 4.5h9 M12.5 4.5v8 M19.5 4.5v8 M10.5 11.5h11v14h-11z M8.5 25.5h15 M13 18h6'],
+  ['v60', 'V-60', 'M6.5 9h19l-6.8 11.5h-5.4z M12.5 12.5l2.3 5 M19.5 12.5l-2.3 5 M10.5 24h11 M14 20.5V24 M18 20.5V24'],
+  ['clever', 'клевер · до 600 мл', 'M7.5 7.5h17l-3 13.5h-11z M10.5 21h11v3h-11z M8.5 24h15 M24.4 10h2.6v5.5l-3.4 1.2'],
+  ['filter', 'фільтр · 800+ мл', 'M6 5h20v5H6z M22 10v16 M6 26h20 M9.5 14h9l-1 10h-7z M18.5 16h2v5h-1.6 M12 10v2.5 M16 10v2.5'],
+  ['cup', 'чашка', 'M7 12h15v4.5a7.5 7.5 0 0 1-15 0z M22 13.5c3.3 0 3.3 5.5 0 5.5 M5.5 27h19'],
+];
+const GCOL = ['#E8394A', '#EA4F45', '#EC6740', '#EF7E38', '#F29A4A', '#F5B26A', '#F7C88E', '#F9DCB4'];
+function grindMap() {
+  const n = GMAP.length;
+  return `<div class="gmap" data-ground="0">
+    <div class="gtabs" role="radiogroup" aria-label="Зерно чи мелена"><button type="button" role="radio" data-gt="beans" aria-checked="true">Зерно</button><button type="button" role="radio" data-gt="ground" aria-checked="false">Змолоти</button></div>
+    <div class="gname" id="gName">ціле зерно</div>
+    <div class="gsteps" role="radiogroup" aria-label="Помел">${GMAP.map(([key, name, d], i) => `<button type="button" role="radio" data-g="${key}" aria-checked="false" aria-label="${esc(name)}" style="--gc:${GCOL[i]}">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="${d}"/></svg>
+      <span class="gl"><i class="gseg" style="${i === 0 ? 'left:50%' : i === n - 1 ? 'right:50%' : ''}"></i><i class="dot" style="--s:${(4 + i * 1.5).toFixed(1)}px;--r:${i * 23}deg;border-radius:${i < 2 ? 50 : 32}%"></i></span></button>`).join('')}</div>
+    <div class="gends"><span>дрібний</span><span>крупний</span></div>
+  </div>`;
+}
 const gKey = g => (GN[g] ? g : 'beans');
 const wTxt = w => (+w === 250 ? '250 г' : '1 кг');
 const gTxt = g => (gKey(g) === 'beans' ? 'зерно' : `помел: ${GN[g]}`);
 cart = cart.map(c => ({ id: c.id, w: +c.w, g: gKey(c.g) }));
-function addToCart(k, w, g = 'beans') {
-  const l = LOTS[k];
-  cart.push({ id: l.id, w: +w, g: gKey(g) }); store.set('pl_cart', cart); renderCart();
-  toast(`${l.name}, ${wTxt(w)}, ${gTxt(g)} — у кошику`);
+function addToCart(k, w, g = 'beans', quiet = false) {
+  const l = LOTS[k], item = { id: l.id, w: +w, g: gKey(g) };
+  cart.push(item); store.set('pl_cart', cart); renderCart();
+  if (!quiet) toast(`${l.name}, ${wTxt(w)}, ${gTxt(g)} — у кошику`);
+  return item;
 }
 function renderCart() { const p = $('#cartPill'); p.hidden = !cart.length; p.textContent = `Кошик ${cart.length}`; }
-$('#buy').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) addToCart(current, b.dataset.w); });
+
+// «Купити» на пачці купує одразу. 3 секунди можна тапнути повідомлення: покупка зупиняється, відкривається штора
+// (вага, помел). Купиш там — гаразд; згорнеш — скасовано. Новий «Купити» — попередня покупка лишається, повідомлення нове.
+const btoast = document.createElement('button');
+btoast.type = 'button'; btoast.className = 'btoast'; btoast.hidden = true;
+($('#w-kava .app') || $('#w-kava'))?.appendChild(btoast);
+let pending = null, paused = null;
+function buyNow(k, w) {
+  clearTimeout(pending?.t);
+  const item = addToCart(k, w, 'beans', true);
+  const l = LOTS[k];
+  btoast.innerHTML = `<b>${esc(l.name)} · ${wTxt(w)} · зерно — у кошику</b><small>Тапни, щоб змінити помел чи вагу</small><i></i>`;
+  btoast.hidden = false; btoast.classList.remove('on'); void btoast.offsetWidth; btoast.classList.add('on');
+  pending = { k, w: +w, item, t: setTimeout(() => { btoast.classList.remove('on'); pending = null; setTimeout(() => { if (!pending) btoast.hidden = true; }, 250); }, 3000) };
+}
+btoast.addEventListener('click', () => {
+  if (!pending) return;
+  clearTimeout(pending.t);
+  const i = cart.indexOf(pending.item);
+  if (i >= 0) { cart.splice(i, 1); store.set('pl_cart', cart); renderCart(); }
+  paused = { k: pending.k, w: pending.w };
+  pending = null; btoast.classList.remove('on'); btoast.hidden = true;
+  openLot(paused.k, { w: paused.w, paused: true });
+});
+$('#buy').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) buyNow(current, b.dataset.w); });
 // кошик → оформлення. Ціни на екрані орієнтовні, остаточну суму рахує сервер.
 const lines = () => {
   const m = new Map();
@@ -225,22 +273,25 @@ $('#cartPill').onclick = openCart;
 
 // ---------- штора ----------
 function openSheet(html, keepScroll) { const y = sheet.scrollTop; sheet.innerHTML = html; sheet.classList.add('on'); shade.classList.add('on'); sheet.scrollTop = keepScroll ? y : 0; }
-function closeSheet() { sheet.classList.remove('on'); shade.classList.remove('on'); }
+function closeSheet() {
+  sheet.classList.remove('on'); shade.classList.remove('on');
+  if (paused) { paused = null; toast('Покупку скасовано'); }
+}
 shade.onclick = closeSheet;
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 let dragY = null;
 sheet.addEventListener('pointerdown', e => { if (sheet.scrollTop <= 0) dragY = e.clientY; });
 sheet.addEventListener('pointerup', e => { if (dragY !== null && e.clientY - dragY > 70) closeSheet(); dragY = null; });
 
-function openLot(k) {
+function openLot(k, opt = {}) {
   const l = LOTS[k];
-  let w = 250, g = 'beans';
+  let w = opt.w === 1000 ? 1000 : 250, g = 'beans';
   const price = () => uah(w === 250 ? l.price250 : l.price1000);
   openSheet(`<div class="handle"></div>
-    <div class="sh-top"><div class="t"><b>${esc(l.name)}</b><div class="seg"><button type="button" class="on" data-sw="250">250 г</button><button type="button" data-sw="1000">1 кг</button></div></div>
+    <div class="sh-top"><div class="t"><b>${esc(l.name)}</b><div class="seg"><button type="button"${w === 250 ? ' class="on"' : ''} data-sw="250">250 г</button><button type="button"${w === 1000 ? ' class="on"' : ''} data-sw="1000">1 кг</button></div></div>
       <button class="cta" type="button" data-buy>Купити<small id="shPrice">${price()}</small></button></div>
-    <div class="grind"><h5>Помел <small>необов'язково</small></h5>
-      <div class="gch" role="radiogroup" aria-label="Помел">${GRIND.map(([key, name, sub]) => `<button type="button" role="radio" data-g="${key}" aria-checked="${key === 'beans'}">${esc(name)}${sub ? `<small>${esc(sub)}</small>` : ''}</button>`).join('')}</div></div>
+    ${opt.paused ? '<p class="paused">Покупку призупинено. Обери вагу й помел і тисни «Купити». Згорнеш — скасуємо.</p>' : ''}
+    ${grindMap()}
     <h5>Опис</h5>
     ${l.description ? `<p>${esc(l.description)}</p>` : `<p>Смак: <b style="color:${l.color}">${esc(l.taste)}</b>.</p>`}
     <div class="chips" style="margin-bottom:10px">${l.words.map(x => `<span class="chip" style="color:${x.color}">${esc(x.word)}</span>`).join('')}</div>
@@ -250,10 +301,22 @@ function openLot(k) {
   sheet.querySelectorAll('[data-sw]').forEach(b => b.onclick = () => {
     w = +b.dataset.sw; sheet.querySelectorAll('[data-sw]').forEach(x => x.classList.toggle('on', x === b)); $('#shPrice').textContent = price();
   });
-  sheet.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
-    g = b.dataset.g; sheet.querySelectorAll('[data-g]').forEach(x => x.setAttribute('aria-checked', String(x === b)));
-  });
-  sheet.querySelector('[data-buy]').onclick = () => { addToCart(k, w, g); closeSheet(); };
+  // зерно ↔ змолоти; тап по образу одразу вмикає «змолоти». «Змолоти» без вибору — «Купити» чекає на спосіб.
+  const map = sheet.querySelector('.gmap'), buyBtn = sheet.querySelector('[data-buy]'), gName = $('#gName');
+  const setG = key => {
+    g = key;
+    const ground = g !== 'beans' && g !== null;
+    map.dataset.ground = g === 'beans' ? '0' : '1';
+    map.querySelectorAll('[data-gt]').forEach(b => b.setAttribute('aria-checked', String((b.dataset.gt === 'beans') === (g === 'beans'))));
+    map.querySelectorAll('[data-g]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.g === g)));
+    gName.textContent = g === 'beans' ? 'ціле зерно' : ground ? GMAP.find(x => x[0] === g)[1] : 'обери, під що молоти';
+    gName.classList.toggle('ask', g === null);
+    buyBtn.disabled = g === null;
+  };
+  map.querySelector('[data-gt="beans"]').onclick = () => setG('beans');
+  map.querySelector('[data-gt="ground"]').onclick = () => { if (g === 'beans') setG(null); };
+  map.querySelectorAll('[data-g]').forEach(b => b.onclick = () => setG(b.dataset.g));
+  buyBtn.onclick = () => { if (g === null) return; paused = null; addToCart(k, w, g); closeSheet(); };
 }
 
 sheet.addEventListener('click', e => {

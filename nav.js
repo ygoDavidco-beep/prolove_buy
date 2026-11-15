@@ -12,107 +12,63 @@ document.addEventListener('click', function (e) {
   } catch (err) { /* звичайне посилання */ }
 });
 
-// ---------- «Лінза»: меню справа як колесо під збільшувальним склом ----------
-// Слово в лінзі велике, сусідні менші. Затисни і крути пальцем — сторінка не міняється, поки не відпустиш;
-// тап по слову — лінза під'їжджає до нього, слово росте, і тоді перехід.
+// ---------- Меню «вугілля і вогонь» ----------
+// Видно всі розділи: графітові, як деревне вугілля; вибраний горить фірмовим вогнем (від червоного до світлого).
+// Тап — слово спалахує і перехід. Можна вести пальцем по меню: горить те слово, над яким палець, перехід — коли відпустиш.
 (function () {
   function init() {
     var tabs = document.querySelector('.nav-tabs');
-    if (!tabs || tabs.getAttribute('data-lens')) return;
-    tabs.setAttribute('data-lens', '1');
+    if (!tabs || tabs.getAttribute('data-coal')) return;
+    tabs.setAttribute('data-coal', '1');
+    tabs.classList.add('coal');
     var items = Array.prototype.slice.call(tabs.children);
-    var track = document.createElement('div'); track.className = 'lens-track';
-    items.forEach(function (it) { it.classList.add('lens-it'); it.setAttribute('draggable', 'false'); track.appendChild(it); });
-    var glass = document.createElement('i'); glass.className = 'lens-glass'; glass.setAttribute('aria-hidden', 'true');
-    tabs.appendChild(glass); tabs.appendChild(track); tabs.classList.add('lens');
-    var N = items.length, S = 84, Wd = 210, off, held = false, raf = 0, follow = true, st = null, dragEnd = 0, holdT = 0;
-    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function curIdx() {
-      for (var i = 0; i < N; i++) { var a = items[i].getAttribute('aria-current'); if (a === 'true' || a === 'page') return i; }
-      return 0;
-    }
-    function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
-    function rub(x) { if (x < 0) return -0.35 * (1 - 1 / (-x + 1)); if (x > N - 1) return N - 1 + 0.35 * (1 - 1 / (x - N + 2)); return x; }
-    function paint() {
-      track.style.transform = 'translate3d(' + (Wd / 2 - (off + 0.5) * S).toFixed(1) + 'px,0,0)';
-      for (var i = 0; i < N; i++) {
-        var d = Math.abs(i - off), s = Math.max(0.6, 1 - 0.32 * d);
-        if (d < 0.5) s *= held ? 1.14 : 1;
-        items[i].style.transform = 'scale(' + s.toFixed(3) + ')';
-        items[i].style.opacity = String(Math.max(0.3, 1 - 0.45 * d).toFixed(2));
-        items[i].classList.toggle('lens-c', d < 0.5);
-      }
-    }
-    function measure() { Wd = tabs.clientWidth || 210; S = clamp(Wd / 2.45, 62, 100); tabs.style.setProperty('--slot', S + 'px'); paint(); }
-    function tween(to, ms, done) {
-      cancelAnimationFrame(raf);
-      var from = off, t0 = performance.now(), d = to - from;
-      if (reduce || Math.abs(d) < 0.001) { off = to; paint(); if (done) done(); return; }
-      var dur = Math.max(160, ms * Math.min(1.4, Math.abs(d)));
-      raf = requestAnimationFrame(function f(now) {
-        var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
-        off = from + d * e; paint();
-        if (k < 1) raf = requestAnimationFrame(f); else { raf = 0; if (done) done(); }
-      });
-    }
-    function choose(i) {
-      follow = false;
-      var here = curIdx(), it = items[i];
-      tween(i, 240, function () {
-        it.classList.add('lens-pop');
-        setTimeout(function () {
-          it.classList.remove('lens-pop');
-          follow = true;
-          // та сама сторінка — нічого не робимо; світ на цій сторінці (кнопка) або інша сторінка (посилання)
-          if (i === here && it.tagName === 'A') return;
-          it.click();
-        }, reduce ? 0 : 150);
-      });
-    }
-    off = curIdx(); measure();
-    if (window.ResizeObserver) new ResizeObserver(measure).observe(tabs); else addEventListener('resize', measure);
-
-    tabs.addEventListener('pointerdown', function (e) {
-      if (e.button) return;
-      cancelAnimationFrame(raf); raf = 0;
-      st = { x: e.clientX, o: off, lx: e.clientX, lt: performance.now(), v: 0, moved: false, id: e.pointerId };
-      clearTimeout(holdT); holdT = setTimeout(function () { if (st) { held = true; tabs.classList.add('lens-held'); paint(); } }, 160);
+    items.forEach(function (it) {
+      var w = document.createElement('span'); w.className = 'w';
+      while (it.firstChild) w.appendChild(it.firstChild);
+      it.appendChild(w); it.setAttribute('draggable', 'false');
     });
+    var st = null, dragEnd = 0, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function at(x) {
+      for (var i = 0; i < items.length; i++) { var r = items[i].getBoundingClientRect(); if (x >= r.left && x <= r.right) return i; }
+      return x < items[0].getBoundingClientRect().left ? 0 : items.length - 1;
+    }
+    function scrub(i) { items.forEach(function (it, j) { it.classList.toggle('scrub', j === i); }); }
+    function choose(i) {
+      var it = items[i], cur = it.getAttribute('aria-current');
+      if (it.tagName === 'A' && cur === 'page') return; // уже тут
+      tabs.classList.add('scrubbing'); scrub(i); it.classList.add('ign');
+      setTimeout(function () {
+        it.classList.remove('ign'); tabs.classList.remove('scrubbing'); scrub(-1);
+        it.click();
+      }, reduce ? 0 : 160);
+    }
+    tabs.addEventListener('pointerdown', function (e) { if (!e.button) st = { x: e.clientX, id: e.pointerId, moved: false }; });
     tabs.addEventListener('pointermove', function (e) {
       if (!st) return;
-      var dx = e.clientX - st.x, now = performance.now();
       if (!st.moved) {
-        if (Math.abs(dx) < 6) return;
-        st.moved = true; held = true; tabs.classList.add('lens-held');
+        if (Math.abs(e.clientX - st.x) < 8) return;
+        st.moved = true; tabs.classList.add('scrubbing');
         try { tabs.setPointerCapture(st.id); } catch (err) { /* */ }
       }
-      st.v = 0.7 * st.v + 0.3 * ((e.clientX - st.lx) / Math.max(1, now - st.lt)); st.lx = e.clientX; st.lt = now;
-      off = rub(st.o - dx / S); paint();
+      scrub(at(e.clientX));
     });
-    function up(cancel) {
-      clearTimeout(holdT);
+    function up(cancel, e) {
       var s = st; st = null;
-      var wasHeld = held; held = false; tabs.classList.remove('lens-held');
-      if (!s) return;
-      if (!s.moved) { if (wasHeld) paint(); return; }
+      if (!s || !s.moved) return;
       dragEnd = performance.now();
-      if (cancel) { tween(curIdx(), 240); return; }
-      choose(clamp(Math.round(off - s.v * 160 / S), 0, N - 1));
+      if (cancel) { tabs.classList.remove('scrubbing'); scrub(-1); return; }
+      choose(at(e.clientX));
     }
-    tabs.addEventListener('pointerup', function () { up(false); });
-    tabs.addEventListener('pointercancel', function () { up(true); });
-    // тап і клавіатура: спершу лінза їде до слова, потім перехід (наш власний it.click() пропускаємо)
+    tabs.addEventListener('pointerup', function (e) { up(false, e); });
+    tabs.addEventListener('pointercancel', function (e) { up(true, e); });
     tabs.addEventListener('click', function (e) {
-      if (!e.isTrusted) return;
+      if (!e.isTrusted) return; // наш власний it.click() після спалаху
       e.preventDefault(); e.stopPropagation();
       if (performance.now() - dragEnd < 400) return;
-      var it = e.target.closest('.lens-it');
-      var i = items.indexOf(it);
+      var i = items.indexOf(e.target.closest('.nav-tabs > *'));
       if (i >= 0) choose(i);
     }, true);
-    // на сторінці світів лінза йде за свайпом між Матрицею і стрічкою
-    addEventListener('pl:pos', function (e) { if (follow && !st && !raf) { off = e.detail; paint(); } });
-    addEventListener('pageshow', function () { follow = true; off = curIdx(); measure(); });
+    addEventListener('pageshow', function () { tabs.classList.remove('scrubbing'); scrub(-1); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
