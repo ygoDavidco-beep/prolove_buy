@@ -1,4 +1,4 @@
-import { fmt, beep, wake, timeline } from './tmr.js?v=mwhtdso8';
+import { fmt, beep, wake, timeline } from './tmr.js?v=mwhtkf8p';
 // DRIP-комікс: лінійні ілюстрації (як на етикетці дріпа) + таймер з підказками.
 const INK = '#141014', BERRY = '#B5123E', WATER = '#3FA9BE', COFFEE = '#4A1820', GOLD = '#F2B33D';
 const svg = (vb, body, label = '') => `<svg viewBox="${vb}" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'}><g stroke="${INK}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">${body}</g></svg>`;
@@ -152,7 +152,7 @@ function paint() {
 // ---------- таймер ----------
 // Команди короткі й наказові; at — автоматично за часом, tap — після «Далі»; nag — нагадування, якщо «Далі» не натиснуто.
 // est — орієнтовний час для карти; minor — дрібна відмітка без підпису.
-const FLOWER = { at: 8, minor: true, t: 'Дивись: росте квітка.', s: 'Кава піднімається шапкою — це CO₂ виходить із зерна. Насолодись. Піна біла й з великими бульбашками — вода холодна.' };
+const FLOWER = { at: 8, minor: true, t: 'Дивись: росте квітка.', s: 'Кава піднімається шапкою — це CO₂ виходить із зерна. Насолодись. Піна біла й з великими бульбашками — вода захолодна: перевір температуру.' };
 const SMELL = { at: 20, minor: true, t: 'Понюхай!', s: 'Нахились над дріпом: після першого вливання аромат найяскравіший. Порівняй із сухим.' };
 const DRY = { after: 30, t: 'Не дай пересохнути!', s: 'Пересохла кава — гірка кава. Кава має бути під водою. Лишився ~1 см — лий далі. Стікає швидко — лий частіше й потроху.' };
 const STAGES = {

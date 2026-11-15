@@ -2,7 +2,7 @@
 // чемпіонатів і з першоджерел, переказані своїми словами з посиланням на оригінал.
 // Кроки таймера: at — секунда старту кроку; approx — орієнтовно; tap — чекає «Далі» (est — для мапи); end — фініш.
 import { svg, sfx, lbl, arrow, flip, cup, cupWhole, kettle, scale, stopwatch, flame, steam, spoon,
-  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwhtdso8';
+  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwhtkf8p';
 
 const F = (body, label) => svg('0 0 320 240', body, label);
 
@@ -150,7 +150,7 @@ export const METHODS = {
       { art: () => F(`${v60(130, 70, { water: true })}${server(130, 160, { coffee: 0.55 })}${stopwatch(264, 150, 30, 160, '2:30–3:15')}<path class="flow" d="M200 40 Q170 60 140 92" stroke="${WATER}" stroke-width="2.5" stroke-dasharray="2 9"/>${lbl(234, 30, 'крапельно', 16)}`, 'Крапельний полив і контроль часу'),
         h: 'Далі — <em>за часом</em>', p: 'Підметод — крапельний полив: тонкою цівкою, щоб поверхня весь час була змочена свіжою водою. Ціль — злити за 2:30–3:15.' },
     ],
-    tips: [DRY_TIP, { h: 'Стікає <em>швидко</em>?', p: 'Пролітає швидше — вода холодна або помел завеликий: нагрій сильніше або змели дрібніше.' }],
+    tips: [DRY_TIP, { h: 'Стікає <em>швидко</em>?', p: 'Пролітає швидше — вода захолодна або помел завеликий: перевір температуру води або змели дрібніше. Щось одне за раз.' }],
     timer: { name: 'Фільтр PROLOVE', params: '15 г · 250 г · 93–96°C', prep: 'Фільтр промитий, 15 г кави, ваги на нуль. «Старт» — разом із першим вливанням.',
       steps: [
         { at: 0, mk: '30 г', t: 'Лий 30 г — змочи всю каву.', s: 'Без сухих плям. Дивись, як квітне.' },
