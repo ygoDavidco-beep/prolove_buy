@@ -1,5 +1,5 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwi78a6z';
+import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwi7c3pu';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
@@ -71,21 +71,30 @@ function note(f0, f1, t, d, type = 'sawtooth', vol = 0.13, vib = 0) {
 // цирковий «тромбон-невдаха»: вау-вау-вау-ваааа
 function sadTrombone() { try { note(392, 380, 0, 0.42); note(370, 356, 0.45, 0.42); note(349, 336, 0.9, 0.42); note(330, 262, 1.35, 1.2, 'sawtooth', 0.14, 9); } catch { /* без звуку */ } }
 // перший крек: сухі «тріски» — короткі шумові клацання врозсип
-function crack() {
-  try {
-    const a = ac(), len = Math.floor(a.sampleRate * 0.03), buf = a.createBuffer(1, len, a.sampleRate), d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);
-    let t = a.currentTime + 0.05;
-    for (let i = 0; i < 26; i++) {
-      t += 0.04 + Math.random() * (i < 6 ? 0.25 : 0.12);
-      const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
-      src.buffer = buf; f.type = 'bandpass'; f.frequency.value = 1800 + Math.random() * 2600; f.Q.value = 1.2;
-      g.gain.value = 0.25 + Math.random() * 0.5;
-      src.connect(f).connect(g).connect(a.destination); src.start(t);
-    }
-  } catch { /* без звуку */ }
-  try { navigator.vibrate?.([12, 60, 12, 90, 12]); } catch { /* */ }
+// крек: сухі «тріски» врозсип. Тріщить безперервно від 200° до 220°: густо на початку, далі рідше
+let popBuf = null, nextPop = 0;
+function pop(a, t, loud) {
+  if (!popBuf) {
+    const len = Math.floor(a.sampleRate * 0.03); popBuf = a.createBuffer(1, len, a.sampleRate);
+    const d = popBuf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 6);
+  }
+  const src = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+  src.buffer = popBuf; f.type = 'bandpass'; f.frequency.value = 1800 + Math.random() * 2600; f.Q.value = 1.2;
+  g.gain.value = loud * (0.35 + Math.random() * 0.65);
+  src.connect(f).connect(g).connect(a.destination); src.start(t);
 }
+function crackle(bt) {
+  if (bt < FC || bt > 220) return;
+  try {
+    const a = ac(), now = a.currentTime;
+    if (nextPop < now) nextPop = now + 0.02;
+    // густота: розгоняється на 200–203°, пік 203–208°, далі стихає до 220°
+    const k = bt < 203 ? (bt - FC) / 3 : bt < 208 ? 1 : Math.max(0.25, 1 - (bt - 208) / 14);
+    const rate = 1.5 + 9 * k, loud = 0.3 + 0.45 * k;     // тріск на секунду, гучність
+    while (nextPop < now + 0.15) { pop(a, nextPop, loud); nextPop += (0.3 + Math.random() * 1.4) / rate; }
+  } catch { /* без звуку */ }
+}
+function crack() { nextPop = 0; try { navigator.vibrate?.([12, 60, 12, 90, 12]); } catch { /* */ } }
 function fanfare() { try { [523, 659, 784, 1047].forEach((f, i) => note(f, f, i * 0.12, i === 3 ? 0.5 : 0.14, 'triangle', 0.12)); } catch { /* */ } }
 
 // ---------- екран ----------
@@ -116,6 +125,7 @@ function loop(now) {
     if (Math.round(s.t / DT) % 4 === 0) hist.push({ t: s.t, bt: s.BT, ror: s.RoR });
   }
   if (s.woke && !cracked && s.BT >= FC) { cracked = true; crack(); s.crackUntil = s.t + 8; } // крек — завжди з 200°
+  if (s.woke && !s.over) crackle(s.BT);
   if (s.crash) say('Запіканка! Вогонь нижче 4 — RoR летить униз. Додай пальник!', 'crash');
   else if (s.low > 8) say('RoR падає — кава запікається. Додай вогню!', 'warn');
   else if (!s.ignited) say('Додай пальника!', 'cue');

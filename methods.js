@@ -2,7 +2,7 @@
 // чемпіонатів і з першоджерел, переказані своїми словами з посиланням на оригінал.
 // Кроки таймера: at — секунда старту кроку; approx — орієнтовно; tap — чекає «Далі» (est — для мапи); end — фініш.
 import { svg, sfx, lbl, arrow, flip, cup, cupWhole, kettle, scale, stopwatch, flame, steam, spoon,
-  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwi78a6z';
+  cezve, moka, espresso, superauto, aeropress, server, v60, orea, origami, valve, cupTop, BERRY, WATER, COFFEE } from './art.js?v=mwi7c3pu';
 
 const F = (body, label) => svg('0 0 320 240', body, label);
 
