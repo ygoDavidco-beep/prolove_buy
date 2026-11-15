@@ -1,16 +1,22 @@
 /* Світи PROLOVE на одній сторінці: гортає сам браузер, кожен світ рівно на екран і не виходить за свої межі. */
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
-.worlds{position:fixed;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;overscroll-behavior-x:none;scrollbar-width:none}
-.worlds::-webkit-scrollbar{display:none}
+.worlds{position:fixed;inset:0;display:flex;overflow:visible;will-change:transform;touch-action:pan-y}
 /* contain: paint — усе «fixed» усередині світу (штора, тост, кнопки ваги) прив'язане до свого світу і їде разом із ним */
-.world{flex:0 0 100%;width:100%;max-width:100%;height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;overflow:hidden;contain:layout paint}
+.world{flex:0 0 100%;width:100%;max-width:100%;height:100%;position:relative;overflow:hidden;contain:layout paint}
 
 /* меню зверху — вміст світів починається під ним */
 #w-kava .pack{padding-top:calc(var(--navh) + 2%)}
 #w-kava .card{padding-top:calc(var(--navh) + 14px)}
 #w-kava .pack .topzone{display:none}
-/* картка лота гортає лише пачку ↔ опис; перехід у Матрицю з пачки — у app.js (вкладене гортання на iPhone ненадійне) */
-#w-kava .pager{overscroll-behavior-x:contain}
+/* пачка ↔ опис гортає app.js за пальцем; браузеру лишаємо тільки вертикаль (стрічка і довгий опис) */
+#w-kava .pager{overflow:hidden;scroll-snap-type:none;touch-action:pan-y}
+#w-kava .card{overscroll-behavior-y:auto;will-change:transform}
+/* підказка «Заварити» за описом */
+#w-kava .pull-brew{position:absolute;right:14px;top:50%;z-index:20;display:flex;align-items:center;gap:6px;padding:10px 14px 10px 16px;border-radius:999px;
+  background:rgba(0,0,0,.82);border:1px solid rgba(255,255,255,.16);color:#F6F0EB;font:800 15px/1 var(--body,'Manrope',system-ui,sans-serif);opacity:0;pointer-events:none;transform:translate3d(40px,-50%,0)}
+#w-kava .pull-brew b{font-size:22px;color:var(--teal,#5EC4CC);line-height:.8}
+#w-kava .pull-brew.go{background:linear-gradient(90deg,#5EC4CC,#E8394A 55%,#F28C28);color:#120D0F;border-color:transparent}
+#w-kava .pull-brew.go b{color:#120D0F}
 #w-ask .term.up{top:calc(var(--navh) + 16px)}
 
 /* спосіб приготування на картці лота — посилання на інструкцію */
@@ -33,3 +39,13 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 /* кошик: місто і відділення Нової пошти поруч */
 #w-kava .checkout .np2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 #w-kava .checkout .np2 input{min-width:0}
+
+/* помел у шторі лота: за замовчуванням зерно */
+#w-kava .grind h5 small{font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:6px}
+#w-kava .gch{display:flex;flex-wrap:wrap;gap:6px}
+#w-kava .gch button{border:1px solid var(--line);background:#000;color:var(--ink);border-radius:999px;padding:8px 12px;font:700 13.5px/1.1 var(--body,'Manrope',system-ui,sans-serif);display:flex;flex-direction:column;align-items:flex-start;text-align:left;-webkit-tap-highlight-color:transparent}
+#w-kava .gch button small{font-size:11px;font-weight:600;color:var(--muted);margin-top:2px}
+#w-kava .gch button[aria-checked="true"]{background:var(--ink);color:#120D0F;border-color:var(--ink)}
+#w-kava .gch button[aria-checked="true"] small{color:#4a4044}
+#w-kava .row2 em.gr{font-style:normal;font-size:12.5px;color:var(--muted)}
+#w-kava .row2 em.gr.on{color:var(--teal,#5EC4CC);font-weight:800}

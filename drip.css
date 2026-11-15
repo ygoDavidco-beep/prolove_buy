@@ -218,3 +218,4 @@ body{margin:0;font-family:var(--body)}
 .comic{overflow-x:clip}
 .comic img,.comic svg{max-width:100%}
 .cover>*,.page>*,.rules>*,.donts>*,.hub>*,.timer>*,.calc-row>*{min-width:0}
+[hidden]{display:none!important}

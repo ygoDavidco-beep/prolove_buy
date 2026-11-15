@@ -29,3 +29,30 @@ html:active-view-transition-type(back)::view-transition-new(root){animation-name
 /* Чітка рамка: сторінка рівно на ширину екрана, вбік не тягнеться — лише гортання вгору-вниз */
 html,body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
 body:not(.pl-app){touch-action:pan-y pinch-zoom}
+
+/* ---------- «Лінза»: колесо розділів під склом ---------- */
+.nav-tabs.lens{position:relative;display:block;flex:0 1 auto;width:min(60vw,250px);height:44px;overflow:hidden;touch-action:none;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 24%,#000 76%,transparent 100%)}
+.lens-track{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;will-change:transform}
+.nav-tabs.lens .lens-it{flex:0 0 var(--slot,84px);width:var(--slot,84px);height:44px;min-height:0;padding:0;justify-content:center;gap:4px;
+  background:none;color:rgba(246,240,235,.72);font-size:15px;font-weight:800;letter-spacing:-.01em;transform-origin:50% 55%;will-change:transform,opacity;transition:color .18s}
+.nav-tabs.lens .lens-it.lens-c{color:#fff}
+.nav-tabs.lens [aria-current]{background:none}
+.nav-tabs.lens .lens-it svg{width:12px;height:12px;flex:0 0 auto}
+.lens-glass{position:absolute;left:50%;top:50%;width:calc(var(--slot,84px) + 8px);height:34px;transform:translate(-50%,-50%);border-radius:999px;pointer-events:none;
+  background:radial-gradient(110% 150% at 50% -10%,rgba(255,255,255,.2),rgba(255,255,255,.05) 55%,rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.26);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -10px 14px rgba(0,0,0,.4),0 0 18px rgba(94,196,204,.22);
+  transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s}
+.lens-glass::before{content:"";position:absolute;left:16%;top:2px;width:30%;height:3px;border-radius:3px;background:linear-gradient(90deg,rgba(255,255,255,.28),rgba(255,255,255,0))}
+.lens-glass::after{content:"";position:absolute;left:20%;right:20%;bottom:-1px;height:2px;border-radius:2px;background:linear-gradient(90deg,#5EC4CC,#E8394A 55%,#F28C28)}
+.lens-held .lens-glass{transform:translate(-50%,-50%) scale(1.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -10px 14px rgba(0,0,0,.4),0 0 26px rgba(232,57,74,.35)}
+.nav-tabs.lens .lens-it.lens-pop{animation:lens-pop .2s ease-out}
+@keyframes lens-pop{50%{transform:scale(1.22)}}
+.nav-tabs.lens .ping::after{top:9px;right:6px}
+@media (max-width:359px){.nav-tabs.lens{width:min(58vw,200px)}.nav-tabs.lens .lens-it{font-size:14px}}
+
+/* свайп на окремих сторінках: сторінка ледь тягнеться за пальцем */
+body:not(.pl-app)>:not(.nav):not(script){transition:transform .22s cubic-bezier(.2,.8,.2,1)}
+body.pl-drag:not(.pl-app)>:not(.nav):not(script){transform:translate3d(var(--pdx,0),0,0);transition:none}

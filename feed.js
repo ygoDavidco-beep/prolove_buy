@@ -79,7 +79,12 @@ function render() {
   feed.innerHTML = [0, 1, 2].map(c => LOTS.map((l, k) => lotHTML(l, k, c)).join('')).join('');
   const H = () => feed.clientHeight;
   const jump = i => feed.scrollTo({ top: i * H(), behavior: 'instant' });
-  const start = Math.max(0, LOTS.findIndex(l => '#' + l.id === location.hash));
+  // повернення зі сторінки «Заварити»: той самий лот і той самий вигляд (пачка чи опис)
+  let back = null;
+  try { back = JSON.parse(sessionStorage.getItem('pl_pos') || 'null'); } catch { /* приватний режим */ }
+  const fromHash = LOTS.findIndex(l => '#' + l.id === location.hash);
+  const start = Math.max(0, fromHash >= 0 ? fromHash : LOTS.findIndex(l => l.id === back?.id));
+  if (fromHash < 0 && back?.view === 1) view = 1;
   requestAnimationFrame(() => jump(N + start));
   let lastH = 0;
   new ResizeObserver(() => { const h = H(); if (!h) return; const i = lastH ? Math.round(feed.scrollTop / lastH) : N + start; lastH = h; jump(i); }).observe(feed);
@@ -115,6 +120,9 @@ function render() {
   peekBrow();
 }
 
+addEventListener('pagehide', () => {
+  try { if (LOTS[current]) sessionStorage.setItem('pl_pos', JSON.stringify({ id: LOTS[current].id, view })); } catch { /* приватний режим */ }
+});
 function setCurrent(k) {
   current = k;
   const l = LOTS[k];
@@ -136,17 +144,24 @@ addEventListener('pl:lot', e => {
 function peekBrow() { browPinned = true; brow.classList.add('on'); clearTimeout(peekBrow.t); peekBrow.t = setTimeout(() => { browPinned = false; setCurrent(current); }, 3000); }
 
 // ---------- кошик ----------
-function addToCart(k, w) {
+// помел: той самий лот, але для пакування — окрема позиція (ключ id:вага:помел)
+const GRIND = [['beans', 'зерно'], ['espresso', 'еспресо'], ['cezve', 'турка'], ['cup', 'чашка'], ['moka', 'гейзер'], ['aeropress', 'аеропрес'], ['v60', 'V-60'], ['clever', 'клевер / фільтр до 600 мл', '2–3 чашки'], ['filter', 'фільтр понад 800 мл']];
+const GN = Object.fromEntries(GRIND);
+const gKey = g => (GN[g] ? g : 'beans');
+const wTxt = w => (+w === 250 ? '250 г' : '1 кг');
+const gTxt = g => (gKey(g) === 'beans' ? 'зерно' : `помел: ${GN[g]}`);
+cart = cart.map(c => ({ id: c.id, w: +c.w, g: gKey(c.g) }));
+function addToCart(k, w, g = 'beans') {
   const l = LOTS[k];
-  cart.push({ id: l.id, w: +w }); store.set('pl_cart', cart); renderCart();
-  toast(`${l.name}, ${+w === 250 ? '250 г' : '1 кг'} — у кошику`);
+  cart.push({ id: l.id, w: +w, g: gKey(g) }); store.set('pl_cart', cart); renderCart();
+  toast(`${l.name}, ${wTxt(w)}, ${gTxt(g)} — у кошику`);
 }
 function renderCart() { const p = $('#cartPill'); p.hidden = !cart.length; p.textContent = `Кошик ${cart.length}`; }
 $('#buy').addEventListener('click', e => { const b = e.target.closest('[data-w]'); if (b) addToCart(current, b.dataset.w); });
 // кошик → оформлення. Ціни на екрані орієнтовні, остаточну суму рахує сервер.
 const lines = () => {
   const m = new Map();
-  for (const c of cart) { const k = c.id + ':' + c.w; m.set(k, { ...c, qty: (m.get(k)?.qty || 0) + 1 }); }
+  for (const c of cart) { const k = `${c.id}:${c.w}:${gKey(c.g)}`; m.set(k, { ...c, g: gKey(c.g), key: k, qty: (m.get(k)?.qty || 0) + 1 }); }
   return [...m.values()].map(x => ({ ...x, lot: LOTS.find(l => l.id === x.id) })).filter(x => x.lot);
 };
 const linePrice = x => (x.w === 250 ? x.lot.price250 : x.lot.price1000);
@@ -169,8 +184,8 @@ async function openCart() {
   openSheet(`<div class="handle"></div><h5>Кошик${q?.partner ? ' · ціни партнера' : ''}</h5>
     ${L.map((x, i) => {
       const it = q?.items[i], p = it ? it.price : linePrice(x), disc = it && it.price !== null && it.price < it.base;
-      return `<div class="row2"><span>${esc(x.lot.name)}, ${x.w === 250 ? '250 г' : '1 кг'}<br><small style="color:var(--muted)">${p === null ? 'ціну уточнимо' : `${disc ? `<s>${uah(it.base)}</s> ` : ''}<b style="color:${disc ? 'var(--teal)' : 'inherit'}">${uah(p)}</b>${disc && it.note ? ` · ${esc(it.note)}` : ''}`}</small></span>
-      <span class="qty"><button type="button" data-dec="${x.id}:${x.w}" aria-label="Менше">−</button><b>${x.qty}</b><button type="button" data-inc="${x.id}:${x.w}" aria-label="Більше">+</button></span></div>`;
+      return `<div class="row2"><span>${esc(x.lot.name)}, ${wTxt(x.w)}<br><em class="gr${x.g === 'beans' ? '' : ' on'}">${esc(gTxt(x.g))}</em><br><small style="color:var(--muted)">${p === null ? 'ціну уточнимо' : `${disc ? `<s>${uah(it.base)}</s> ` : ''}<b style="color:${disc ? 'var(--teal)' : 'inherit'}">${uah(p)}</b>${disc && it.note ? ` · ${esc(it.note)}` : ''}`}</small></span>
+      <span class="qty"><button type="button" data-dec="${esc(x.key)}" aria-label="Менше">−</button><b>${x.qty}</b><button type="button" data-inc="${esc(x.key)}" aria-label="Більше">+</button></span></div>`;
     }).join('')}
     <div class="row2"><b>Разом${q ? ` · ${q.total_kg.toLocaleString('uk-UA')} кг` : ''}</b><b>${missing ? '—' : uah(total)}</b></div>
     ${saved > 0 ? `<p class="saved">Знижка ${uah(saved)}</p>` : ''}
@@ -185,7 +200,7 @@ async function openCart() {
         <input name="np_branch" placeholder="Відділення або поштомат НП, №" value="${v('np_branch')}" required></div>
       <div class="payopt"><label><input type="radio" name="payment" value="invoice" ${prev?.payment !== 'cod' ? 'checked' : ''}> На рахунок<small>QR і кнопка Приват24 / mono</small></label>
         <label><input type="radio" name="payment" value="cod" ${prev?.payment === 'cod' ? 'checked' : ''}> Накладений платіж<small>оплата при отриманні</small></label></div>
-      <textarea name="comment" rows="2" placeholder="Коментар: помол, побажання">${v('comment')}</textarea>
+      <textarea name="comment" rows="2" placeholder="Коментар, побажання">${v('comment')}</textarea>
       <div class="msg" id="coMsg"></div>
       <button class="cta" type="submit" style="width:100%">Замовити · ${uah(total)}</button>
       <p class="consent">Натискаючи «Замовити», ти погоджуєшся з <a href="legal-oferta.html" target="_blank">офертою</a>, <a href="legal-delivery.html" target="_blank">умовами доставки й повернення</a> та <a href="legal-privacy.html" target="_blank">політикою конфіденційності</a>.</p>
@@ -197,7 +212,7 @@ async function submitOrder(e) {
   const f = new FormData(e.target), btn = e.target.querySelector('button[type=submit]');
   btn.disabled = true;
   try {
-    const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...Object.fromEntries(f), items: lines().map(x => ({ id: x.id, w: x.w, qty: x.qty })) }) });
+    const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...Object.fromEntries(f), items: lines().map(x => ({ id: x.id, w: x.w, g: x.g, qty: x.qty })) }) });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || 'Не вдалося оформити');
     cart = []; store.set('pl_cart', cart); renderCart();
@@ -219,11 +234,13 @@ sheet.addEventListener('pointerup', e => { if (dragY !== null && e.clientY - dra
 
 function openLot(k) {
   const l = LOTS[k];
-  let w = 250;
+  let w = 250, g = 'beans';
   const price = () => uah(w === 250 ? l.price250 : l.price1000);
   openSheet(`<div class="handle"></div>
     <div class="sh-top"><div class="t"><b>${esc(l.name)}</b><div class="seg"><button type="button" class="on" data-sw="250">250 г</button><button type="button" data-sw="1000">1 кг</button></div></div>
       <button class="cta" type="button" data-buy>Купити<small id="shPrice">${price()}</small></button></div>
+    <div class="grind"><h5>Помел <small>необов'язково</small></h5>
+      <div class="gch" role="radiogroup" aria-label="Помел">${GRIND.map(([key, name, sub]) => `<button type="button" role="radio" data-g="${key}" aria-checked="${key === 'beans'}">${esc(name)}${sub ? `<small>${esc(sub)}</small>` : ''}</button>`).join('')}</div></div>
     <h5>Опис</h5>
     ${l.description ? `<p>${esc(l.description)}</p>` : `<p>Смак: <b style="color:${l.color}">${esc(l.taste)}</b>.</p>`}
     <div class="chips" style="margin-bottom:10px">${l.words.map(x => `<span class="chip" style="color:${x.color}">${esc(x.word)}</span>`).join('')}</div>
@@ -233,14 +250,17 @@ function openLot(k) {
   sheet.querySelectorAll('[data-sw]').forEach(b => b.onclick = () => {
     w = +b.dataset.sw; sheet.querySelectorAll('[data-sw]').forEach(x => x.classList.toggle('on', x === b)); $('#shPrice').textContent = price();
   });
-  sheet.querySelector('[data-buy]').onclick = () => { addToCart(k, w); closeSheet(); };
+  sheet.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
+    g = b.dataset.g; sheet.querySelectorAll('[data-g]').forEach(x => x.setAttribute('aria-checked', String(x === b)));
+  });
+  sheet.querySelector('[data-buy]').onclick = () => { addToCart(k, w, g); closeSheet(); };
 }
 
 sheet.addEventListener('click', e => {
   const inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]');
   if (inc || dec) {
-    const [id, w] = (inc || dec).dataset[inc ? 'inc' : 'dec'].split(':');
-    if (inc) cart.push({ id, w: +w }); else { const i = cart.findIndex(c => c.id === id && c.w === +w); if (i >= 0) cart.splice(i, 1); }
+    const [id, w, g] = (inc || dec).dataset[inc ? 'inc' : 'dec'].split(':');
+    if (inc) cart.push({ id, w: +w, g: gKey(g) }); else { const i = cart.findIndex(c => c.id === id && c.w === +w && gKey(c.g) === gKey(g)); if (i >= 0) cart.splice(i, 1); }
     store.set('pl_cart', cart); renderCart(); openCart();
   }
   const m = e.target.closest('[data-moodpick]');
