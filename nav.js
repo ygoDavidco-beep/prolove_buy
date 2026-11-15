@@ -23,7 +23,7 @@ document.addEventListener('click', function (e) {
     tabs.classList.add('coal');
     var items = Array.prototype.slice.call(tabs.children);
     items.forEach(function (it) {
-      var w = document.createElement('span'); w.className = 'w';
+      var w = document.createElement('span'); w.className = 'nw';
       while (it.firstChild) w.appendChild(it.firstChild);
       it.appendChild(w); it.setAttribute('draggable', 'false');
     });

@@ -193,13 +193,17 @@ export function cupTop(cx, cy, { broken = false, rx = 100, ry = 54 } = {}) {
 // маленька іконка пристрою для карток (кадр 120×110)
 export function deviceIcon(kind) {
   const f = {
-    v60: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, orea: () => `${orea(60, 26)}`, origami: () => `${origami(60, 14)}`, valve: () => `${valve(60, 8)}`,
-    solo: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, aero: () => `${aeropress(60, 104, { press: 0.2 })}`, aeroInv: () => `<g transform="translate(15 4) scale(.5)">${aeropress(90, 200, { inverted: true })}</g>`,
-    cezve: () => `<g transform="translate(-14 0) scale(.9)">${cezve(70, 108, { foam: 0.6 })}</g>`, moka: () => `${moka(56, 106)}`,
-    espresso: () => `<g transform="scale(.66) translate(10 10)">${espresso(80, 0, { flow: true, cupY: 108 })}</g>`,
-    superauto: () => `<g transform="scale(.6) translate(30 10)">${superauto(70, 176)}</g>`,
-    cup: () => `${cupTop(60, 60, { rx: 50, ry: 28 })}`,
+    v60: () => v60(60, 14), orea: () => orea(60, 26), origami: () => origami(60, 14), valve: () => valve(60, 8),
+    solo: () => v60(60, 14), aero: () => aeropress(60, 104, { press: 0.2 }), aeroInv: () => aeropress(60, 106, { inverted: true }),
+    cezve: () => cezve(70, 108, { foam: 0.6 }), moka: () => moka(56, 106),
+    espresso: () => espresso(80, 0, { flow: true, cupY: 108 }),
+    superauto: () => superauto(70, 176),
+    cup: () => cupTop(60, 60, { rx: 50, ry: 28 }),
   }[kind];
-  // width/height — щоб Safari знав пропорцію іконки і не розтягував її поза рамку
-  return f ? svg('0 0 120 110', f()).replace('<svg ', '<svg width="120" height="110" preserveAspectRatio="xMidYMid meet" ') : '';
+  if (!f) return '';
+  // габарити малюнка виміряні (getBBox) — вписуємо кожну іконку в рамку 120×110 з полями, щоб нічого не обрізалось
+  const bb = BBOX[kind], k = Math.min(108 / bb[2], 98 / bb[3], 1.25), tx = 60 - k * (bb[0] + bb[2] / 2), ty = 55 - k * (bb[1] + bb[3] / 2);
+  return svg('0 0 120 110', `<g transform="translate(${tx.toFixed(1)} ${ty.toFixed(1)}) scale(${k.toFixed(3)})">${f()}</g>`).replace('<svg ', '<svg width="120" height="110" preserveAspectRatio="xMidYMid meet" ');
 }
+// [x, y, ширина, висота] кожної іконки у власних координатах
+const BBOX = { v60: [9, 18, 102, 72], orea: [6, 23, 108, 67], origami: [6, 14, 108, 79], valve: [10, 8, 100, 84], solo: [9, 18, 102, 72], aero: [29, -54, 62, 158], aeroInv: [29, -90, 62, 196], cezve: [29, 10, 161, 98], moka: [10, -37, 106, 143], espresso: [13, 7, 125, 98], superauto: [23, 2, 74, 109], cup: [10, 32, 100, 56] };
