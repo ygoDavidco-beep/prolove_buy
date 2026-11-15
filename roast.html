@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Вивантаж вчасно — PROLOVE</title>
+<meta name="description" content="Міні-гра PROLOVE: відчуй себе ростером — вивантаж каву вчасно.">
+<link rel="icon" href="img/favicon.png">
+<link rel="stylesheet" href="base.css?v=mwi2gxtw">
+<link rel="stylesheet" href="nav.css?v=mwi2gxtw">
+<script src="nav.js?v=mwi2gxtw"></script>
+<link rel="stylesheet" href="roast.css?v=mwi2gxtw">
+</head>
+<body>
+<header class="nav">
+  <div class="nav-wm"><a class="nav-back" href="index.html" data-back aria-label="Назад">‹</a><a href="info.html" aria-label="Про PROLOVE"><img src="img/wordmark.png" alt="PROLOVE"></a></div>
+  <nav class="nav-tabs" aria-label="Розділи"><a href="index.html?w=ask">Запитай</a><a href="index.html">Кава</a><a href="brew.html">Заварити</a><a href="partners.html"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Партнерам</a></nav>
+</header>
+<main class="rg" id="rg">
+  <header class="rg-head"><h1>Вивантаж вчасно</h1><p id="rgPrize">демо · з третьої спроби вже виходить</p></header>
+  <section class="rg-stage">
+    <figure class="drum" id="drum" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <circle class="drum-glow" cx="100" cy="100" r="86"/>
+        <circle class="drum-body" cx="100" cy="100" r="80"/>
+        <g class="drum-spin"><path d="M100 24v152M24 100h152M46 46l108 108M154 46 46 154"/></g>
+        <g class="beans" id="beans"></g>
+        <circle class="drum-rim" cx="100" cy="100" r="80"/>
+        <circle class="drum-hub" cx="100" cy="100" r="9"/>
+      </svg>
+      <div class="smoke" id="smoke"><i></i><i></i><i></i><i></i></div>
+    </figure>
+    <div class="rg-read">
+      <div class="bt"><small>Зерно</small><b id="bt">—</b></div>
+      <div class="ror"><small>RoR</small><b id="ror">—</b><em>°/хв</em></div>
+      <div class="gas"><small>Пальник</small><span class="gbar" id="gbar"><i></i><i></i><i></i><i></i></span></div>
+    </div>
+  </section>
+  <canvas class="rg-chart" id="chart" aria-label="Графік температури зерна і RoR"></canvas>
+  <p class="rg-msg" id="msg" aria-live="polite"></p>
+  <div class="rg-ctl">
+    <button type="button" class="g-dn" id="gDown" aria-label="Пальник менше">−</button>
+    <button type="button" class="g-up" id="gUp" aria-label="Пальник більше">+</button>
+    <button type="button" class="drop" id="drop">Вивантажити</button>
+  </div>
+  <section class="rg-over" id="intro">
+    <div class="rg-card">
+      <h2>Ти — ростер</h2>
+      <p>Завантажуємо зерно… Твоя ціль — вивантажити між <b>212 і 212,5°</b>.</p>
+      <ul>
+        <li><b>+</b> — більше вогню: RoR росте, але не одразу — у барабана інерція.</li>
+        <li><b>−</b> — менше вогню. Скинеш різко на низькому RoR — <b>запіканка</b>.</li>
+        <li>Пропустиш момент — зерно вигорить до чорного.</li>
+      </ul>
+      <p class="rg-load"><i id="load"></i></p>
+      <button type="button" class="drop" id="go" disabled>Завантажуємо…</button>
+    </div>
+  </section>
+  <section class="rg-over" id="result" hidden>
+    <div class="rg-card"><h2 id="rTitle"></h2><p id="rText"></p><button type="button" class="drop" id="again">Ще раз</button></div>
+  </section>
+</main>
+<script type="module" src="demo-shim.js?v=mwi2gxtw"></script>
+<script type="module" src="roast.js?v=mwi2gxtw"></script>
+</body>
+</html>
