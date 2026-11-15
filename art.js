@@ -189,12 +189,13 @@ export function cupTop(cx, cy, { broken = false, rx = 100, ry = 54 } = {}) {
 // маленька іконка пристрою для карток (кадр 120×110)
 export function deviceIcon(kind) {
   const f = {
-    v60: () => `${v60(60, 14)}`, orea: () => `${orea(60, 26)}`, origami: () => `${origami(60, 14)}`, valve: () => `${valve(60, 8)}`,
-    solo: () => `${v60(60, 14)}`, aero: () => `${aeropress(60, 104, { press: 0.2 })}`, aeroInv: () => `${aeropress(60, 106, { inverted: true })}`,
+    v60: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, orea: () => `${orea(60, 26)}`, origami: () => `${origami(60, 14)}`, valve: () => `${valve(60, 8)}`,
+    solo: () => `<g transform="translate(2 6) scale(.88)">${v60(60, 14)}</g>`, aero: () => `${aeropress(60, 104, { press: 0.2 })}`, aeroInv: () => `${aeropress(60, 106, { inverted: true })}`,
     cezve: () => `<g transform="translate(-14 0) scale(.9)">${cezve(70, 108, { foam: 0.6 })}</g>`, moka: () => `${moka(56, 106)}`,
-    espresso: () => `<g transform="scale(.7) translate(10 6)">${espresso(80, 0, { flow: true, cupY: 108 })}</g>`,
+    espresso: () => `<g transform="scale(.66) translate(10 10)">${espresso(80, 0, { flow: true, cupY: 108 })}</g>`,
     superauto: () => `<g transform="scale(.6) translate(30 10)">${superauto(70, 176)}</g>`,
     cup: () => `${cupTop(60, 60, { rx: 50, ry: 28 })}`,
   }[kind];
-  return f ? svg('0 0 120 110', f()) : '';
+  // width/height — щоб Safari знав пропорцію іконки і не розтягував її поза рамку
+  return f ? svg('0 0 120 110', f()).replace('<svg ', '<svg width="120" height="110" preserveAspectRatio="xMidYMid meet" ') : '';
 }
