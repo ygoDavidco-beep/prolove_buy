@@ -10,8 +10,9 @@
   color-scheme:light;
 }
 :root[data-theme=dark]{
-  --paper:#121011; --sheet:#1C1819; --ink:#EFE8DD; --berry:#D8264F; --berry-dk:#A01A3C; --dot:#3B262C;
-  --water:#4DBBD0; --gold:#F2B33D; --muted:#A99DA1; --card:#211C1E; --on-ink:#141014; --shadow:#000;
+  --paper:#0B0909; --sheet:#161112; --ink:#F3E9DC; --berry:#FF3D5E; --berry-dk:#C21E45; --dot:#2A1A17;
+  --water:#5EC4CC; --gold:#F2B33D; --muted:#A99DA1; --card:#120E0F; --on-ink:#0B0909; --shadow:#F2603A;
+  --flame:linear-gradient(100deg,#E8394A 0%,#F2603A 40%,#F28C28 75%,#FFD39A 100%);
   color-scheme:dark;
 }
 html,body{background:var(--paper)!important;color:var(--ink)}
@@ -310,19 +311,26 @@ html.fx-on,html.fx-on body{overflow:hidden}
 .ahub .pnl .cap h3{font-size:19px}
 .hub.ahub{gap:14px;grid-template-columns:repeat(2,minmax(0,1fr))}.ahub .pnl{height:100%}@media (max-width:520px){.hub.ahub{grid-template-columns:1fr}}
 
-/* ---------- темна тема: ілюстрації ---------- */
-/* у SVG кольори задані атрибутами — перефарбовуємо туш і папір CSS-ом, кава, вода й ягода лишаються */
+/* ---------- темна тема: «Кава вогонь уночі» ---------- */
+/* Окремий нічний стиль: чорне тло, туш — кольору вершків зі світінням жару, тверді тіні — полум'я, заголовки — градієнт вогню. */
 :root[data-theme=dark] svg [stroke="#141014"]{stroke:var(--ink)}
 :root[data-theme=dark] svg [fill="#141014"]{fill:var(--ink)}
 :root[data-theme=dark] svg [fill="#F6F2E8"]{fill:var(--sheet)}
-:root[data-theme=dark] body::before{opacity:.25}
-/* перемикач теми */
-.theme-tg{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:90;width:46px;height:46px;border-radius:50%;
-  border:2.5px solid var(--ink);background:var(--sheet);color:var(--ink);box-shadow:3px 3px 0 var(--shadow);display:grid;place-items:center;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.theme-tg svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
-html.fx-on .theme-tg{display:none}
-@media print{.theme-tg{display:none}}
-/* на золотому — завжди темна туш, щоб читалось і в темній темі */
-:root[data-theme=dark] :is(.btn:not(.ghost),.rule,.calc .cup input,.champ .cmeta,.fx-next.soon,.cp-card,.mhint,.acheck li::before){color:#141014}
-:root[data-theme=dark] :is(.cp-card,.fx-next.soon,.rule,.mhint) :is(h3,p,b,span,small,i){color:#141014}
+:root[data-theme=dark] svg [fill="#4A1820"]{fill:#9A3A2A}
+:root[data-theme=dark] :is(.pnl .art,.mdev,.cdev) svg{filter:drop-shadow(0 0 2.5px rgba(242,140,40,.55))}
+:root[data-theme=dark] .pnl .art{background:radial-gradient(var(--dot) 1.3px,transparent 1.6px) 0 0/9px 9px,var(--card)}
+:root[data-theme=dark] :is(.part h2,.pnl .no){background:var(--flame);color:#0B0909}
+:root[data-theme=dark] .cover .title{background:#0B0909;border-color:#F2603A}
+:root[data-theme=dark] .cover .title h1{text-shadow:none;filter:drop-shadow(3px 3px 0 #5A1A12);background:var(--flame);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root[data-theme=dark] .cover .title::before{background:radial-gradient(rgba(242,96,58,.22) 1.2px,transparent 1.6px) 0 0/10px 10px}
+:root[data-theme=dark] :is(.fx-open,.finale){background:var(--flame);color:#0B0909}
+:root[data-theme=dark] :is(.btn:not(.ghost),.rule,.calc .cup input,.champ .cmeta,.fx-next.soon,.cp-card,.mhint,.acheck li::before){color:#0B0909}
+:root[data-theme=dark] :is(.cp-card,.fx-next.soon,.rule,.mhint) :is(h3,p,b,span,small,i){color:#0B0909}
 :root[data-theme=dark] .fx-next.soon .fx-k b{color:#7E0B2E}
+:root[data-theme=dark] .lbl{fill:var(--ink)}
+/* перемикач теми — угорі сторінки: «День / Ніч» */
+.theme-tg{position:relative;z-index:3;display:flex;width:max-content;align-items:center;gap:6px;margin:0 0 12px auto;padding:7px 13px;border:2.5px solid var(--ink);border-radius:999px;
+  background:var(--sheet);color:var(--ink);box-shadow:3px 3px 0 var(--shadow);font:500 13px/1 var(--head);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.theme-tg svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.theme-tg:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+@media print{.theme-tg{display:none}}
