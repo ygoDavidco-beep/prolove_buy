@@ -90,7 +90,8 @@ function step(dir) {
 
 // ---------- дотик ----------
 const EDGE = 18; // від самого краю — системний «назад» телефона, не чіпаємо
-const SKIP = 'input, textarea, select, [contenteditable], .hint, .sheet, .nav';
+// кнопки поверх стрічки (кошик, вага, повідомлення, правий ряд) — лише тапи, свайп із них не починаємо
+const SKIP = 'input, textarea, select, [contenteditable], .hint, .sheet, .nav, .cartpill, .buy, .btoast, .rail, .toast';
 let g = null;
 worlds.addEventListener('touchstart', e => {
   g = null;
@@ -110,8 +111,9 @@ worlds.addEventListener('touchmove', e => {
   if (!g) return;
   const t = e.touches[0], dx = t.clientX - g.x, dy = t.clientY - g.y;
   if (!g.axis) {
-    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-    g.axis = Math.abs(dx) > Math.abs(dy) * 1.15 ? 'x' : 'y';
+    // тап із легким ковзанням пальця — ще тап, не свайп
+    if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+    g.axis = Math.abs(dx) > Math.abs(dy) * 1.3 ? 'x' : 'y';
   }
   if (g.axis !== 'x') return;
   e.preventDefault();

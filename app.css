@@ -60,9 +60,9 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 #w-kava .sheet [data-buy]:disabled{opacity:.45}
 #w-kava .sheet p.paused{margin:0;font-size:13.5px;color:#F28C28}
 /* «у кошику» на 3 секунди з можливістю змінити */
-#w-kava .btoast{position:absolute;left:14px;right:14px;bottom:calc(var(--buyh,62px) + 24px);z-index:25;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(20,16,17,.95);
-  padding:12px 14px 14px;text-align:left;color:var(--ink);overflow:hidden;display:flex;flex-direction:column;gap:3px;opacity:0;transform:translateY(14px);transition:opacity .22s,transform .22s cubic-bezier(.2,.8,.2,1);-webkit-tap-highlight-color:transparent}
-#w-kava .btoast.on{opacity:1;transform:none}
+#w-kava .btoast{position:absolute;left:14px;right:14px;top:calc(var(--navh,50px) + 10px);pointer-events:none;z-index:25;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(20,16,17,.95);
+  padding:12px 14px 14px;text-align:left;color:var(--ink);overflow:hidden;display:flex;flex-direction:column;gap:3px;opacity:0;transform:translateY(-14px);transition:opacity .22s,transform .22s cubic-bezier(.2,.8,.2,1);-webkit-tap-highlight-color:transparent}
+#w-kava .btoast.on{opacity:1;transform:none;pointer-events:auto}
 #w-kava .btoast b{font:800 15px/1.25 var(--body,'Manrope',sans-serif)}
 #w-kava .btoast small{font:600 13px/1.3 var(--body,'Manrope',sans-serif);color:#A59BA0}
 #w-kava .btoast i{position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#E8394A,#F28C28,#FFE3B8);transform-origin:left}
