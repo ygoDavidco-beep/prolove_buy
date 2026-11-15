@@ -74,7 +74,7 @@ body{overscroll-behavior:none}
 .rg-over.brief{background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 .rg-offer{margin:4px 0 10px;padding:12px;border-radius:14px;border:1px dashed #6A3418}
 .rg-offer p{margin:0 0 8px}
-#again.ghost{background:none;border:2px solid #3A3234;color:#ADA19C}
+#again.ghost,.drop.ghost{background:none;border:2px solid #3A3234;color:#ADA19C}
 /* зерно сиплеться в барабан */
 .beans.pour ellipse{animation:rg-pour .7s cubic-bezier(.3,.6,.4,1) backwards}
 @keyframes rg-pour{from{transform:translateY(-120px);opacity:0}}

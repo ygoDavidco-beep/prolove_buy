@@ -88,7 +88,18 @@
 #w-kava .qty button{width:34px;height:34px;padding:0;font-size:18px;font-weight:800}
 #w-kava .checkout{display:flex;flex-direction:column;gap:9px}
 #w-kava .checkout input,#w-kava .checkout textarea{background:#000;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:16px;color:var(--ink)}
-#w-kava .payopt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+#w-kava .giftopt{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;font-weight:700;font-size:14.5px;cursor:pointer}
+#w-kava .giftopt b{margin-left:auto;color:#FFD39A;white-space:nowrap}
+#w-kava .giftopt:has(input:checked){border-color:#F28C28;background:rgba(242,140,40,.08)}
+#w-kava .giftnote{display:none}
+#w-kava .giftopt:has(input:checked)+.giftnote{display:block}
+#w-kava .payrow{display:flex;gap:8px;align-items:stretch}
+#w-kava .payopt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;flex:1;min-width:0}
+#w-kava .disc10{flex:0 0 74px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:0;border-radius:12px;padding:8px 4px;cursor:pointer;
+  background:linear-gradient(140deg,#E8394A,#F2603A 50%,#F28C28);color:#0B0909;font:500 22px/1 'Oswald',sans-serif;text-decoration:none;box-shadow:0 0 18px rgba(242,96,58,.35)}
+#w-kava .disc10 small{font:700 10px/1.15 var(--body,'Manrope',sans-serif);text-align:center;opacity:.85}
+#w-kava .disc10.won{background:none;border:1.5px solid #F28C28;color:#FFD39A;box-shadow:none}
+#w-kava .disc10.dim{background:none;border:1.5px dashed rgba(242,96,58,.6);color:#F2B08A;box-shadow:none;font-size:16px}
 #w-kava .payopt label{border:1px solid var(--line);border-radius:12px;padding:10px;font-weight:800;font-size:14px;cursor:pointer}
 #w-kava .payopt label:has(input:checked){border-color:var(--ink);background:var(--surface2)}
 #w-kava .payopt input{accent-color:var(--flame);margin:0 6px 0 0}
@@ -97,6 +108,7 @@
 #w-kava .consent a{color:rgba(246,240,235,.8)}
 #w-kava .saved{margin:0;color:var(--teal);font-weight:800;font-size:14.5px}
 #w-kava .hint-soft{margin:0;font-size:13.5px;color:var(--muted);border-left:2px solid var(--flame);padding-left:10px}
+#w-kava .roast-go{display:block;margin:8px 0 4px;padding:11px 14px;border-radius:14px;border:1px solid rgba(242,96,58,.5);background:linear-gradient(100deg,rgba(232,57,74,.16),rgba(242,140,40,.12));color:#FFD39A;font-weight:700;font-size:14.5px;text-decoration:none}
 #w-kava .row2 s{opacity:.55}
 #w-kava .checkout .msg{color:#F2B33D;font-weight:700;font-size:14px;min-height:18px}
 #w-kava .mood{border:1.5px solid currentColor;background:none;border-radius:14px;padding:13px;text-align:left;font-weight:800;font-size:16px}

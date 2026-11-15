@@ -206,7 +206,32 @@ function addToCart(k, w, g = 'beans', quiet = false) {
   const l = LOTS[k], item = { id: l.id, w: +w, g: gKey(g) };
   cart.push(item); store.set('pl_cart', cart); renderCart();
   if (!quiet) toast(`${l.name}, ${wTxt(w)}, ${gTxt(g)} — у кошику`);
+  roastChance();
   return item;
+}
+// гра «Вивантаж вчасно»: людина пішла по ще одну пачку — пачка в кошику відкриває другий (і останній) шанс
+const LSx = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* */ } }, del: k => { try { localStorage.removeItem(k); } catch { /* */ } } };
+function roastChance() {
+  if (LSx.get('pl_roast_await') !== '1') return;
+  LSx.del('pl_roast_await'); LSx.set('pl_roast_extra', '1');
+  setTimeout(() => toast('🔥 Другий шанс у грі відкрито — він чекає в кошику'), 1400);
+}
+const roastHref = location.pathname.endsWith('.html') ? 'roast.html' : '/roast';
+const roastReady = () => LSx.get('pl_roast_extra') === '1' && !LSx.get('pl_roast_won') && +(LSx.get('pl_roast_n') || 0) < 2;
+// кнопка «−10%» біля оплати: стан гри для цього замовлення (демо — у браузері; у справжній грі — сервер)
+function roastBtn() {
+  if (LSx.get('pl_roast_won')) return '<span class="disc10 won">−10% ✓<small>виграно в обсмажці</small></span>';
+  const n = +(LSx.get('pl_roast_n') || 0);
+  if (!n) return `<button type="button" class="disc10" data-roast>−10%<small>вивантаж вчасно</small></button>`;
+  if (roastReady()) return `<button type="button" class="disc10" data-roast>−10%<small>другий шанс</small></button>`;
+  if (!LSx.get('pl_roast_extra') && n === 1) return `<button type="button" class="disc10 dim" data-more>ще шанс<small>за ще одну пачку</small></button>`;
+  return '';
+}
+// йдемо в гру — форму не губимо
+function goRoast() {
+  const f = $('#checkout');
+  try { if (f) sessionStorage.setItem('pl_co_draft', JSON.stringify(Object.fromEntries(new FormData(f)))); sessionStorage.setItem('pl_back_cart', '1'); } catch { /* */ }
+  location.href = roastHref + '?from=cart';
 }
 function renderCart() { const p = $('#cartPill'); p.hidden = !cart.length; p.textContent = `Кошик ${cart.length}`; }
 
@@ -247,7 +272,8 @@ async function openCart() {
   const L = lines();
   if (!L.length) { closeSheet(); return; }
   // що вже введено у форму — не губимо при зміні кількості
-  const prev = $('#checkout') ? Object.fromEntries(new FormData($('#checkout'))) : null;
+  let prev = $('#checkout') ? Object.fromEntries(new FormData($('#checkout'))) : null;
+  if (!prev) { try { prev = JSON.parse(sessionStorage.getItem('pl_co_draft')); sessionStorage.removeItem('pl_co_draft'); } catch { prev = null; } }
   const v = k => esc(prev?.[k] ?? ({ name: me?.first_name, phone: me?.phone, cafe: me?.cafe }[k] || ''));
   let q = null;
   try {
@@ -256,6 +282,7 @@ async function openCart() {
   } catch { /* покажемо базові ціни */ }
   const missing = q ? q.total === null : L.some(x => linePrice(x) === null);
   const total = q?.total ?? L.reduce((a, x) => a + (linePrice(x) || 0) * x.qty, 0);
+  const giftP = q?.gift_price ?? 200; // ціну пакування рахує сервер; тут — лише показати
   const saved = q && q.base_total !== null ? q.base_total - q.total : 0;
   openSheet(`<div class="handle"></div><h5>Кошик${q?.partner ? ' · ціни партнера' : ''}</h5>
     ${L.map((x, i) => {
@@ -265,6 +292,7 @@ async function openCart() {
     }).join('')}
     <div class="row2"><b>Разом${q ? ` · ${q.total_kg.toLocaleString('uk-UA')} кг` : ''}</b><b>${missing ? '—' : uah(total)}</b></div>
     ${saved > 0 ? `<p class="saved">Знижка ${uah(saved)}</p>` : ''}
+    ${LSx.get('pl_roast_won') && !missing ? `<p class="saved">−10% · виграно в обсмажці: −${uah(Math.round(total * 0.1))} <small>(демо: на сервері ще не застосовується)</small></p>` : ''}
     ${(q?.hints || []).map(h => `<p class="hint-soft">${esc(h)}</p>`).join('')}
     ${missing ? '<p style="color:var(--muted);font-size:14px">Ціни на ці лоти ще не опубліковані. Напиши нам — порахуємо.</p>' : `
     <form class="checkout" id="checkout" novalidate>
@@ -274,14 +302,23 @@ async function openCart() {
       <input name="cafe" placeholder="Заклад (для кав'ярень, необов'язково)" value="${v('cafe')}">
       <div class="np2"><input name="np_city" placeholder="Місто" autocomplete="address-level2" value="${v('np_city')}" required>
         <input name="np_branch" placeholder="Відділення або поштомат НП, №" value="${v('np_branch')}" required></div>
-      <div class="payopt"><label><input type="radio" name="payment" value="invoice" ${prev?.payment !== 'cod' ? 'checked' : ''}> На рахунок<small>QR і кнопка Приват24 / mono</small></label>
-        <label><input type="radio" name="payment" value="cod" ${prev?.payment === 'cod' ? 'checked' : ''}> Накладений платіж<small>оплата при отриманні</small></label></div>
-      <textarea name="comment" rows="2" placeholder="Коментар, побажання">${v('comment')}</textarea>
+      <div class="payrow"><div class="payopt"><label><input type="radio" name="payment" value="invoice" ${prev?.payment !== 'cod' ? 'checked' : ''}> На рахунок<small>QR і кнопка Приват24 / mono</small></label>
+        <label><input type="radio" name="payment" value="cod" ${prev?.payment === 'cod' ? 'checked' : ''}> Накладений платіж<small>оплата при отриманні</small></label></div>${roastBtn()}</div>
+      <label class="giftopt"><input type="checkbox" name="gift" value="on" ${prev?.gift ? 'checked' : ''}> 🎁 Подарункове пакування <b>+${uah(giftP)}</b></label>
+      <textarea name="gift_note" class="giftnote" rows="2" maxlength="500" placeholder="Побажання до пакування: для кого, листівка, підпис…">${v('gift_note')}</textarea>
+      <textarea name="comment" rows="2" placeholder="Коментар до замовлення">${v('comment')}</textarea>
       <div class="msg" id="coMsg"></div>
-      <button class="cta" type="submit" style="width:100%">Замовити · ${uah(total)}</button>
+      <button class="cta" type="submit" style="width:100%" data-total="${total}">Замовити · ${uah(total + (prev?.gift ? giftP : 0))}</button>
       <p class="consent">Натискаючи «Замовити», ти погоджуєшся з <a href="legal-oferta.html" target="_blank">офертою</a>, <a href="legal-delivery.html" target="_blank">умовами доставки й повернення</a> та <a href="legal-privacy.html" target="_blank">політикою конфіденційності</a>.</p>
     </form>`}`, !!prev);
   $('#checkout')?.addEventListener('submit', submitOrder);
+  // пакування змінює суму на кнопці (остаточну суму все одно рахує сервер)
+  $('#checkout')?.addEventListener('change', e => {
+    if (e.target.name !== 'gift') return;
+    const b = $('#checkout button[type=submit]');
+    b.textContent = `Замовити · ${uah(+b.dataset.total + (e.target.checked ? giftP : 0))}`;
+    if (e.target.checked) $('#checkout .giftnote')?.focus({ preventScroll: true });
+  });
 }
 async function submitOrder(e) {
   e.preventDefault();
@@ -298,6 +335,12 @@ async function submitOrder(e) {
   } catch (err) { $('#coMsg').textContent = err.message; btn.disabled = false; }
 }
 $('#cartPill').onclick = openCart;
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-roast]')) { e.preventDefault(); goRoast(); }
+  else if (e.target.closest('[data-more]')) { e.preventDefault(); LSx.set('pl_roast_await', '1'); closeSheet(); toast('Обери ще пачку — і другий шанс твій'); }
+});
+// повернулись із гри — одразу відкриваємо замовлення
+try { if (sessionStorage.getItem('pl_back_cart')) { sessionStorage.removeItem('pl_back_cart'); setTimeout(() => { if (cart.length) openCart(); }, 350); } } catch { /* */ }
 
 // ---------- штора ----------
 function openSheet(html, keepScroll) { const y = sheet.scrollTop; sheet.innerHTML = html; sheet.classList.add('on'); shade.classList.add('on'); sheet.scrollTop = keepScroll ? y : 0; }

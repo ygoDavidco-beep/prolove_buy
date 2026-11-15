@@ -1,9 +1,9 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, ignite, unload, SPEED, WIN, BLACK, LOW_GAS } from './roastgame.js?v=mwi5dta9';
+import { makeRoast, step, gas, ignite, unload, SPEED, WIN, BLACK, LOW_GAS } from './roastgame.js?v=mwi6g1s5';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
-let s = null, acts = [], hist = [], raf = 0, last = 0, acc = 0, started = false, forPrize = false;
+let briefAt = 0, s = null, acts = [], hist = [], raf = 0, last = 0, acc = 0, started = false, forPrize = false;
 // демо-лічильники лише в цьому браузері; у справжній грі все це рахує сервер
 const LS = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* */ } } };
 
@@ -108,7 +108,7 @@ function act(a) {
   if (!s.ignited) { // перша команда — лише «+», одним натисканням пальник на 8
     if (a !== 'up') return;
     acts.push({ t: +s.t.toFixed(2), a: 'ignite' }); ignite(s);
-    $('rg').classList.remove('wait'); $('brief').hidden = false; $('briefOk').focus({ preventScroll: true });
+    $('rg').classList.remove('wait'); $('brief').hidden = false; briefAt = Date.now(); $('briefOk').focus({ preventScroll: true });
     try { navigator.vibrate?.(25); } catch { /* */ }
     return;
   }
@@ -133,36 +133,39 @@ function finish() {
   }[o.kind];
   $('brief').hidden = true;
   const won = o.kind === 'win';
-  if (forPrize && won) R[1] += ' Перша обсмажка — і в точку: −10% твої. (У демо знижки немає.)';
-  else if (forPrize) R[1] += ' Знижка грала лише на першій обсмажці — як у житті, шанс один.';
-  if (won && forPrize) LS.set('pl_roast_won', '1');
-  // повторний шанс — за упаковку в замовленні (один раз)
-  const offer = !won && !LS.get('pl_roast_won') && !LS.get('pl_roast_pack');
-  setTimeout(() => {
-    $('rTitle').textContent = R[0]; $('rText').textContent = R[1];
-    $('offer').hidden = !offer;
-    $('again').textContent = offer ? 'Просто потренуватись' : 'Ще раз';
-    $('again').classList.toggle('ghost', offer);
-    $('result').hidden = false; $('result').classList.toggle('win', won);
-    (offer ? $('pack') : $('again')).focus({ preventScroll: true });
-  }, black ? 1300 : 700);
+  if (won) { R[1] += ' Одна спроба — і в точку: −10% твої. (У демо знижки немає.)'; LS.set('pl_roast_won', '1'); }
+  else R[1] += ' В обсмажці шанс один — як і тут.';
   LS.set('pl_roast_n', String(+(LS.get('pl_roast_n') || 0) + 1));
+  setTimeout(() => { showResult(R[0], R[1], won); }, black ? 1300 : 700);
 }
-
+// повторний шанс — лише за ще одну пачку в замовленні, і лише один
+const extraLeft = () => !LS.get('pl_roast_won') && !LS.get('pl_roast_extra');
+function showResult(title, text, won) {
+  $('rTitle').textContent = title; $('rText').textContent = text;
+  const offer = !won && extraLeft();
+  $('offer').hidden = !offer;
+  $('result').hidden = false; $('result').classList.toggle('win', !!won);
+  (offer ? $('pack') : $('again')).focus({ preventScroll: true });
+}
 function newGame() {
   const seed = (crypto.getRandomValues(new Uint32Array(1))[0]) >>> 0; // у справжній грі seed видає сервер
   s = makeRoast(seed); acts = []; hist = [{ t: 0, bt: s.BT, ror: s.RoR }]; acc = 0; started = false;
   $('result').hidden = true; $('brief').hidden = true; $('smoke').classList.remove('on'); say('');
-  const n = +(LS.get('pl_roast_n') || 0), bonus = LS.get('pl_roast_pack') === '1';
-  forPrize = !LS.get('pl_roast_won') && (n === 0 || bonus);
-  $('rgPrize').textContent = forPrize ? 'ця обсмажка — на −10% · демо' : 'тренування · знижка грає лише з першої спроби';
+  const used = +(LS.get('pl_roast_n') || 0), extra = LS.get('pl_roast_extra') === '1' ? 1 : 0;
+  forPrize = !LS.get('pl_roast_won') && used < 1 + extra;
+  $('rgPrize').textContent = forPrize ? (used ? 'другий шанс · −10% · демо' : 'одна спроба · −10% · демо') : 'спробу використано';
+  if (!forPrize) { // тренувань немає: одна обсмажка на замовлення (+1 за ще одну пачку)
+    $('intro').hidden = true;
+    showResult(LS.get('pl_roast_won') ? 'Знижку виграно' : 'Свою обсмажку ти зробив',
+      LS.get('pl_roast_won') ? 'Ти вже вивантажив вчасно — −10% твої.' : 'В обсмажці шанс один — як і тут.', !!LS.get('pl_roast_won'));
+    return;
+  }
   beansG.style.visibility = 'hidden';
   paint();
   $('intro').hidden = false; $('go').textContent = 'Засипай зерно в барабан';
 }
 // засипали зерно — барабан крутиться, температура йде, світиться лише «+»
 function charge() {
-  if (forPrize && LS.get('pl_roast_pack') === '1') LS.set('pl_roast_pack', '2'); // повторний шанс використано
   $('intro').hidden = true; $('rg').classList.add('wait');
   beansG.style.visibility = ''; beansG.classList.remove('pour'); void beansG.getBBox(); beansG.classList.add('pour');
   start();
@@ -185,9 +188,16 @@ hold('gUp', 'up');
 hold('gDown', 'down');
 press('drop', () => act('drop'));
 $('go').addEventListener('click', () => { try { ac().resume(); } catch { /* */ } if (s && s.t > 0 && !s.over) start(); else charge(); });
-$('briefOk').addEventListener('click', () => { $('brief').hidden = true; });
-$('again').addEventListener('click', newGame);
-$('pack').addEventListener('click', () => { LS.set('pl_roast_pack', '1'); newGame(); }); // демо: у справжній грі — упаковка додається в кошик
+// той самий тап по «+» не має закрити інструкцію, що з'явилась під пальцем
+$('briefOk').addEventListener('click', () => { if (Date.now() - briefAt > 450) $('brief').hidden = true; });
+const feedUrl = location.pathname.endsWith('.html') ? 'index.html' : '/';
+const fromCart = new URLSearchParams(location.search).get('from') === 'cart';
+if (fromCart) $('again').textContent = 'Повернутись до замовлення';
+$('again').addEventListener('click', () => { if (fromCart) { try { sessionStorage.setItem('pl_back_cart', '1'); } catch { /* */ } } location.href = feedUrl; });
+// ще одна пачка в замовленні — ще один шанс: ведемо в стрічку, кошик відкриє шанс (feed.js)
+$('pack').addEventListener('click', () => { LS.set('pl_roast_await', '1'); location.href = feedUrl; });
+// демо: /roast?reset — почати спочатку (у справжній грі спроби рахує сервер за замовленням)
+if (new URLSearchParams(location.search).has('reset')) ['pl_roast_n', 'pl_roast_won', 'pl_roast_extra', 'pl_roast_await'].forEach(k => { try { localStorage.removeItem(k); } catch { /* */ } });
 addEventListener('keydown', e => {
   if (e.key === 'ArrowUp' || e.key === '+') act('up');
   else if (e.key === 'ArrowDown' || e.key === '-') act('down');
