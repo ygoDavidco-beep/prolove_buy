@@ -49,22 +49,16 @@ function cardHTML(l, k) {
     <div class="chips">${l.words.map(w => `<span class="chip" style="color:${w.color}">${esc(w.word[0].toUpperCase() + w.word.slice(1))}</span>`).join('')}</div>
     ${pos === null ? '' : `<div class="box"><h4>Смак на шкалі вогню</h4>
       <div class="sc-hit" role="slider" aria-label="Гортай лоти за смаком" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pos}" tabindex="0">
-        <div class="sc" style="background:${MAP.gradient}">${ticksHTML(k)}<i style="left:${pos}%;background:${l.color}"></i></div></div>
+        <div class="sc" style="background:${MAP.gradient}"><i style="left:${pos}%;background:${l.color}"></i></div></div>
       <div class="scl"><span>свіжа кислинка</span><span>тепла солодкість</span></div>
-      <p class="sc-tip">Веди пальцем по шкалі — гортай лоти за смаком</p>
-      <div class="cats">${l.categories.map(c => `<span style="color:${c.color}">${esc(c.uk)}</span>`).join('')}</div>
-      <p class="sc-note">Смаковий профіль і шкалу вогню складають технологи PROLOVE — це наше суб'єктивне відчуття. Кожна людина індивідуальна і відчуває букет по-своєму, а смак змінюється від способу приготування, води й обладнання. Ми куштуємо нашу каву в різних варіаціях, щоб робити її смачнішою для вас.</p></div>`}
+      <p class="sc-tip">Веди пальцем по шкалі — гортай лоти за смаком<button type="button" class="sc-ast" data-taste-note aria-label="Як ми складаємо смаковий профіль">*</button></p>
+      <div class="cats">${l.categories.map(c => `<span style="color:${c.color}">${esc(c.uk)}</span>`).join('')}</div></div>`}
     ${l.methods?.length ? `<div class="box"><h4>Як готувати</h4>${methLinks(l)}</div>` : ''}
     <div class="box"><h4>Паспорт лота</h4><dl class="kv">
       ${l.process_label ? `<dt>Обробка</dt><dd>${esc(l.process_label)}</dd>` : ''}${l.variety ? `<dt>Різновид</dt><dd>${esc(l.variety)}</dd>` : ''}${l.farm ? `<dt>Ферма</dt><dd>${esc(l.farm)}</dd>` : ''}${l.altitude ? `<dt>Висота</dt><dd>${esc(l.altitude)}</dd>` : ''}${l.country ? `<dt>Країна</dt><dd>${esc(l.country)}</dd>` : ''}
     </dl></div>
     ${l.description ? `<p class="desc-p">${esc(l.description)}</p>` : ''}
   </div>`;
-}
-
-// позначки всіх лотів на шкалі вогню: по них гортаємо стрічку
-function ticksHTML(k) {
-  return LOTS.map((l, j) => (l.flame === null || l.flame === undefined || j === k ? '' : `<b class="tk" style="left:${Math.round(l.flame * 1000) / 10}%;--c:${l.color}"></b>`)).join('');
 }
 
 // спосіб приготування веде на інструкцію до нього (турка → поради для турки), призначення — просто позначка
@@ -416,6 +410,25 @@ function fsEnd(e) {
 document.addEventListener('pointerup', fsEnd);
 document.addEventListener('pointercancel', fsEnd);
 
+// зірочка біля шкали: чесно про те, що смак — справа суб'єктивна. Саме зникає за 8 секунд.
+const TASTE_NOTE = "Смаковий профіль і шкала вогню — це відчуття наших технологів, а не лабораторний вимір. Кожен смакує по-своєму, а чашку змінюють спосіб приготування, вода й обладнання. Тож ми постійно куштуємо свою каву в різних варіаціях — щоб у вас вона розкривалась якнайкраще.";
+const tnPop = document.createElement('div');
+tnPop.className = 'tnote'; tnPop.setAttribute('role', 'note'); tnPop.hidden = true;
+tnPop.innerHTML = `<b>*</b><p>${TASTE_NOTE}</p><i></i>`;
+(document.querySelector('#w-kava .app') || document.querySelector('#w-kava'))?.appendChild(tnPop);
+tnPop.addEventListener('click', () => hideNote());
+function hideNote() { clearTimeout(tnPop._t); tnPop.classList.remove('on'); setTimeout(() => { if (!tnPop.classList.contains('on')) tnPop.hidden = true; }, 220); }
+function tasteNote(btn) {
+  if (tnPop.classList.contains('on')) return hideNote();
+  const host = tnPop.parentElement.getBoundingClientRect(), r = btn.getBoundingClientRect();
+  tnPop.hidden = false;
+  const below = r.bottom - host.top + 8, h = tnPop.offsetHeight;
+  tnPop.style.top = `${below + h > host.height - 90 ? Math.max(8, r.top - host.top - h - 8) : below}px`;
+  tnPop.classList.remove('on'); void tnPop.offsetWidth; tnPop.classList.add('on');
+  clearTimeout(tnPop._t); tnPop._t = setTimeout(hideNote, 8000);
+}
+feed.addEventListener('scroll', () => { if (tnPop.classList.contains('on')) hideNote(); }, { passive: true });
+
 // ---------- жести в стрічці ----------
 let lastTap = 0;
 feed.addEventListener('click', e => {
@@ -424,6 +437,7 @@ feed.addEventListener('click', e => {
   const fb = t.closest('[data-fav]'); if (fb) return toggleFav(+fb.dataset.fav);
   const sh = t.closest('[data-share]'); if (sh) return share(+sh.dataset.share);
   if (t.closest('[data-mood]')) return openMoods();
+  const tn = t.closest('[data-taste-note]'); if (tn) return tasteNote(tn);
   const op = t.closest('[data-open]'); if (op) return openLot(+op.dataset.open);
 });
 feed.addEventListener('pointerup', e => {
