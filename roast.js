@@ -1,10 +1,11 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, unload, SPEED, WIN, BLACK, LOW_GAS } from './roastgame.js?v=mwi2mlww';
+import { makeRoast, step, gas, ignite, unload, SPEED, WIN, BLACK, LOW_GAS } from './roastgame.js?v=mwi5dta9';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
-const LOAD_MS = 3200;            // «завантажуємо зерно» — час прочитати правила
-let s = null, acts = [], hist = [], raf = 0, last = 0, acc = 0, started = false;
+let s = null, acts = [], hist = [], raf = 0, last = 0, acc = 0, started = false, forPrize = false;
+// демо-лічильники лише в цьому браузері; у справжній грі все це рахує сервер
+const LS = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* */ } } };
 
 // ---------- зерна в барабані ----------
 const beansG = $('beans');
@@ -28,7 +29,7 @@ const cv = $('chart'), ctx = cv.getContext('2d');
 function fit() { const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = r.width * d; cv.height = r.height * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
 function chart() {
   const W = cv.clientWidth, H = cv.clientHeight, L = 34, R = 30, T = 8, B = 18;
-  const tMax = Math.max(40, (s?.t || 0) + 8), y = v => T + (H - T - B) * (1 - (v - 203) / 15), r = v => T + (H - T - B) * (1 - v / 40), x = t => L + (W - L - R) * (t / tMax);
+  const tMax = Math.max(40, (s?.t || 0) + 8), y = v => T + (H - T - B) * (1 - (v - 199) / 19), r = v => T + (H - T - B) * (1 - v / 40), x = t => L + (W - L - R) * (t / tMax);
   ctx.clearRect(0, 0, W, H);
   // вікно вивантаження
   ctx.fillStyle = 'rgba(242,96,58,.22)'; ctx.fillRect(L, y(WIN[1]), W - L - R, y(WIN[0]) - y(WIN[1]));
@@ -37,7 +38,7 @@ function chart() {
   ctx.setLineDash([]);
   // осі
   ctx.fillStyle = 'rgba(246,240,235,.5)'; ctx.font = '11px Oswald, sans-serif'; ctx.textAlign = 'right';
-  [204, 208, 212, 216].forEach(v => ctx.fillText(v + '°', L - 5, y(v) + 4));
+  [200, 204, 208, 212, 216].forEach(v => ctx.fillText(v + '°', L - 5, y(v) + 4));
   ctx.fillStyle = 'rgba(94,196,204,.8)'; ctx.textAlign = 'left'; [10, 20, 30].forEach(v => ctx.fillText(v, W - R + 5, r(v) + 4));
   // легенда
   ctx.font = '11px Manrope, sans-serif'; ctx.fillStyle = '#F28C28'; ctx.fillText('— зерно, °C', L + 6, T + 12);
@@ -48,7 +49,7 @@ function chart() {
   hist.forEach((p, i) => (i ? ctx.lineTo(x(p.t), r(Math.max(0, Math.min(40, p.ror)))) : ctx.moveTo(x(p.t), r(p.ror))));
   ctx.stroke();
   // температура зерна — полум'я
-  const g = ctx.createLinearGradient(0, y(216), 0, y(204)); g.addColorStop(0, '#E8394A'); g.addColorStop(0.5, '#F28C28'); g.addColorStop(1, '#FFD39A');
+  const g = ctx.createLinearGradient(0, y(216), 0, y(200)); g.addColorStop(0, '#E8394A'); g.addColorStop(0.5, '#F28C28'); g.addColorStop(1, '#FFD39A');
   ctx.strokeStyle = g; ctx.lineWidth = 3; ctx.beginPath();
   hist.forEach((p, i) => (i ? ctx.lineTo(x(p.t), y(Math.min(217.5, p.bt))) : ctx.moveTo(x(p.t), y(p.bt))));
   ctx.stroke();
@@ -95,7 +96,7 @@ function loop(now) {
   }
   if (s.crash) say('Запіканка! Вогонь нижче 4 — RoR летить униз. Додай пальник!', 'crash');
   else if (s.low > 8) say('RoR падає — кава запікається. Додай вогню!', 'warn');
-  else if (s.t < 6 && s.gas < 0.5) say('Готовий? Додай пальник +');
+  else if (!s.ignited) say('Додай пальника!', 'cue');
   else if (!s.note) say('');
   paint();
   if (s.over) return finish();
@@ -104,8 +105,15 @@ function loop(now) {
 
 function act(a) {
   if (!s || s.over || !started) return;
+  if (!s.ignited) { // перша команда — лише «+», одним натисканням пальник на 8
+    if (a !== 'up') return;
+    acts.push({ t: +s.t.toFixed(2), a: 'ignite' }); ignite(s);
+    $('rg').classList.remove('wait'); $('brief').hidden = false; $('briefOk').focus({ preventScroll: true });
+    try { navigator.vibrate?.(25); } catch { /* */ }
+    return;
+  }
   acts.push({ t: +s.t.toFixed(2), a });
-  if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else { unload(s); hist.push({ t: s.t, bt: s.BT, ror: s.RoR }); paint(); finish(); }
+  if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else { $('brief').hidden = true; unload(s); hist.push({ t: s.t, bt: s.BT, ror: s.RoR }); paint(); finish(); }
   try { navigator.vibrate?.(a === 'drop' ? 30 : 12); } catch { /* */ }
 }
 
@@ -123,26 +131,41 @@ function finish() {
     black: ['Чорне зерно', `${fmt(BLACK)}° — момент вивантаження пролетів. Наступного разу тисни раніше.`],
     baked: ['Запіканка!', s.peak >= 0.6 ? 'Вогонь скинули нижче 4 — RoR провалився, і кава запеклась: пласка й порожня. Знижуй пальник плавно, не нижче 4.' : 'Вогню забракло — RoR провис, і кава запеклась. Додавай пальник раніше.'],
   }[o.kind];
+  $('brief').hidden = true;
+  const won = o.kind === 'win';
+  if (forPrize && won) R[1] += ' Перша обсмажка — і в точку: −10% твої. (У демо знижки немає.)';
+  else if (forPrize) R[1] += ' Знижка грала лише на першій обсмажці — як у житті, шанс один.';
+  if (won && forPrize) LS.set('pl_roast_won', '1');
+  // повторний шанс — за упаковку в замовленні (один раз)
+  const offer = !won && !LS.get('pl_roast_won') && !LS.get('pl_roast_pack');
   setTimeout(() => {
     $('rTitle').textContent = R[0]; $('rText').textContent = R[1];
-    $('result').hidden = false; $('result').classList.toggle('win', o.kind === 'win');
-    $('again').focus({ preventScroll: true });
+    $('offer').hidden = !offer;
+    $('again').textContent = offer ? 'Просто потренуватись' : 'Ще раз';
+    $('again').classList.toggle('ghost', offer);
+    $('result').hidden = false; $('result').classList.toggle('win', won);
+    (offer ? $('pack') : $('again')).focus({ preventScroll: true });
   }, black ? 1300 : 700);
-  // скільки спроб — лише в цьому браузері (у справжній грі рахує сервер)
-  try { localStorage.setItem('pl_roast_n', String(+(localStorage.getItem('pl_roast_n') || 0) + 1)); } catch { /* */ }
+  LS.set('pl_roast_n', String(+(LS.get('pl_roast_n') || 0) + 1));
 }
 
 function newGame() {
   const seed = (crypto.getRandomValues(new Uint32Array(1))[0]) >>> 0; // у справжній грі seed видає сервер
   s = makeRoast(seed); acts = []; hist = [{ t: 0, bt: s.BT, ror: s.RoR }]; acc = 0; started = false;
-  $('result').hidden = true; $('smoke').classList.remove('on'); say('');
-  let n = 0; try { n = +(localStorage.getItem('pl_roast_n') || 0); } catch { /* */ }
-  $('rgPrize').textContent = `спроба ${n + 1} · демо, без знижки`;
+  $('result').hidden = true; $('brief').hidden = true; $('smoke').classList.remove('on'); say('');
+  const n = +(LS.get('pl_roast_n') || 0), bonus = LS.get('pl_roast_pack') === '1';
+  forPrize = !LS.get('pl_roast_won') && (n === 0 || bonus);
+  $('rgPrize').textContent = forPrize ? 'ця обсмажка — на −10% · демо' : 'тренування · знижка грає лише з першої спроби';
+  beansG.style.visibility = 'hidden';
   paint();
-  $('intro').hidden = false; $('go').disabled = true; $('go').textContent = 'Завантажуємо…';
-  const load = $('load'); load.style.transition = 'none'; load.style.width = '0%';
-  requestAnimationFrame(() => { load.style.transition = `width ${LOAD_MS}ms linear`; load.style.width = '100%'; });
-  setTimeout(() => { $('go').disabled = false; $('go').textContent = 'Поїхали'; $('go').focus({ preventScroll: true }); }, LOAD_MS);
+  $('intro').hidden = false; $('go').textContent = 'Засипай зерно в барабан';
+}
+// засипали зерно — барабан крутиться, температура йде, світиться лише «+»
+function charge() {
+  if (forPrize && LS.get('pl_roast_pack') === '1') LS.set('pl_roast_pack', '2'); // повторний шанс використано
+  $('intro').hidden = true; $('rg').classList.add('wait');
+  beansG.style.visibility = ''; beansG.classList.remove('pour'); void beansG.getBBox(); beansG.classList.add('pour');
+  start();
 }
 function start() {
   $('intro').hidden = true; started = true; last = performance.now();
@@ -161,13 +184,15 @@ function hold(id, a) {
 hold('gUp', 'up');
 hold('gDown', 'down');
 press('drop', () => act('drop'));
-$('go').addEventListener('click', () => { try { ac().resume(); } catch { /* */ } start(); });
+$('go').addEventListener('click', () => { try { ac().resume(); } catch { /* */ } if (s && s.t > 0 && !s.over) start(); else charge(); });
+$('briefOk').addEventListener('click', () => { $('brief').hidden = true; });
 $('again').addEventListener('click', newGame);
+$('pack').addEventListener('click', () => { LS.set('pl_roast_pack', '1'); newGame(); }); // демо: у справжній грі — упаковка додається в кошик
 addEventListener('keydown', e => {
   if (e.key === 'ArrowUp' || e.key === '+') act('up');
   else if (e.key === 'ArrowDown' || e.key === '-') act('down');
   else if (e.key === ' ' && started) { e.preventDefault(); act('drop'); }
 });
 addEventListener('resize', () => { fit(); if (s) chart(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden && started && s && !s.over) { cancelAnimationFrame(raf); started = false; say('Пауза — повертайся й тисни «Поїхали»'); $('intro').hidden = false; $('go').disabled = false; $('go').textContent = 'Поїхали'; } });
+document.addEventListener('visibilitychange', () => { if (document.hidden && started && s && !s.over) { cancelAnimationFrame(raf); started = false; $('intro').hidden = false; $('go').textContent = 'Продовжити'; } });
 fit(); newGame();

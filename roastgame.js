@@ -1,8 +1,8 @@
 // «Вивантаж вчасно» — фізика міні-гри. Чиста й детермінована: той самий seed і ті самі натискання дають той самий результат.
 // Тому згодом сервер зможе сам «прокрутити» гру й перевірити виграш (браузеру не довіряємо).
-// Час обсмаження йде швидше за реальний (SPEED): 1 с на екрані = 4 с у барабані.
+// Час обсмаження йде швидше за реальний (SPEED): 1 с на екрані = 2,6 с у барабані.
 
-export const SPEED = 4;
+export const SPEED = 2.6;
 export const WIN = [212, 212.5];          // вікно вивантаження, °C
 export const BLACK = 218;                 // далі — чорне зерно, гру зупиняємо
 export const GAS_STEP = 0.1;             // пальник 0…10, крок 1
@@ -19,8 +19,8 @@ export function makeRoast(seed) {
   const r = rng(seed);
   return {
     seed, t: 0,
-    BT: 204.2 + r() * 1.2,                // температура зерна
-    RoR: 6 + r() * 2,                     // °C/хв
+    BT: 200.6 + r() * 0.8,                // температура зерна: стартуємо біля 201°
+    RoR: 5 + r() * 2,                     // °C/хв
     gas: 0.2, gasEff: 0.2,                // поставлений газ і той, що реально «дійшов» до зерна
     k: 62 + r() * 22,                     // скільки RoR дає повний газ
     decay: 2.2 + r() * 0.5,             // наскільки RoR сам падає з ростом температури
@@ -45,6 +45,14 @@ export function step(s, dt) {
   if (s.low > 30 || (s.crash && s.RoR < 1)) s.over = { kind: 'baked', BT: s.BT, t: s.t };
   if (s.BT >= BLACK) s.over = { kind: 'black', BT: s.BT, t: s.t };
   return s;
+}
+
+/** Перша команда «Додай пальника»: одним натисканням — одразу на 8. */
+export const IGNITE = 0.8;
+export function ignite(s) {
+  if (s.over) return false;
+  s.gas = IGNITE; s.peak = Math.max(s.peak, IGNITE); s.ignited = true; s.note = null;
+  return true;
 }
 
 /** Газ більше / менше. Скинув нижче 4 після розгону — RoR провалюється: запіканка. */
@@ -74,7 +82,7 @@ export function replay(seed, actions, dt = 0.05) {
   while (!s.over && s.t < 600) {
     while (i < acts.length && acts[i].t <= s.t) {
       const a = acts[i++].a;
-      if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else if (a === 'drop') unload(s);
+      if (a === 'ignite') ignite(s); else if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else if (a === 'drop') unload(s);
     }
     if (!s.over) step(s, dt);
   }

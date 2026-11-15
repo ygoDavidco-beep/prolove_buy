@@ -7,10 +7,10 @@
 <title>Вивантаж вчасно — PROLOVE</title>
 <meta name="description" content="Міні-гра PROLOVE: відчуй себе ростером — вивантаж каву вчасно.">
 <link rel="icon" href="img/favicon.png">
-<link rel="stylesheet" href="base.css?v=mwi2mlww">
-<link rel="stylesheet" href="nav.css?v=mwi2mlww">
-<script src="nav.js?v=mwi2mlww"></script>
-<link rel="stylesheet" href="roast.css?v=mwi2mlww">
+<link rel="stylesheet" href="base.css?v=mwi5dta9">
+<link rel="stylesheet" href="nav.css?v=mwi5dta9">
+<script src="nav.js?v=mwi5dta9"></script>
+<link rel="stylesheet" href="roast.css?v=mwi5dta9">
 </head>
 <body>
 <header class="nav">
@@ -46,22 +46,32 @@
   </div>
   <section class="rg-over" id="intro">
     <div class="rg-card">
-      <h2>Ти — ростер</h2>
-      <p>Завантажуємо зерно… Твоя ціль — вивантажити між <b>212 і 212,5°</b>.</p>
+      <h2>Обсмаж сам</h2>
+      <p>Барабан розігрітий. У справжній обсмажці є лише одна спроба — тут так само: <b>перша обсмажка грає на −10%</b>.</p>
+      <button type="button" class="drop" id="go">Засипай зерно в барабан</button>
+    </div>
+  </section>
+  <section class="rg-over brief" id="brief" hidden>
+    <div class="rg-card">
+      <h2>Ти за ростером</h2>
+      <p>Зерно в барабані, пальник на 8 — кава почала розвиватися. Твоє завдання — вивантажити її між <b>212 і 212,5°</b>.</p>
       <ul>
-        <li><b>+</b> — більше вогню (тримай — додає швидко): RoR росте, але не одразу — у барабана інерція.</li>
-        <li><b>−</b> — менше вогню. Скинеш пальник нижче 4 — RoR провалиться: <b>запіканка</b>.</li>
-        <li>Пропустиш момент — зерно вигорить до чорного.</li>
+        <li>Вогонь має інерцію: що зробиш зараз, зерно відчує за кілька секунд.</li>
+        <li>Пригальмувати — зменшуй пальник «−» плавно. Нижче 4 — RoR провалиться, і кава запечеться.</li>
+        <li>Затримаєшся — зерно піде в чорне.</li>
       </ul>
-      <p class="rg-load"><i id="load"></i></p>
-      <button type="button" class="drop" id="go" disabled>Завантажуємо…</button>
+      <p><b>Поки ти це читаєш, барабан уже крутиться.</b></p>
+      <button type="button" class="drop" id="briefOk">До барабана!</button>
     </div>
   </section>
   <section class="rg-over" id="result" hidden>
-    <div class="rg-card"><h2 id="rTitle"></h2><p id="rText"></p><button type="button" class="drop" id="again">Ще раз</button></div>
+    <div class="rg-card"><h2 id="rTitle"></h2><p id="rText"></p>
+      <div class="rg-offer" id="offer" hidden><p>Ще один шанс на <b>−10%</b>: додай до замовлення упаковку — і обсмаж ще раз.</p>
+        <button type="button" class="drop" id="pack">Додати упаковку</button></div>
+      <button type="button" class="drop" id="again">Ще раз</button></div>
   </section>
 </main>
-<script type="module" src="demo-shim.js?v=mwi2mlww"></script>
-<script type="module" src="roast.js?v=mwi2mlww"></script>
+<script type="module" src="demo-shim.js?v=mwi5dta9"></script>
+<script type="module" src="roast.js?v=mwi5dta9"></script>
 </body>
 </html>
