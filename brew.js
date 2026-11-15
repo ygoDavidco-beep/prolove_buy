@@ -1,12 +1,17 @@
-// «Заварити» з картки лота: /brew?m=cezve — показуємо, що є для цього способу.
-const NAMES = { espresso: 'еспресо', superauto: 'суперавтомата', moka: 'гейзера', cezve: 'турки', filter: 'фільтра' };
+// «Заварити»: хаб способів. З картки лота приходить /brew?m=cezve — одразу відкриваємо сторінку способу.
+import { METHODS, ORDER, FROM_LOT } from './methods.js?v=mwht0uki';
+import { deviceIcon } from './art.js?v=mwht0uki';
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sfx = location.pathname.endsWith('.html') ? '.html' : '';
 const m = new URLSearchParams(location.search).get('m');
-const box = document.getElementById('mHint');
-if (box && NAMES[m]) {
-  box.hidden = false;
-  if (m === 'filter') {
-    box.querySelector('.cap').innerHTML = '<h3>Для <em>фільтра</em></h3><p>Калькулятор порції і секундомір — одразу нижче: обери вагу, тисни «Старт», і він підкаже кожне вливання.</p>';
-  } else {
-    box.querySelector('.cap').innerHTML = `<h3>Для <em>${NAMES[m]}</em></h3><p>Комікс-інструкцію для ${NAMES[m]} саме малюємо. Поки напиши нам в Instagram — підкажемо рецепт під твій лот.</p><p><a class="btn" href="https://instagram.com/prolove_coffee" target="_blank" rel="noopener">Написати в Instagram</a></p>`;
-  }
+if (FROM_LOT[m]) location.replace(`method${sfx}?m=${FROM_LOT[m]}`);
+
+const box = document.getElementById('methods');
+if (box) {
+  box.innerHTML = ORDER.map((k, i) => {
+    const x = METHODS[k];
+    return `<a href="method${sfx}?m=${k}"><article class="pnl"><span class="no">${i + 2}</span><div class="art">${deviceIcon(x.icon)}</div>
+      <div class="cap"><h3>${esc(x.title)}</h3><p>${esc(x.stamp)}${x.champs?.length ? ' · <b>рецепти чемпіонів</b>' : ''}</p></div></article></a>`;
+  }).join('');
 }

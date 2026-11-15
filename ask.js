@@ -106,6 +106,7 @@ async function search(q) {
     catch { await type('&gt; зв\'язок перервався. спробуй ще раз'); busy = false; return; }
   }
   const m = r.match || { lots: [] };
+  setMood(m.mood, q, m);
   if (/доставк|оплат|поверн|замовлен|рахун|опт\b|оптов/i.test(q)) {
     await type(r.owner ? '&gt; передав ростеру — Давид відповість тут' : '&gt; це питання до людей — контакти в «Інфо»');
     out.insertAdjacentHTML('beforeend', '<a class="lot" href="info.html"><b>Інфо і підтримка</b><span class="go">→</span><small>доставка, оплата, контакти</small></a>');
@@ -166,6 +167,25 @@ $('#q').addEventListener('input', () => {
 });
 $('#hint').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { $('#q').value = b.textContent; search(b.textContent); } });
 
+// ---------- настрій кольору ----------
+// Колір змінює сприйняття смаку: рожево-малиновий підсилює солодкість, лимонний і свіжий зелений — кислинку,
+// теплий коричневий із червоним — шоколад і тіло. Підсвічуємо те, що людина сама назвала, і лише справжні лоти з таким профілем.
+// Смак людини зберігається тільки в її браузері (localStorage) — на сервер не йде.
+const app = document.getElementById('w-ask');
+const taste = {
+  get() { try { const t = JSON.parse(localStorage.getItem('pl_taste')); return t && Date.now() - t.at < 60 * 864e5 ? t : null; } catch { return null; } },
+  set(v) { try { localStorage.setItem('pl_taste', JSON.stringify(v)); } catch { /* приватний режим */ } },
+};
+function paintMood(mood) {
+  if (!app) return;
+  if (mood) app.dataset.mood = mood; else delete app.dataset.mood;
+}
+function setMood(mood, q, m) {
+  if (!mood) return; // незрозумілий запит не стирає вже відомий смак
+  paintMood(mood);
+  taste.set({ mood, q: q.slice(0, 60), words: (m.words || []).slice(0, 8), at: Date.now() });
+}
+
 // підказки в полі по черзі
 const EX = ['хочу солодку каву…', 'вишня й шоколад…', 'щось для турки…', 'без кислинки…', 'кисле ягідне…', 'під капучино…', 'вайб: дощовий вечір…', 'горіх і карамель…', 'для фільтра…', 'Гватемала?…'];
 let exi = 0;
@@ -176,6 +196,14 @@ setInterval(() => { if (document.activeElement !== $('#q') && !$('#q').value) $(
   try { LOTS = await fetch('/api/lots').then(r => r.json()); } catch { LOTS = []; }
   POOL = LOTS.flatMap(l => [{ t: l.name, c: l.color }, { t: l.country || '', c: 'rgba(246,240,235,.55)' }, ...l.words.map(w => ({ t: w.word, c: w.color })), ...(l.methods || []).map(m => ({ t: m.short, c: 'rgba(94,196,204,.8)' }))]).filter(w => w.t);
   POOL.push({ t: 'PROLOVE', c: '#E8394A' }, { t: 'кава вогонь', c: '#F2B33D' }, { t: 'солодка', c: '#F2B33D' }, { t: 'без кислинки', c: '#C98A55' }, { t: 'яскрава', c: '#5EC4CC' }, { t: 'турка', c: 'rgba(94,196,204,.8)' }, { t: 'гейзер', c: 'rgba(94,196,204,.8)' }, { t: 'капучино', c: 'rgba(94,196,204,.8)' });
+  // людина повертається — Матриця вже знає її смак: колір, дощ зі «своїх» слів і її запит першою підказкою
+  const t = taste.get();
+  if (t) {
+    paintMood(t.mood);
+    const mine = POOL.filter(w => t.words.some(x => w.t.toLowerCase().includes(x)));
+    if (mine.length) FOCUS = mine;
+    if (t.q && ![...$('#hint').children].some(b => b.textContent === t.q)) $('#hint').insertAdjacentHTML('afterbegin', `<button type="button" class="mine">${esc(t.q)}</button>`);
+  }
   resize(); addEventListener('resize', resize);
   if (calm) still(); else requestAnimationFrame(loop);
   const q = new URLSearchParams(location.search).get('q');

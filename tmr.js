@@ -27,8 +27,19 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '
 export function timeline(el, marks, now, total) {
   total = Math.max(total, 30);
   const pct = x => Math.min(100, Math.max(0, (x / total) * 100));
-  el.innerHTML = `<div class="tl-line"><i style="width:${pct(now)}%"></i></div>${marks.map(m => {
+  // підписи не налазять: близька мітка йде в другий ряд, а якщо й там тісно — лишається тільки рисочка
+  const GAP = 19, last = [-99, -99];
+  let two = false;
+  const rows = marks.map(m => {
+    if (m.minor) return -1;
+    const p = pct(m.at);
+    for (const r of [0, 1]) if (p - last[r] >= GAP) { last[r] = p; if (r) two = true; return r; }
+    return -1;
+  });
+  el.classList.toggle('two', two);
+  el.innerHTML = `<div class="tl-line"><i style="width:${pct(now)}%"></i></div>${marks.map((m, i) => {
     const p = pct(m.at), side = p > 82 ? 'r' : p < 10 ? 'l' : '';
-    return `<span class="tl-mk${m.minor ? ' minor' : ''}${m.rec ? ' rec' : ''}${!m.rec && now >= m.at ? ' done' : ''} ${side}" style="left:${p}%">${m.minor ? '' : `<b>${m.approx ? '~' : ''}${fmt(m.at)}</b>${esc(m.label || '')}`}</span>`;
+    const bare = m.minor || rows[i] < 0;
+    return `<span class="tl-mk${m.minor ? ' minor' : bare ? ' bare' : ''}${rows[i] === 1 ? ' low' : ''}${m.rec ? ' rec' : ''}${!m.rec && now >= m.at ? ' done' : ''} ${side}" style="left:${p}%">${bare ? '' : `<b>${m.approx ? '~' : ''}${fmt(m.at)}</b>${esc(m.label || '')}`}</span>`;
   }).join('')}<span class="tl-now" style="left:${pct(now)}%"></span>`;
 }
