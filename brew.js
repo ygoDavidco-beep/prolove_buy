@@ -1,7 +1,7 @@
 // «Заварити»: хаб способів. З картки лота приходить /brew?m=cezve — одразу відкриваємо сторінку способу.
-import { METHODS, ORDER, FROM_LOT } from './methods.js?v=mwi6g1s5';
-import { deviceIcon } from './art.js?v=mwi6g1s5';
-import { ARTICLES, ART_ORDER } from './articles.js?v=mwi6g1s5';
+import { METHODS, ORDER, FROM_LOT } from './methods.js?v=mwi6y3ea';
+import { deviceIcon } from './art.js?v=mwi6y3ea';
+import { ARTICLES, ART_ORDER } from './articles.js?v=mwi6y3ea';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const sfx = location.pathname.endsWith('.html') ? '.html' : '';

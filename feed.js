@@ -206,26 +206,16 @@ function addToCart(k, w, g = 'beans', quiet = false) {
   const l = LOTS[k], item = { id: l.id, w: +w, g: gKey(g) };
   cart.push(item); store.set('pl_cart', cart); renderCart();
   if (!quiet) toast(`${l.name}, ${wTxt(w)}, ${gTxt(g)} — у кошику`);
-  roastChance();
   return item;
 }
-// гра «Вивантаж вчасно»: людина пішла по ще одну пачку — пачка в кошику відкриває другий (і останній) шанс
-const LSx = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* */ } }, del: k => { try { localStorage.removeItem(k); } catch { /* */ } } };
-function roastChance() {
-  if (LSx.get('pl_roast_await') !== '1') return;
-  LSx.del('pl_roast_await'); LSx.set('pl_roast_extra', '1');
-  setTimeout(() => toast('🔥 Другий шанс у грі відкрито — він чекає в кошику'), 1400);
-}
+// гра «Вивантаж вчасно»: скільки пачок у кошику — стільки спроб, доки не виб'єш −10% (демо — у браузері; у справжній грі — сервер)
+const LSx = { get: k => { try { return localStorage.getItem(k); } catch { return null; } } };
 const roastHref = location.pathname.endsWith('.html') ? 'roast.html' : '/roast';
-const roastReady = () => LSx.get('pl_roast_extra') === '1' && !LSx.get('pl_roast_won') && +(LSx.get('pl_roast_n') || 0) < 2;
-// кнопка «−10%» біля оплати: стан гри для цього замовлення (демо — у браузері; у справжній грі — сервер)
 function roastBtn() {
   if (LSx.get('pl_roast_won')) return '<span class="disc10 won">−10% ✓<small>виграно в обсмажці</small></span>';
-  const n = +(LSx.get('pl_roast_n') || 0);
-  if (!n) return `<button type="button" class="disc10" data-roast>−10%<small>вивантаж вчасно</small></button>`;
-  if (roastReady()) return `<button type="button" class="disc10" data-roast>−10%<small>другий шанс</small></button>`;
-  if (!LSx.get('pl_roast_extra') && n === 1) return `<button type="button" class="disc10 dim" data-more>ще шанс<small>за ще одну пачку</small></button>`;
-  return '';
+  const left = Math.max(0, cart.length - +(LSx.get('pl_roast_n') || 0));
+  if (left) return `<button type="button" class="disc10" data-roast>−10%<small>${+(LSx.get('pl_roast_n') || 0) ? `ще спроб: ${left}` : 'вивантаж вчасно'}</small></button>`;
+  return `<button type="button" class="disc10 dim" data-more>ще спроба<small>за ще одну пачку</small></button>`;
 }
 // йдемо в гру — форму не губимо
 function goRoast() {
@@ -337,7 +327,7 @@ async function submitOrder(e) {
 $('#cartPill').onclick = openCart;
 document.addEventListener('click', e => {
   if (e.target.closest('[data-roast]')) { e.preventDefault(); goRoast(); }
-  else if (e.target.closest('[data-more]')) { e.preventDefault(); LSx.set('pl_roast_await', '1'); closeSheet(); toast('Обери ще пачку — і другий шанс твій'); }
+  else if (e.target.closest('[data-more]')) { e.preventDefault(); closeSheet(); toast('Додай ще пачку — і ще одна спроба твоя'); }
 });
 // повернулись із гри — одразу відкриваємо замовлення
 try { if (sessionStorage.getItem('pl_back_cart')) { sessionStorage.removeItem('pl_back_cart'); setTimeout(() => { if (cart.length) openCart(); }, 350); } } catch { /* */ }

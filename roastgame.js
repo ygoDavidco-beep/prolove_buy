@@ -22,12 +22,14 @@ export function makeRoast(seed) {
     BT: 200.6 + r() * 0.8,                // температура зерна: стартуємо біля 201°
     RoR: 5 + r() * 2,                     // °C/хв
     gas: 0.2, gasEff: 0.2,                // поставлений газ і той, що реально «дійшов» до зерна
-    k: 62 + r() * 22,                     // скільки RoR дає повний газ
+    k: 72 + r() * 24,                     // скільки RoR дає повний газ
     decay: 2.2 + r() * 0.5,             // наскільки RoR сам падає з ростом температури
     lift: r() * 2,
     tauG: 18 + r() * 10,                  // інерція барабана й газу, с
     tauR: 10 + r() * 6,
     low: 0, peak: 0.2, crash: false, note: null, over: null,
+    wake: 204 + r() * 2.5,                // де «прокинешся» після інструкції: 204–206,5°
+    fc: 205.6 + r() * 1.4,                // перший крек
   };
 }
 
@@ -53,6 +55,12 @@ export function ignite(s) {
   if (s.over) return false;
   s.gas = IGNITE; s.peak = Math.max(s.peak, IGNITE); s.ignited = true; s.note = null;
   return true;
+}
+
+/** Людина читала інструкцію — барабан не чекав: перемотуємо до «прокинувся» (204–206,5°). Детерміновано. */
+export function fastForward(s, dt = 0.05) {
+  while (!s.over && s.BT < s.wake) step(s, dt);
+  return s;
 }
 
 /** Газ більше / менше. Скинув нижче 4 після розгону — RoR провалюється: запіканка. */
@@ -82,7 +90,7 @@ export function replay(seed, actions, dt = 0.05) {
   while (!s.over && s.t < 600) {
     while (i < acts.length && acts[i].t <= s.t) {
       const a = acts[i++].a;
-      if (a === 'ignite') ignite(s); else if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else if (a === 'drop') unload(s);
+      if (a === 'ignite') ignite(s); else if (a === 'ff') fastForward(s, dt); else if (a === 'up') gas(s, 1); else if (a === 'down') gas(s, -1); else if (a === 'drop') unload(s);
     }
     if (!s.over) step(s, dt);
   }
