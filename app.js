@@ -91,7 +91,11 @@ function step(dir) {
 // ---------- дотик ----------
 const EDGE = 18; // від самого краю — системний «назад» телефона, не чіпаємо
 // кнопки поверх стрічки (кошик, вага, повідомлення, правий ряд) — лише тапи, свайп із них не починаємо
-const SKIP = 'input, textarea, select, [contenteditable], .hint, .sheet, .nav, .cartpill, .buy, .btoast, .rail, .toast, .sc-hit';
+// свайп можна почати будь-де, навіть із кнопок; не чіпаємо лише поля вводу, підказки Матриці, штору, меню і шкалу вогню
+const SKIP = 'input, textarea, select, [contenteditable], .hint, .sheet, .nav, .sc-hit';
+// тап чи свайп: з кнопки палець має пройти більше, щоб тап із легким ковзанням лишився тапом
+const LOCK = 10, LOCK_BTN = 18;
+let swipedAt = 0;
 let g = null;
 worlds.addEventListener('touchstart', e => {
   g = null;
@@ -99,10 +103,12 @@ worlds.addEventListener('touchstart', e => {
   const t = e.touches[0];
   if (t.clientX < EDGE || t.clientX > innerWidth - EDGE || e.target.closest(SKIP) || $('#w-kava .sheet.on')) return;
   cancelAnimationFrame(wAnim);
-  const lot = KEYS[cur] === 'kava' ? e.target.closest('.lot') : null;
+  // кнопки ваги, кошик, повідомлення лежать над стрічкою — для них беремо лот, який зараз на екрані
+  const lot = KEYS[cur] === 'kava' ? (e.target.closest('.lot') || lotNow()) : null;
   const pg = lot?.querySelector('.pager') || null;
   if (pg) { cancelAnimationFrame(pg._raf); }
-  g = { x: t.clientX, y: t.clientY, lx: t.clientX, lt: performance.now(), v: 0, axis: null, pg, page: pg ? pageOf(pg) : 0, p0: pos };
+  g = { x: t.clientX, y: t.clientY, lx: t.clientX, lt: performance.now(), v: 0, axis: null, pg, page: pg ? pageOf(pg) : 0, p0: pos,
+    lock: e.target.closest('button, a, [role="button"]') ? LOCK_BTN : LOCK };
   const card = e.target.closest('.card');
   if (card && feed) Object.assign(g, { card, top: card.scrollTop <= 1, bot: card.scrollTop + card.clientHeight >= card.scrollHeight - 2, feedTop: feed.scrollTop });
 }, { passive: true });
@@ -112,7 +118,7 @@ worlds.addEventListener('touchmove', e => {
   const t = e.touches[0], dx = t.clientX - g.x, dy = t.clientY - g.y;
   if (!g.axis) {
     // тап із легким ковзанням пальця — ще тап, не свайп
-    if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+    if (Math.abs(dx) < g.lock && Math.abs(dy) < g.lock) return;
     g.axis = Math.abs(dx) > Math.abs(dy) * 1.3 ? 'x' : 'y';
   }
   if (g.axis !== 'x') return;
@@ -143,7 +149,9 @@ function drag(dx) {
 
 function release() {
   const w = W(), u = -(g.dx || 0) / w, fling = Math.abs(g.v) > 0.45 ? -Math.sign(g.v) : 0;
-  const go = Math.abs(u) > 0.2 || (fling && Math.sign(u) === fling && Math.abs(u) > 0.03);
+  // гортаємо, якщо протягнув п'яту частину екрана або коротко й швидко махнув (від ~30 px), а не просто ковзнув пальцем
+  const go = Math.abs(u) > 0.2 || (fling && Math.sign(u) === fling && Math.abs(u) > 0.08);
+  swipedAt = performance.now();
   if (KEYS[cur] === 'ask' || !g.pg) { slideTo(Math.min(KEYS.length - 1, Math.max(0, Math.round(g.p0 + (go ? Math.sign(u) : 0))))); return; }
   if (g.page === 0) {
     if (u < 0) slideTo(go ? KEYS.indexOf('ask') : g.p0);
@@ -175,6 +183,9 @@ worlds.addEventListener('touchcancel', () => {
   if (g?.axis === 'x') { g.dx = 0; g.v = 0; release(); }
   g = null;
 }, { passive: true });
+
+// після свайпу кнопка, з якої він почався, не натискається
+worlds.addEventListener('click', e => { if (performance.now() - swipedAt < 350) { e.preventDefault(); e.stopPropagation(); } }, true);
 
 // ---------- тачпад і миша: горизонтальне гортання — один крок за жест ----------
 let wsum = 0, wlock = false, wt = 0;
