@@ -292,7 +292,10 @@ html.fx-on,html.fx-on body{overflow:hidden}
 .cp-ends{display:flex;justify-content:space-between;font:500 12px var(--head);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 2px 12px}
 .cp-list{display:flex;flex-direction:column;gap:7px}
 .cp-list button{text-align:left;border:2px solid var(--ink);background:var(--card);border-radius:10px;padding:10px 12px;font:600 15px/1.25 var(--body);color:var(--ink);cursor:pointer}
-.cp-list button.on{background:var(--ink);color:var(--on-ink)}
+.cp-list button.on{background:var(--ink);color:var(--on-ink);-webkit-text-fill-color:var(--on-ink)}
+/* iOS: без системного синього (вигляд кнопки, підсвітка тапу, рамка фокусу) */
+.compass button{-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;outline:none}
+.cp-list button:not(.on){-webkit-text-fill-color:var(--ink)}
 .cp-list button[data-cp=both]{border-style:dashed}
 .cp-card{margin-top:14px;border:3px solid var(--ink);background:var(--gold);padding:12px 14px;box-shadow:4px 4px 0 var(--shadow)}
 .cp-card h3{margin:0 0 4px;font:500 20px/1.1 var(--head);text-transform:uppercase}

@@ -58,8 +58,10 @@ let last = 0;
 const host = document.getElementById('w-ask');
 function loop(ts) {
   // дощ іде лише тоді, коли Матрицю видно: решту часу телефон відпочиває
-  if (ts - last > 55 && (!host || host.dataset.vis !== '0') && !document.hidden) { step(); last = ts; }
-  requestAnimationFrame(loop);
+  const on = (!host || host.dataset.vis !== '0') && !document.hidden;
+  if (on && ts - last > 55) { step(); last = ts; }
+  // Матриці не видно — не крутимо кадри 60 разів на секунду, лише зрідка перевіряємо, чи повернулись
+  if (on) requestAnimationFrame(loop); else setTimeout(() => requestAnimationFrame(loop), 400);
 }
 function still() { // без анімації: статичний візерунок слів
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.font = `500 ${FS}px Oswald, sans-serif`; ctx.textBaseline = 'top';

@@ -23,8 +23,8 @@ const icon = {
 function packHTML(l, k) {
   return `<div class="page pack" data-k="${k}" style="--lotc:${l.color}">
     <button class="topzone" type="button" aria-label="Показати меню"></button>
-    <div class="wm"><img src="img/wordmark.png" alt="PROLOVE"></div>
-    <div class="lg"><img src="img/logo.png" alt=""></div>
+    <div class="wm"><img src="img/wordmark.webp" alt="PROLOVE"></div>
+    <div class="lg"><img src="img/logo.webp" alt=""></div>
     <div class="rail">
       <button type="button" data-fav="${k}" aria-pressed="${fav.includes(l.id)}"><span class="ic"><svg viewBox="0 0 24 24">${icon.heart}</svg></span>Відкласти</button>
       <button type="button" data-share="${k}"><span class="ic"><svg viewBox="0 0 24 24">${icon.share}</svg></span>Поділитись</button>
@@ -45,7 +45,7 @@ function packHTML(l, k) {
 function cardHTML(l, k) {
   const pos = l.flame === null ? null : Math.round(l.flame * 1000) / 10;
   return `<div class="page card" data-k="${k}" style="--lotc:${l.color}">
-    <div class="dh"><div class="mini"><img src="img/wordmark.png" alt=""><img src="img/logo.png" alt=""></div>
+    <div class="dh"><div class="mini"><img src="img/wordmark.webp" alt=""><img src="img/logo.webp" alt=""></div>
       <div><div class="nm">${esc(l.name)}</div><div class="s">${esc([l.country, l.farm && 'Ферма ' + l.farm].filter(Boolean).join(' · '))}</div></div></div>
     <div class="chips">${l.words.map(w => `<span class="chip" style="color:${w.color}">${esc(w.word[0].toUpperCase() + w.word.slice(1))}</span>`).join('')}</div>
     ${pos === null ? '' : `<div class="box"><h4>Смак на шкалі вогню</h4>
