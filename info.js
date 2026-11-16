@@ -23,5 +23,5 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '
   }
   const s = d.seller || {};
   const row = (k, v) => (v ? `<dt>${k}</dt><dd>${esc(v)}</dd>` : '');
-  $('#seller').innerHTML = row('Бренд', 'PROLOVE') + row('Продавець', s.name) + row('ІПН / ЄДРПОУ', s.code) + row('Адреса', s.address) + row('Телефон', s.phone) + row('Email', s.email);
+  $('#seller').innerHTML = row('Бренд', 'PROLOVE') + row('Продавець', s.name) + row('ІПН / ЄДРПОУ', s.code) + row(s.name ? 'Адреса' : 'Місто', s.address) + row('Телефон', s.phone) + row('Email', s.email);
 })();
