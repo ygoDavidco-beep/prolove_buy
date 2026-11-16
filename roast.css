@@ -9,7 +9,18 @@ body{overscroll-behavior:none}
 
 .rg-stage{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
 .drum{position:relative;margin:0;--heat:0}
-.drum svg{display:block;width:100%;max-width:230px;height:auto;aspect-ratio:1;margin:0 auto;overflow:visible}
+.drum svg{display:block;width:100%;max-width:230px;height:auto;aspect-ratio:200/238;margin:0 auto;overflow:visible}
+/* вогонь пальника: висота язиків = поставлений газ (--g), мерехтіння — окремо, щоб iPhone не смикало */
+.drum{--g:0}
+.flame-h{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(calc(.08 + var(--g) * .92));transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.flame .t{transform-box:fill-box;transform-origin:50% 100%;animation:rg-flick .42s ease-in-out var(--d) infinite alternate}
+.flame .t path{fill:url(#fl)}
+.flame .t .core{fill:url(#flc);opacity:.75}
+.flame-glow{fill:#F2603A;opacity:calc(var(--g) * .55);filter:blur(7px);transition:opacity .35s}
+.flame{opacity:calc(.25 + var(--g) * .75)}
+.drum.off .flame{opacity:0}
+.burner{fill:#2A2224}
+@keyframes rg-flick{0%{transform:scale(1,.9) skewX(-3deg)}50%{transform:scale(.94,1.06) skewX(2deg)}100%{transform:scale(1.05,.97) skewX(-1deg)}}
 .drum-glow{fill:none;stroke:#E8394A;stroke-width:10;opacity:calc(.08 + var(--heat) * .9);filter:blur(6px);transition:opacity .3s}
 .drum-body{fill:#151112}
 .drum-rim{fill:none;stroke:#3A3234;stroke-width:6}
@@ -63,7 +74,7 @@ body{overscroll-behavior:none}
 .rg-card .drop{width:100%;margin-top:6px}
 .rg-load{height:4px;border-radius:2px;background:#2A2224;overflow:hidden;margin:4px 0 12px}
 .rg-load i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5EC4CC,#E8394A,#F28C28)}
-@media (prefers-reduced-motion:reduce){.drum-spin,.smoke i{animation:none}}
+@media (prefers-reduced-motion:reduce){.drum-spin,.smoke i,.flame .t{animation:none}}
 
 /* старт: світиться лише «+» */
 .rg.wait .g-dn,.rg.wait .drop#drop{opacity:.25;pointer-events:none}

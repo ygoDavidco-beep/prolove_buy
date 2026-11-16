@@ -7,12 +7,12 @@
 <title>Вивантаж вчасно — PROLOVE</title>
 <meta name="description" content="Міні-гра PROLOVE: відчуй себе ростером — вивантаж каву вчасно.">
 <link rel="icon" href="img/favicon.png">
-<link rel="stylesheet" href="base.css?v=mwinbmom">
-<link rel="stylesheet" href="nav.css?v=mwinbmom">
-<script src="track.js?v=mwinbmom"></script>
-<script src="nav.js?v=mwinbmom"></script>
-<link rel="stylesheet" href="roast.css?v=mwinbmom">
-<!-- модулі, які сторінка підтягне — завантажуємо паралельно, а не ланцюжком --><link rel="modulepreload" href="roastgame.js?v=mwinbmom">
+<link rel="stylesheet" href="base.css?v=mwjblxnh">
+<link rel="stylesheet" href="nav.css?v=mwjblxnh">
+<script src="track.js?v=mwjblxnh"></script>
+<script src="nav.js?v=mwjblxnh"></script>
+<link rel="stylesheet" href="roast.css?v=mwjblxnh">
+<!-- модулі, які сторінка підтягне — завантажуємо паралельно, а не ланцюжком --><link rel="modulepreload" href="roastgame.js?v=mwjblxnh">
 </head>
 <body>
 <header class="nav">
@@ -23,7 +23,12 @@
   <header class="rg-head"><h1>Вивантаж вчасно</h1><p id="rgPrize">демо · з третьої спроби вже виходить</p></header>
   <section class="rg-stage">
     <figure class="drum" id="drum" aria-hidden="true">
-      <svg viewBox="0 0 200 200">
+      <svg viewBox="0 0 200 238">
+        <!-- брендований вогонь пальника: висота = пальник, кольори як у логотипа -->
+        <defs><linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#5EC4CC"/><stop offset=".22" stop-color="#3FA7C9"/><stop offset=".45" stop-color="#E8394A"/><stop offset=".78" stop-color="#F28C28"/><stop offset="1" stop-color="#FFD39A"/></linearGradient>
+          <linearGradient id="flc" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#BFF3F5"/><stop offset=".5" stop-color="#FFD39A"/><stop offset="1" stop-color="#FFF4DD"/></linearGradient></defs>
+        <g class="flame"><ellipse class="flame-glow" cx="100" cy="226" rx="58" ry="10"/><g class="flame-h"><g class="t" style="--d:0.00s"><path d="M47 230C47 218.84 54.2 215.12 57.35 205.2C60.05 214.624 65 220.07999999999998 65 230Z"/><path class="core" d="M51.95 230C51.95 222.56 56 220.07999999999998 56.9 214.624C58.7 220.576 60.05 223.8 60.05 230Z"/></g><g class="t" style="--d:0.47s"><path d="M61 230C61 215.24 69.8 210.32 73.65 197.2C76.95 209.664 83 216.88 83 230Z"/><path class="core" d="M67.05 230C67.05 220.16 72 216.88 73.1 209.664C75.3 217.536 76.95 221.8 76.95 230Z"/></g><g class="t" style="--d:0.34s"><path d="M77 230C77 212.9 85.8 207.2 89.65 192.0C92.95 206.44 99 214.8 99 230Z"/><path class="core" d="M83.05 230C83.05 218.6 88 214.8 89.1 206.44C91.3 215.56 92.95 220.5 92.95 230Z"/></g><g class="t" style="--d:0.21s"><path d="M89 230C89 212.0 97.8 206.0 101.65 190.0C104.95 205.2 111 214.0 111 230Z"/><path class="core" d="M95.05 230C95.05 218.0 100 214.0 101.1 205.2C103.3 214.8 104.95 220.0 104.95 230Z"/></g><g class="t" style="--d:0.08s"><path d="M101 230C101 213.44 109.8 207.92 113.65 193.2C116.95 207.184 123 215.28 123 230Z"/><path class="core" d="M107.05 230C107.05 218.96 112 215.28 113.1 207.184C115.3 216.016 116.95 220.8 116.95 230Z"/></g><g class="t" style="--d:0.55s"><path d="M117 230C117 215.6 125.8 210.8 129.65 198.0C132.95 210.16 139 217.2 139 230Z"/><path class="core" d="M123.05 230C123.05 220.4 128 217.2 129.1 210.16C131.3 217.84 132.95 222.0 132.95 230Z"/></g><g class="t" style="--d:0.42s"><path d="M135 230C135 219.2 142.2 215.6 145.35 206.0C148.05 215.12 153 220.4 153 230Z"/><path class="core" d="M139.95 230C139.95 222.8 144 220.4 144.9 215.12C146.7 220.88 148.05 224.0 148.05 230Z"/></g></g></g>
+        <rect class="burner" x="44" y="229" width="112" height="6" rx="3"/>
         <circle class="drum-glow" cx="100" cy="100" r="86"/>
         <circle class="drum-body" cx="100" cy="100" r="80"/>
         <g class="drum-spin"><path d="M100 24v152M24 100h152M46 46l108 108M154 46 46 154"/></g>
@@ -73,7 +78,7 @@
       <button type="button" class="drop ghost" id="again">До кави</button></div>
   </section>
 </main>
-<script type="module" src="demo-shim.js?v=mwinbmom"></script>
-<script type="module" src="roast.js?v=mwinbmom"></script>
+<script type="module" src="demo-shim.js?v=mwjblxnh"></script>
+<script type="module" src="roast.js?v=mwjblxnh"></script>
 </body>
 </html>
