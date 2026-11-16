@@ -1,4 +1,4 @@
-import { fmt, beep, wake, timeline } from './tmr.js?v=mwin6g5u';
+import { fmt, beep, wake, timeline } from './tmr.js?v=mwinbmom';
 // DRIP-комікс: лінійні ілюстрації (як на етикетці дріпа) + таймер з підказками.
 const INK = '#141014', BERRY = '#B5123E', WATER = '#3FA9BE', COFFEE = '#4A1820', GOLD = '#F2B33D';
 const svg = (vb, body, label = '') => `<svg viewBox="${vb}" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'}><g stroke="${INK}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">${body}</g></svg>`;

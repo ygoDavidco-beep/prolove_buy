@@ -1,5 +1,5 @@
 // Стаття: /read?a=bitter. Обкладинка, короткі розділи, чек-лист і джерела.
-import { ARTICLES, ART_ORDER } from './articles.js?v=mwin6g5u';
+import { ARTICLES, ART_ORDER } from './articles.js?v=mwinbmom';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const key = new URLSearchParams(location.search).get('a');

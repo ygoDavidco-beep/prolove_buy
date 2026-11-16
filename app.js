@@ -229,20 +229,5 @@ show(KEYS.includes(start) ? start : 'kava', false);
 // повернення «назад» зі сторінки інструкцій (кеш браузера) — меню на свій світ
 addEventListener('pageshow', () => { cur = -1; slideTo(Math.round(pos), 0); });
 
-// ---------- разовий «підгляд»: ледь видно край Матриці, потім край опису лота ----------
-let seen = false;
-try { seen = sessionStorage.getItem('pl_peek') === '1'; sessionStorage.setItem('pl_peek', '1'); } catch { /* приватний режим */ }
-if (!seen && !start && !location.hash && !reduce) {
-  const anims = [];
-  const cancel = () => anims.forEach(a => a.cancel());
-  setTimeout(() => {
-    if (cur !== KEYS.indexOf('kava')) return;
-    const kv = $('#w-kava');
-    anims.push(kv.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(56px)', offset: 0.45 }, { transform: 'translateX(56px)', offset: 0.6 }, { transform: 'translateX(0)' }],
-      { duration: 1100, easing: 'ease-in-out' }));
-    const pages = lotNow()?.querySelectorAll('.page') || [];
-    pages.forEach(p => anims.push(p.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-56px)', offset: 0.45 }, { transform: 'translateX(-56px)', offset: 0.6 }, { transform: 'translateX(0)' }],
-      { duration: 1100, delay: 1150, easing: 'ease-in-out' })));
-  }, 1300);
-  for (const ev of ['pointerdown', 'touchstart', 'keydown', 'wheel']) addEventListener(ev, cancel, { once: true, capture: true, passive: true });
-}
+// «підгляд» світів при завантаженні прибрано 16.11.2026: і так видно, що є куди гортати
+
