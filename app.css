@@ -25,7 +25,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 
 /* Матриця як розмова: ШІ, Давид, роздільник між запитами */
 #w-ask .note{margin:2px 0 0;text-align:center;font:12px/1.4 ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:rgba(233,255,251,.38)}
-#w-ask .term.up .note{display:none}
+#w-ask .term.up .note{margin-top:0}
+#w-ask .callr{font:inherit;color:#7FF5E0;background:none;border:0;border-bottom:1px dashed currentColor;padding:0;cursor:pointer}
 #w-ask .out .sep{height:1px;margin:10px 0 8px;background:linear-gradient(90deg,transparent,rgba(94,196,204,.35),transparent)}
 #w-ask .out .ln.ai{color:#E9FFFB}
 #w-ask .out .ln.owner{color:#F2B33D}

@@ -109,11 +109,18 @@ async function search(q) {
     catch { await type('&gt; зв\'язок перервався. спробуй ще раз'); busy = false; return; }
   }
   const m = r.match || { lots: [] };
+  const call = /^\s*[!！]\s*(ростера|ростер|roaster|rost)(?!\p{L})/iu.test(q);
+  if (call) {
+    window.plt?.('call', null, r.owner ? 'ok' : 'off');
+    for (const msg of (r.messages || []).filter(x => x.role !== 'user')) await render(msg);
+    if (!r.messages?.length) await type('&gt; напиши нам у Telegram — контакти в «Інфо»');
+    busy = false; return;
+  }
   setMood(m.mood, q, m);
   // у статистику — слова, які людина написала сама (без наших розширень «солодке → карамель, мед…»), і намір
   window.plt?.('q', q, `${(m.own?.length ? m.own : m.words || []).slice(0, 8).join(',')}|${m.mood || ''}|${(m.intents || []).join(',')}`, (m.lots || []).length);
   if (/доставк|оплат|поверн|замовлен|рахун|опт\b|оптов/i.test(q)) {
-    await type(r.owner ? '&gt; передав ростеру — Давид відповість тут' : '&gt; це питання до людей — контакти в «Інфо»');
+    await type(r.called ? '&gt; ростер у розмові — відповість тут' : r.owner ? '&gt; це питання до людини — напиши !ростер, і ростер приєднається' : '&gt; це питання до людей — контакти в «Інфо»');
     blk.insertAdjacentHTML('beforeend', '<a class="lot" href="info.html"><b>Інфо і підтримка</b><span class="go">→</span><small>доставка, оплата, контакти</small></a>');
   } else {
     const found = (m.lots || []).map(x => ({ ...x, lot: LOTS.find(l => l.id === x.id) })).filter(x => x.lot);
@@ -134,7 +141,7 @@ async function search(q) {
     }
   }
   for (const msg of (r.messages || []).filter(x => x.role !== 'user')) await render(msg);
-  if (r.owner && !(r.messages || []).some(x => x.role === 'ai')) await type(r.human ? '&gt; Давид на зв\'язку — відповідь з\'явиться тут' : '&gt; ростер бачить запит і може відповісти тут', 'dim');
+  if (r.called && !(r.messages || []).some(x => x.role === 'ai')) await type(r.human ? '&gt; Давид на зв\'язку — відповідь з\'явиться тут' : '&gt; ростер у розмові — може відповісти тут', 'dim');
   busy = false;
 }
 async function render(msg) {
@@ -172,6 +179,7 @@ $('#q').addEventListener('input', () => {
   HL = tok ? new RegExp(`(^|[\\s,(])${tok.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'u') : null;
   HLPOOL = HL ? POOL.filter(lit) : [];
 });
+document.querySelector('[data-call]')?.addEventListener('click', () => { $('#q').value = '!ростер'; search('!ростер'); });
 $('#hint').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { $('#q').value = b.textContent; search(b.textContent); } });
 
 // ---------- настрій кольору ----------
