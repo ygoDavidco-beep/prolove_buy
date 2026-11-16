@@ -302,11 +302,11 @@ async function openCart() {
       <input name="phone" type="tel" inputmode="tel" placeholder="Телефон +380…" autocomplete="tel" value="${v('phone')}" required>
       <input name="cafe" placeholder="Заклад (для кав'ярень, необов'язково)" value="${v('cafe')}">
       <div class="ship"><label><input type="radio" name="ship" value="np" ${prev?.ship !== 'city' ? 'checked' : ''}> Нова пошта<small>за тарифом перевізника</small></label>
-        <label><input type="radio" name="ship" value="city" ${prev?.ship === 'city' ? 'checked' : ''}> По Чернівцях<small>привеземо безкоштовно</small></label></div>
+        <label><input type="radio" name="ship" value="city" ${prev?.ship === 'city' ? 'checked' : ''}> По Чернівцях<small>безкоштовно, до 3 днів</small></label></div>
       <div class="np2"><input name="np_city" placeholder="Місто" autocomplete="address-level2" value="${v('np_city')}">
         <input name="np_branch" placeholder="Відділення або поштомат НП, №" value="${v('np_branch')}"></div>
       <input class="cityaddr" name="city_addr" placeholder="Вулиця, будинок — у Чернівцях" autocomplete="street-address" value="${v('city_addr')}">
-      <p class="hint-soft">Смажимо під твоє замовлення й відправляємо наступного дня.</p>
+      <p class="hint-soft">Смажимо під твоє замовлення. Новою поштою відправляємо наступного дня після оплати, по Чернівцях привозимо протягом 3 днів.</p>
       <div class="payrow"><div class="payopt"><label><input type="radio" name="payment" value="invoice" ${prev?.payment !== 'cod' ? 'checked' : ''}> На рахунок<small>QR і кнопка Приват24 / mono</small></label>
         <label><input type="radio" name="payment" value="cod" ${prev?.payment === 'cod' ? 'checked' : ''}> Накладений платіж<small>оплата при отриманні</small></label></div>${roastBtn()}</div>
       <label class="giftopt"><input type="checkbox" name="gift" value="on" ${prev?.gift ? 'checked' : ''}> 🎁 Подарункове пакування <b>+${uah(giftP)}</b></label>
