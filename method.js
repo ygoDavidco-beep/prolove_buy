@@ -1,7 +1,7 @@
 // Сторінка способу: /method?m=cezve. Комікс за рецептом PROLOVE, кнопка таймера на весь екран і «Рецепти чемпіонів».
-import { METHODS, ORDER, COMPASS } from './methods.js?v=mwime8i1';
-import { deviceIcon } from './art.js?v=mwime8i1';
-import { openFocus } from './focus.js?v=mwime8i1';
+import { METHODS, ORDER, COMPASS } from './methods.js?v=mwimh5ef';
+import { deviceIcon } from './art.js?v=mwimh5ef';
+import { openFocus } from './focus.js?v=mwimh5ef';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const key = new URLSearchParams(location.search).get('m');
