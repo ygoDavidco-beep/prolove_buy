@@ -93,3 +93,25 @@ tag.textContent = 'демо';
 tag.setAttribute('aria-label', 'Демо-версія: замовлення не відправляються');
 tag.style.cssText = 'position:fixed;left:max(10px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 54px);z-index:60;font:800 10px/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#120D0F;background:#F2B33D;border-radius:999px;padding:4px 8px;pointer-events:none;opacity:.9';
 document.addEventListener('DOMContentLoaded', () => document.body.append(tag));
+
+// Демо на GitHub Pages живе в підпапці (/prolove_buy/), а скрипти сайту малюють посилання від кореня ("/brew?m=…").
+// Перехоплюємо такі кліки й ведемо на статичні файли демо, інакше GitHub показує «сторінки немає».
+(() => {
+  const PAGES = { '': 'index.html', brew: 'brew.html', drip: 'drip.html', info: 'info.html', partners: 'partners.html', method: 'method.html', read: 'read.html', roast: 'roast.html' };
+  const base = new URL('.', location.href);
+  const map = href => {
+    const u = new URL(href, location.origin);
+    const [, first = '', second = ''] = u.pathname.split('/');
+    const file = first === 'legal' ? `legal-${second}.html` : PAGES[first];
+    return file ? new URL(file + u.search + u.hash, base).href : null;
+  };
+  document.addEventListener('click', e => {
+    if (e.defaultPrevented) return; // сторінка сама обробила клік (напр. перехід усередині стрічки)
+    const a = e.target.closest && e.target.closest('a[href^="/"]:not([href^="//"])');
+    if (!a) return;
+    const to = map(a.getAttribute('href'));
+    if (!to) return;
+    e.preventDefault();
+    if (a.target === '_blank') window.open(to, '_blank', 'noopener'); else location.href = to;
+  });
+})();

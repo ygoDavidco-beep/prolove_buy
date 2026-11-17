@@ -1,13 +1,13 @@
 // Сторінка способу: /method?m=cezve. Комікс за рецептом PROLOVE, кнопка таймера на весь екран і «Рецепти чемпіонів».
-import { METHODS, ORDER, COMPASS } from './methods.js?v=mwjblxnh';
-import { deviceIcon } from './art.js?v=mwjblxnh';
-import { openFocus } from './focus.js?v=mwjblxnh';
+import { METHODS, ORDER, COMPASS } from './methods.js?v=mwl8etx8';
+import { deviceIcon } from './art.js?v=mwl8etx8';
+import { openFocus } from './focus.js?v=mwl8etx8';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const key = new URLSearchParams(location.search).get('m');
 const M = METHODS[key];
 const main = document.getElementById('m');
-const sfx = location.pathname.endsWith('.html') ? '.html' : ''; // статичне демо
+const sfx = (location.pathname.endsWith('.html') || /github\.io$/.test(location.hostname)) ? '.html' : ''; // статичне демо
 const href = k => `method${sfx}?m=${k}`;
 const PLACE = { 1: '1 місце', 2: '2 місце', 3: '3 місце' };
 

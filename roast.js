@@ -1,5 +1,5 @@
 // «Вивантаж вчасно»: барабан, графік і керування. Фізика — у roastgame.js (детермінована, згодом перевіряється сервером).
-import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwjblxnh';
+import { makeRoast, step, gas, ignite, wakeUp, unload, SPEED, WIN, BLACK, LOW_GAS, FC } from './roastgame.js?v=mwl8etx8';
 
 const $ = id => document.getElementById(id);
 const DT = 0.05;                 // крок фізики, с обсмаження
@@ -240,7 +240,7 @@ $('briefOk').addEventListener('click', () => {
     paint();
   }
 });
-const feedUrl = location.pathname.endsWith('.html') ? 'index.html' : '/';
+const feedUrl = (location.pathname.endsWith('.html') || /github\.io$/.test(location.hostname)) ? 'index.html' : '/';
 const fromCart = new URLSearchParams(location.search).get('from') === 'cart';
 if (fromCart) $('again').textContent = 'Повернутись до замовлення';
 $('again').addEventListener('click', () => { if (fromCart) { try { sessionStorage.setItem('pl_back_cart', '1'); } catch { /* */ } } location.href = feedUrl; });

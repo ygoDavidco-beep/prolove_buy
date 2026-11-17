@@ -1,10 +1,10 @@
 // «Заварити»: хаб способів. З картки лота приходить /brew?m=cezve — одразу відкриваємо сторінку способу.
-import { METHODS, ORDER, FROM_LOT } from './methods.js?v=mwjblxnh';
-import { deviceIcon } from './art.js?v=mwjblxnh';
-import { ARTICLES, ART_ORDER } from './articles.js?v=mwjblxnh';
+import { METHODS, ORDER, FROM_LOT } from './methods.js?v=mwl8etx8';
+import { deviceIcon } from './art.js?v=mwl8etx8';
+import { ARTICLES, ART_ORDER } from './articles.js?v=mwl8etx8';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const sfx = location.pathname.endsWith('.html') ? '.html' : '';
+const sfx = (location.pathname.endsWith('.html') || /github\.io$/.test(location.hostname)) ? '.html' : '';
 const m = new URLSearchParams(location.search).get('m');
 if (FROM_LOT[m]) location.replace(`method${sfx}?m=${FROM_LOT[m]}`);
 

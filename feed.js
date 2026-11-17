@@ -220,7 +220,7 @@ function addToCart(k, w, g = 'beans', quiet = false) {
 }
 // гра «Вивантаж вчасно»: скільки пачок у кошику — стільки спроб, доки не виб'єш −10% (демо — у браузері; у справжній грі — сервер)
 const LSx = { get: k => { try { return localStorage.getItem(k); } catch { return null; } } };
-const roastHref = location.pathname.endsWith('.html') ? 'roast.html' : '/roast';
+const roastHref = (location.pathname.endsWith('.html') || /github\.io$/.test(location.hostname)) ? 'roast.html' : '/roast';
 function roastBtn() {
   if (LSx.get('pl_roast_won')) return '<span class="disc10 won">−10% ✓<small>виграно в обсмажці</small></span>';
   const left = Math.max(0, cart.length - +(LSx.get('pl_roast_n') || 0));

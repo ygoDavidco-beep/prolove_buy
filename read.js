@@ -1,11 +1,11 @@
 // Стаття: /read?a=bitter. Обкладинка, короткі розділи, чек-лист і джерела.
-import { ARTICLES, ART_ORDER } from './articles.js?v=mwjblxnh';
+import { ARTICLES, ART_ORDER } from './articles.js?v=mwl8etx8';
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const key = new URLSearchParams(location.search).get('a');
 const A = ARTICLES[key];
 const main = document.getElementById('a');
-const sfx = location.pathname.endsWith('.html') ? '.html' : '';
+const sfx = (location.pathname.endsWith('.html') || /github\.io$/.test(location.hostname)) ? '.html' : '';
 const local = h => h.replace(/^(\w+)(\?|$)/, `$1${sfx}$2`);
 
 if (!A) location.replace(`brew${sfx}`);

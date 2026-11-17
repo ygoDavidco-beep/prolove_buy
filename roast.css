@@ -9,7 +9,7 @@ body{overscroll-behavior:none}
 
 .rg-stage{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
 .drum{position:relative;margin:0;--heat:0}
-.drum svg{display:block;width:100%;max-width:230px;height:auto;aspect-ratio:200/238;margin:0 auto;overflow:visible}
+.drum svg{display:block;width:100%;max-width:min(230px,calc(32svh * 200 / 218));height:auto;aspect-ratio:200/218;margin:0 auto;overflow:visible}
 /* вогонь пальника: висота язиків = поставлений газ (--g), мерехтіння — окремо, щоб iPhone не смикало */
 .drum{--g:0}
 .flame-h{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(calc(.08 + var(--g) * .92));transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
